@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "note": "科研实体类型白名单。抽得准=实体必须是材料中真实出现的科研对象，并绑定 source_id + paragraph_id + 原文短引；mention_role 区分作者自述与他人转述。",
+  "types": [
+    {"type": "researcher", "zh": "研究者", "examples": ["作者姓名", "被引用学者"], "rule": "必须在材料中出现且带原文位置"},
+    {"type": "material", "zh": "材料/样品", "examples": ["数据集", "物理样品", "试剂", "语料"], "rule": "区分通用方法术语与具体样品/数据集实例"},
+    {"type": "method", "zh": "方法/模型", "examples": ["算法", "模型", "流程"], "rule": "记录原文表述，不补常识性全名"},
+    {"type": "task", "zh": "任务/问题", "examples": ["分类", "翻译", "预测"], "rule": "来自材料明确描述"},
+    {"type": "metric", "zh": "指标", "examples": ["准确率", "F1", "p 值"], "rule": "数值必须随指标一起绑定，不跨篇合并"},
+    {"type": "conclusion", "zh": "结论/发现", "examples": ["作者主张", "实验发现"], "rule": "带条件；作者自述与他人转述分开"}
+  ],
+  "mention_roles": ["author_self", "other_paraphrase"],
+  "evidence_strength": ["direct", "indirect"],
+  "forbidden": [
+    "凭常识补全的概念（材料未出现）",
+    "无 source_id / paragraph_id / quote 的裸节点",
+    "把跨篇通用术语同名当作同一实体实例"
+  ]
+}
