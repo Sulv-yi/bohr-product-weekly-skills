@@ -1,0 +1,87 @@
+{
+  "version": "1.0",
+  "note": "受控关系词表。relation 必须是 canonical 或命中 alias；direction 描述 subject->object 的语义；evidence_min 为可被接受为直接关系的最低证据强度。共现/综述转述/推测不得注册为关系。",
+  "relations": [
+    {
+      "canonical": "uses",
+      "aliases": ["use", "使用", "采用", "utilizes", "employs", "applies", "基于", "based_on"],
+      "direction": "researcher|method -> material|method|dataset|task",
+      "meaning": "主体在方法/实验中实际使用某材料、方法、数据集或任务",
+      "evidence_min": "direct",
+      "condition_fields": ["section", "paragraph_id"]
+    },
+    {
+      "canonical": "compares_with",
+      "aliases": ["compare", "compare_to", "compared_with", "比较", "对比", "与...比较", "versus", "vs"],
+      "direction": "method -> method|baseline",
+      "meaning": "主体与另一对象在同一实验中对比；不代表优劣",
+      "evidence_min": "direct",
+      "condition_fields": ["metric", "paragraph_id"]
+    },
+    {
+      "canonical": "outperforms",
+      "aliases": ["outperform", "优于", "超过", "beats", "surpasses", "better_than", "improves_over"],
+      "direction": "method -> method|baseline",
+      "meaning": "在同指标同条件下主体结果优于客体；必须绑定数值/指标与条件",
+      "evidence_min": "direct",
+      "condition_fields": ["metric", "value", "dataset", "paragraph_id"],
+      "requires_metric": true
+    },
+    {
+      "canonical": "supports",
+      "aliases": ["support", "支持", "证实", "confirms", "evidence_for", "支撑"],
+      "direction": "evidence|result -> conclusion|claim",
+      "meaning": "原文结果对某结论提供直接支持；不得把作者转述当作本文证据",
+      "evidence_min": "direct",
+      "condition_fields": ["paragraph_id"]
+    },
+    {
+      "canonical": "contradicts",
+      "aliases": ["contradict", "矛盾", "反驳", "conflicts_with", "disagrees_with", "与...冲突"],
+      "direction": "evidence|result -> conclusion|claim",
+      "meaning": "原文结果或作者明确指出与某结论冲突",
+      "evidence_min": "direct",
+      "condition_fields": ["paragraph_id"]
+    },
+    {
+      "canonical": "measures",
+      "aliases": ["measure", "度量", "评估", "evaluates", "评估指标", "metric_for", "指标"],
+      "direction": "metric -> task|method|result",
+      "meaning": "某指标用于度量特定任务/方法/结果",
+      "evidence_min": "direct",
+      "condition_fields": ["paragraph_id"]
+    },
+    {
+      "canonical": "requires",
+      "aliases": ["require", "需要", "依赖", "depends_on", "necessary_condition", "前提是"],
+      "direction": "result|method -> condition|material",
+      "meaning": "结论或方法成立所需的条件；作者自述局限也应标此类",
+      "evidence_min": "direct",
+      "condition_fields": ["paragraph_id"]
+    },
+    {
+      "canonical": "is_part_of",
+      "aliases": ["part_of", "属于", "组成部分", "component_of", "包含在", "included_in"],
+      "direction": "component -> whole",
+      "meaning": "组成关系；注意区分同篇不同文件格式与真正跨篇组件",
+      "evidence_min": "direct",
+      "condition_fields": ["paragraph_id"]
+    },
+    {
+      "canonical": "same_as",
+      "aliases": ["same_as", "同一", "等同于", "identical_to", "即", "aka"],
+      "direction": "alias -> canonical_entity",
+      "meaning": "实体对齐专用边：别名/缩写/全称指向同一对象；跨篇使用需显式身份依据，禁止仅凭通用术语同名合并",
+      "evidence_min": "direct",
+      "condition_fields": ["identity_basis", "paragraph_id"],
+      "requires_identity_basis": true
+    }
+  ],
+  "forbidden_relation_kinds": [
+    "cooccurrence",
+    "review_paraphrase",
+    "speculation",
+    "common_knowledge"
+  ],
+  "forbidden_note": "同现(cooccurrence)、综述转述(review_paraphrase)、推测(speculation)、常识补全(common_knowledge)均不得作为关系的证据类型；如需记录，写入 uncertainty 或 notes 字段，而非 relation 边。"
+}
