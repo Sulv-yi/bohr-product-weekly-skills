@@ -1,0 +1,23 @@
+{
+  "version": "1.0",
+  "note": "文献格式字段映射表。source 为输入格式字段，target 为 GB/T 7714-2015 / APA 常用输出字段；* 表示必须保留的关键字段。",
+  "critical_fields": ["title", "authors", "year", "doi", "volume", "issue", "pages"],
+  "types_gb7714": {
+    "article": "[J]", "book": "[M]", "inproceedings": "[C]", "conference": "[C]",
+    "phdthesis": "[D]", "mastersthesis": "[D]", "techreport": "[R]",
+    "misc": "[Z]", "preprint": "[Z]", "online": "[EB/OL]"
+  },
+  "bibtex_to_standard": {
+    "title": "title", "author": "authors", "year": "year", "journal": "journal",
+    "booktitle": "booktitle", "volume": "volume", "number": "issue", "pages": "pages",
+    "doi": "doi", "publisher": "publisher", "address": "address", "edition": "edition",
+    "url": "url", "note": "note"
+  },
+  "ris_to_standard": {
+    "TI": "title", "T1": "title", "AU": "authors", "A1": "authors", "PY": "year",
+    "Y1": "year", "JF": "journal", "JO": "journal", "VL": "volume", "IS": "issue",
+    "SP": "pages", "DO": "doi", "PB": "publisher", "CY": "address", "UR": "url", "LA": "language"
+  },
+  "doi_normalize": "strip https?://(dx.)?doi.org/ prefix; lowercase; strip trailing slash",
+  "punctuation_note": "中文文献用全角标点、英文用半角；作者超过3名时 GB/T 7714 列前三名加 ', et al'（或'等'）"
+}
