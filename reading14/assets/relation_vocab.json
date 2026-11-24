@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "description": "科研断言关系受控词表。断言统一表示为 (subject, relation, object)，relation 必须从下列条目取 canonical 名；别名用于把自由文本映射回 canonical，避免同义表述各自为政。",
+  "relations": [
+    {"canonical": "reports", "aliases": ["report", "reported", "observes", "finds", "shows", "报告", "发现", "表明"], "meaning": "研究报道某现象/数值，无因果主张", "direction": "subject -> object"},
+    {"canonical": "increases", "aliases": ["increase", "raises", "improves", "enhances", "提升", "提高", "增加"], "meaning": "主体使客体增加/提升", "direction": "subject increases object"},
+    {"canonical": "decreases", "aliases": ["decrease", "reduces", "lowers", "抑制", "降低", "减少"], "meaning": "主体使客体降低", "direction": "subject decreases object"},
+    {"canonical": "causes", "aliases": ["cause", "causes", "leads_to", "induces", "导致", "引起", "诱发"], "meaning": "因果主张，需直接证据支撑", "direction": "subject causes object"},
+    {"canonical": "correlates_with", "aliases": ["correlates", "associated_with", "associated", "相关", "关联"], "meaning": "相关关系，不等同因果", "direction": "subject correlates with object"},
+    {"canonical": "outperforms", "aliases": ["outperform", "beats", "superior_to", "优于", "超过", "胜过"], "meaning": "主体在某指标上优于基线", "direction": "subject outperforms object on metric"},
+    {"canonical": "achieves", "aliases": ["achieve", "attains", "reaches", "达到", "取得"], "meaning": "主体获得某数值/性能", "direction": "subject achieves object"},
+    {"canonical": "is_a", "aliases": ["is", "are", "属于", "是"], "meaning": "类别归属", "direction": "subject is a object"},
+    {"canonical": "requires", "aliases": ["require", "depends_on", "需要", "依赖"], "meaning": "主体成立的前提条件", "direction": "subject requires object"},
+    {"canonical": "limits", "aliases": ["limit", "constrains", "限制", "受限于"], "meaning": "限制条件/适用边界", "direction": "subject limits object"},
+    {"canonical": "contradicts", "aliases": ["contradict", "conflicts_with", "与...矛盾", "冲突"], "meaning": "与既有结论冲突", "direction": "subject contradicts object"}
+  ],
+  "quality_flags": [
+    {"flag": "over_broad", "meaning": "断言范围超过证据支持（如把'在条件C下'写成普适结论）"},
+    {"flag": "insufficient_evidence", "meaning": "证据片段不足以支撑断言，或证据是间接推论却标为直接"},
+    {"flag": "wrong_relation", "meaning": "关系方向或类型错误（如把相关写成因果）"},
+    {"flag": "subject_confusion", "meaning": "主体混淆（把方法的结果记成基线的，或主体缺失）"},
+    {"flag": "missing_source", "meaning": "来源元数据或溯源链字段缺失"}
+  ]
+}
