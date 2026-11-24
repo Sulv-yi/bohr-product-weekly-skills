@@ -1,0 +1,5 @@
+本次提交暂未提供 GitHub 公开作品链接。
+
+作品目录：bohr-submission-reading01
+说明：Skill 本体、脚本、规则文档与最小示例均已随本次提交一并交付，
+可直接在提交的 outputs 目录中查看，无需 GitHub 即可复核。
