@@ -1,0 +1,143 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "total_chars": 1918,
+    "min_chars_ok": true,
+    "sections": {
+      "abstract": {
+        "chars": 235,
+        "min": 150,
+        "ok": true
+      },
+      "introduction": {
+        "chars": 354,
+        "min": 250,
+        "ok": true
+      },
+      "methods": {
+        "chars": 254,
+        "min": 220,
+        "ok": true
+      },
+      "results": {
+        "chars": 214,
+        "min": 200,
+        "ok": true
+      },
+      "discussion": {
+        "chars": 315,
+        "min": 250,
+        "ok": true
+      },
+      "conclusion": {
+        "chars": 77,
+        "min": 80,
+        "ok": false
+      },
+      "data_availability": {
+        "chars": 74,
+        "min": 20,
+        "ok": true
+      },
+      "references": {
+        "chars": 306,
+        "min": 1,
+        "ok": true
+      }
+    },
+    "section_coverage": 0.875,
+    "fig_pairs": 1,
+    "tab_pairs": 1,
+    "fig_orphan_caps": [],
+    "tab_orphan_caps": [],
+    "cite_keys": 12,
+    "ref_entries": 12,
+    "cite_resolved_rate": 1.0,
+    "cite_dangling": [],
+    "claim_sentences": 16,
+    "cited_sentences": 14,
+    "binding_rate": 0.875,
+    "material_index_count": 10,
+    "num_trace_rate": 1.0,
+    "num_untraced": [],
+    "declaration_fields": 3,
+    "declarations": [
+      "data_availability",
+      "author_contribution",
+      "conflict_of_interest"
+    ],
+    "placeholder_count": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "pass",
+      "note": "稿件 1918 字；章节齐备度 88%"
+    },
+    "result_correctness": {
+      "verdict": "pass",
+      "note": "引用闭合 100%；占位符 0；数值可回溯 100%"
+    },
+    "result_completeness": {
+      "verdict": "pass",
+      "note": "声明 3 类；图表对 1+1"
+    },
+    "verifiability": {
+      "verdict": "pass",
+      "note": "材料索引 10 条；论断句挂引用 88%"
+    },
+    "quality_gain": {
+      "verdict": "pass",
+      "note": "变好 5 项；变差 无"
+    },
+    "efficiency_gain": {
+      "verdict": "pass",
+      "note": "索引 10（基线 0）"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "10 条材料索引带定位；图表题注双向对齐"
+    },
+    "method_improvement": {
+      "verdict": "pass",
+      "note": "数值可回溯率 100%（正文数值 → 材料摘录）"
+    },
+    "innovation_evidence": {
+      "verdict": "pass",
+      "note": "方案边界 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "pass",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "脚本仅用标准库；同一输入重复运行结果一致"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "异常矩阵齐备"
+    },
+    "documentation": {
+      "verdict": "pass",
+      "note": "README 与章节规范齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "度量口径 + 材料索引规范可复用"
+    },
+    "sharing_value": {
+      "verdict": "pass",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "na": 0
+  },
+  "note": "只报指标与判定，不输出总分；变差项必须写进 result.uncertainty。"
+}
