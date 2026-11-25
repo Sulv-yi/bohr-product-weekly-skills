@@ -1,0 +1,15 @@
+claim_id,subject,metric,value,page,bind,page_ok,value_ok,unit_ok,consist,unverifiable,verdict,note
+C01,PET_B,cell_size,2,1,ok,ok,ok,ok,ok,,PASS,底账覆盖 2
+C02,PET_B,relative_density,"0.2,0.28",1,ok,ok,ok,ok,out-of-range:0.35,,CONFLICT,"底账内同料名数值 0.35 越出声明区间 0.2,0.28"
+C03,PET_C,cell_size,"5,18",1,ok,ok,ok,ok,"out-of-range:3,20",,CONFLICT,"底账内同料名数值 3,20 越出声明区间 5,18"
+C04,PET_V,relative_density,"0.16,0.18",6,ok,ok,ok,ok,ok,,PASS,"底账覆盖 0.16,0.18"
+C05,PET_B,relative_density,"0.35,0.20",7,ok,ok,ok,ok,ok,,PASS,"底账覆盖 0.2,0.28,0.35"
+C06,PET_V,mfi,highest,4,ok,ok,ok,ok,ok,,PASS,底账覆盖 46.7
+C07,PET_B,none,11.52,4,ok,ok,ok,skip,no-corpus,,PASS,
+C08,3D-printed,density_reduction,40,10,ok,ok,ok,ok,ok,,PASS,底账覆盖 40
+C09,3D-printed,density_reduction,40,10,ok,ok,ok,DRIFT(weight reductions),ok,,FAIL,底账覆盖 40
+C10,3D-printed,relative_density,1.26,10,ok,ok,ok,NO-ANCHOR(relative density),ok,,FAIL,底账覆盖 1.26
+C11,3D-printed,none,,1,ok,ok,ok,skip,no-corpus,flag,PASS,含 first/only 类断言，需检索依据
+C12,PET_B,none,0.80,2,ok,ok,ok,skip,no-corpus,,PASS,
+C13,PET_C,relative_density,"0.20,0.17",7,ok,ok,ok,ok,ok,,PASS,"底账覆盖 0.17,0.18,0.2"
+C14,PET_B,none,"0.70,0.80",2,ok,ok,ok,skip,no-corpus,,PASS,
