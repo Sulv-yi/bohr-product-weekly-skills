@@ -1,0 +1,99 @@
+{
+  "rubric_version": "1.0",
+  "task": "latex-writing-compile",
+  "case_id": "selftest-demo-013",
+  "status": "partial",
+  "note": "只记录指标与逐项判定，不含自评分；增益结论须由 compare_ab.py 与 baseline 对比得出。",
+  "metrics": {
+    "sections": 2,
+    "total_real_chars": 102,
+    "min_section_chars": 38,
+    "equations": 0,
+    "tables": 0,
+    "cite_keys": 1,
+    "cite_resolved_rate": 1.0,
+    "compile_status": "unavailable",
+    "compile_errors": 0,
+    "compile_errors_located_rate": 1.0,
+    "repro_coverage": 0.4,
+    "source_map_count": 1,
+    "placeholder_errors": 0,
+    "cm_errors": [
+      "以下章节实质篇幅不足 120 字: 引言(48字); 方法(38字)",
+      "全文实义字数 102 < 400，不成稿",
+      "没有含真实内容的 equation/align 公式",
+      "引用键无法回溯: \\cite{wang2019} 在参考文献中不存在"
+    ]
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "fail",
+      "note": "章节 2；全文实义 102 字"
+    },
+    "result_correctness": {
+      "verdict": "fail",
+      "note": "公式 0；表格 0；占位符问题 0（公式与数值是否正确需对着原文核）"
+    },
+    "result_completeness": {
+      "verdict": "pass",
+      "note": "引用键 1，可回溯 100%"
+    },
+    "result_verifiability": {
+      "verdict": "fail",
+      "note": "来源映射 1 条；复现要素覆盖 40%"
+    },
+    "quality_gain": {
+      "verdict": "pass",
+      "note": "编译状态 unavailable；增益方向须用 eval/compare_ab.py 与 baseline 对比得出"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "编译轮次与耗时由平台记录，本脚本不代填；见 compile-report.json"
+    },
+    "gain_verifiability": {
+      "verdict": "n/a",
+      "note": "本机无 TeX 引擎，编译类证据无法产生；需在有 latex-compiler 的镜像内复核，本脚本不代为判定"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "成稿门槛可计算 + 编译错误定位到行 + 引用闭合核验"
+    },
+    "method_improvement": {
+      "verdict": "pass",
+      "note": "先出成稿 → 结构预检 → 编译 → 报错定位 → 引用收敛 → 复现记录"
+    },
+    "innovation_evidence": {
+      "verdict": "pass",
+      "note": "边界与取舍见 references/innovation-boundary.md"
+    },
+    "invocation": {
+      "verdict": "pass",
+      "note": "case_id='selftest-demo-013'"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "编译状态 unavailable；重复性由 eval/ab-protocol.md 第 3 节定义"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "uncertainty 1 条；编译错误已定位 100%"
+    },
+    "docs": {
+      "verdict": "pass",
+      "note": "SKILL.md + README.md + examples/ 齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "模板与公式规则、错误分类表、度量脚本、评分表可复用"
+    },
+    "sharing": {
+      "verdict": "pass",
+      "note": "公开仓库地址见 GITHUB_URL.txt"
+    }
+  },
+  "counts": {
+    "pass": 11,
+    "fail": 3,
+    "na": 2
+  }
+}
