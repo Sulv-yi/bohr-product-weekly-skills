@@ -7,12 +7,28 @@
 import sys
 import json
 import os
+import importlib.util
 
 REQUIRED_TOP = {'case_id', 'status', 'result', 'sources', 'uncertainty', 'changes'}
 REQUIRED_RESULT = {'polished_text', 'change_log', 'term_decisions'}
 VALID_STATUS = {'success', 'partial', 'unable_to_determine', 'refused'}
 CHANGE_TYPES = {'grammar', 'agreement', 'article_prep', 'tense_voice', 'punctuation',
                 'terminology', 'register', 'conciseness', 'chinese_english', 'split'}
+
+
+def _load_check_polish():
+    """同目录载入润色成稿门槛检查器。"""
+    here = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(here, 'check_polish.py')
+    if not os.path.isfile(path):
+        return None
+    spec = importlib.util.spec_from_file_location('check_polish_mod', path)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+    except Exception:
+        return None
+    return mod
 
 
 def main():
@@ -83,6 +99,21 @@ def main():
     for k in ('uncertainty', 'changes'):
         if not isinstance(d.get(k), list):
             problems.append({'field': k, 'issue': 'must be list'})
+
+    # status=success 的硬门槛：润色成稿必须逐段对齐、锁定项不丢、强度不改
+    if d.get('status') == 'success':
+        ck = _load_check_polish()
+        if ck is None:
+            problems.append({'field': 'result.paragraphs', 'issue': '缺少 check_polish.py，无法核验成稿'})
+        else:
+            try:
+                rep = ck.check(d, None, None)
+                for e in rep['errors'][:10]:
+                    problems.append({'field': 'result.paragraphs',
+                                     'issue': '成稿未过硬门槛', 'detail': e})
+            except Exception as e:
+                problems.append({'field': 'result.paragraphs',
+                                 'issue': f'核验异常: {type(e).__name__}: {e}'})
 
     result = {'status': 'passed' if not problems else 'failed',
               'case_id': d.get('case_id'), 'problems': problems}
