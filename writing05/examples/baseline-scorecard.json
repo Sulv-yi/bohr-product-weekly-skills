@@ -1,0 +1,101 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "total_chars": 218,
+    "min_chars_ok": false,
+    "section_chars": {
+      "一、孔隙率与渗透性的取舍": 96,
+      "二、机制与测量口径": 56,
+      "三、冲突证据": 27,
+      "四、适用边界": 9
+    },
+    "section_min": 9,
+    "draft_units": 12,
+    "draft_cited_units": 12,
+    "binding_rate": 1.0,
+    "claims_count": 0,
+    "claim_coverage": 0.0,
+    "locator_rate": 0.0,
+    "strength_rate": 0.0,
+    "hedge_alignment": 0.0,
+    "evidence_rows": 0,
+    "evidence_claim_coverage": 0.0,
+    "conflict_handled": false,
+    "source_count": 9,
+    "source_metadata_rate": 1.0,
+    "placeholder_count": 0,
+    "open_items": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "fail",
+      "note": "成稿 218 字；论断 0 条；证据表 0 行"
+    },
+    "result_correctness": {
+      "verdict": "fail",
+      "note": "元数据齐备 100%；占位符 0；表述相称 0%"
+    },
+    "result_completeness": {
+      "verdict": "fail",
+      "note": "断言无/来源有/强度0%/不确定性无/冲突未处置"
+    },
+    "verifiability": {
+      "verdict": "fail",
+      "note": "定位 0%；证据覆盖 0%；清单覆盖成稿 0%"
+    },
+    "quality_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定（不是通过）"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "fail",
+      "note": "成稿切出 12 个论断单元，清单登记 0 条"
+    },
+    "method_improvement": {
+      "verdict": "fail",
+      "note": "0/0 条论断带强度判定依据（规则推导，可复核）"
+    },
+    "innovation_evidence": {
+      "verdict": "fail",
+      "note": "方案边界说明 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "pass",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "同一输入可重复运行，脚本仅用标准库"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "异常矩阵齐备（六类：文献不可得/仅摘要/摘要矛盾/证据冲突/格式不支持/权限不足）"
+    },
+    "documentation": {
+      "verdict": "pass",
+      "note": "README 与强度分级口径齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "切分规则 + 切分脚本 + 证据表结构可复用"
+    },
+    "sharing_value": {
+      "verdict": "pass",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 7,
+    "fail": 7,
+    "na": 2
+  },
+  "note": "只报指标与判定；不输出总分。变差项与未判定项必须写进 result.uncertainty。"
+}
