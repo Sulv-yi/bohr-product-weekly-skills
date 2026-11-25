@@ -1,1 +1,2 @@
-预留：写作08 题面未列 GitHub 公开链接加分项，无需填写。
+https://github.com/Sulv-yi/bohr-product-weekly-skills/tree/main/writing08
+writing08/SKILL.md
