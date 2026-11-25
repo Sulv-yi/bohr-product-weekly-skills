@@ -20,10 +20,20 @@
 ## Agent 执行
 
 ```bash
+# 1) 先落四要素骨架（防只交大纲）
+python <skill_dir>/scripts/draft_skeleton.py --case /input/case.json --out /app/output/draft.md
+# 2) 填真实内容、逐段绑定 sources，写成 result.json
+# 3) 落可核验附件：来源映射表 + 自检表（有 pandoc 时含 preview.pdf）
+python <skill_dir>/scripts/build_outputs.py --draft /app/output/draft.md \
+    --result /app/output/result.json --outdir /app/output
+# 4) 结构门槛 + 引用核验
+python <skill_dir>/scripts/validate_result.py /app/output/result.json \
+    --case /input/case.json --text /app/output/draft.md
 python <skill_dir>/scripts/citation_check.py /app/output/result.json \
-  --sources /app/work/sources.json --case /input/case.json
-python <skill_dir>/scripts/validate_result.py /app/output/result.json --case /input/case.json
+    --sources /app/work/sources.json --case /input/case.json
 ```
+
+`/app/output` 最终应是：`draft.md`、`result.json`、`source-map.csv`、`selfcheck.md`（+ 有环境时 `preview.pdf`）。
 
 ## 输出（/app/output/result.json，示例）
 
