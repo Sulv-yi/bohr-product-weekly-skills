@@ -64,3 +64,43 @@ python scripts/verify_result.py /app/output/result.json --case /input/case.json 
 - `compile_report.status=failed` 但 `result.status=success` → 编译一致性 error。
 - `reproduction` 缺 `engine`/`command`/`rounds` → 复现要素缺失 error。
 - `static_check.status=failed` 但声明 success → 契约 error。
+
+---
+
+## 附：成稿链路最小示例（示意，非正式案例结果）
+
+> 以下命令与输出仅演示接口和判定形态，`case_id`、章节名与数值均为示例，
+> **不代表任何正式案例，也不得作为预制答案使用**。真实运行时以 `/input/case.json` 为准。
+
+```bash
+# 1) 建结构（章节取自 case.required_sections，没有则用通用科研结构）
+python scripts/build_manuscript.py --case /input/case.json --out /app/output --main main.tex
+# -> main.tex / refs.bib / manuscript_plan.json
+
+# 2) 按 manuscript_plan.json 逐节写实（这一步是 Agent 的主要工作，不能跳过）
+
+# 3) 成稿硬门槛
+python scripts/check_manuscript.py /app/output/main.tex --case /input/case.json --bib /app/output/refs.bib
+```
+
+空骨架会被判失败，形如：
+
+```json
+{"status": "failed",
+ "errors": ["仍是 build_manuscript 生成的空骨架：需逐节写实后删除该提示",
+            "以下章节实质篇幅不足 120 字: Introduction(0字); Method(0字)",
+            "摘要实质篇幅不足 40 字",
+            "表格只有表头骨架，没有真实数据行（当前最多 0 行，需 >=2 行）"]}
+```
+
+逐节写实后应为：
+
+```json
+{"status": "passed",
+ "stats": {"sections": 3, "total_real_chars": 552,
+           "section_chars": {"Introduction": 169, "Method": 136, "Results": 153},
+           "cite_keys": ["carmenini2025"], "equations": 1, "tables": 1}}
+```
+
+最后 `verify_result.py` 还会复核：`status=success` 时必须定位得到这份 .tex、成稿过门槛、
+`source_map` ≥3 条、`reproduction` 要素齐全。少任何一项都会被判 failed 并给出具体缺什么。
