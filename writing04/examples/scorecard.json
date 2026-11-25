@@ -1,0 +1,101 @@
+{
+  "rubric_version": "1.0",
+  "task": "reference-citation-management",
+  "case_id": "selftest-demo-004",
+  "status": "success",
+  "note": "本文件只记录指标与逐项判定，不含自评分；增益结论须由 compare_ab.py 与 baseline 对比得出。",
+  "metrics": {
+    "cite_count": 4,
+    "claim_rate": 1.0,
+    "claim_location_rate": 1.0,
+    "position_ok_rate": 1.0,
+    "match_basis_rate": 1.0,
+    "ref_resolved_rate": 1.0,
+    "numbering_continuous": true,
+    "dangling_count": 0,
+    "uncited_count": 0,
+    "dedup_merged": 1,
+    "dedup_merged_basis_rate": 1.0,
+    "dedup_kept": 1,
+    "dedup_kept_reason_rate": 1.0,
+    "dedup_pending": 1,
+    "dedup_pending_reason_rate": 1.0,
+    "format_mapping_fields": 8,
+    "preserved_fields": 4,
+    "manuscript_delivered": true,
+    "manuscript_chars": 98,
+    "placeholder_count": 0,
+    "open_items": 2
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "pass",
+      "note": "引用 4 条；稿件 已交付"
+    },
+    "result_correctness": {
+      "verdict": "pass",
+      "note": "论断覆盖 100%；匹配依据 100%；位置成立 100%（是否真对得上仍需人读 match_basis 判断）"
+    },
+    "result_completeness": {
+      "verdict": "pass",
+      "note": "编号连续 是；悬空 0；字段映射 8 项"
+    },
+    "result_verifiability": {
+      "verdict": "pass",
+      "note": "文献键可回溯 100%；位置精确到句 100%"
+    },
+    "quality_gain": {
+      "verdict": "pass",
+      "note": "增益方向须用 eval/compare_ab.py 与 baseline 对比得出；此处只查可比指标是否齐备"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "待确认项 2 条；耗时与轮次由平台记录，本脚本不代填"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "对照口径见 eval/ab-protocol.md，指标可被同一脚本重跑"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "四性质可计算 + 逐条引用映射表 + 自检表生成"
+    },
+    "method_improvement": {
+      "verdict": "pass",
+      "note": "先落交付清单 → 解析 → 去重 → 编号 → 定位 → 四性质核验 → 结构门槛"
+    },
+    "innovation_evidence": {
+      "verdict": "fail",
+      "note": "边界与取舍见 references/innovation-boundary.md"
+    },
+    "invocation": {
+      "verdict": "pass",
+      "note": "case_id='selftest-demo-004'"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "重复运行一致性由 eval/ab-protocol.md 第 3 节定义；脚本只读输入、写独立输出"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "uncertainty 2 条"
+    },
+    "docs": {
+      "verdict": "pass",
+      "note": "SKILL.md + README.md + examples/ 齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "评分表、指标脚本、格式映射 asset、去重判据可复用"
+    },
+    "sharing": {
+      "verdict": "pass",
+      "note": "公开仓库地址见 GITHUB_URL.txt"
+    }
+  },
+  "counts": {
+    "pass": 14,
+    "fail": 1,
+    "na": 1
+  }
+}
