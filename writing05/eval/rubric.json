@@ -1,0 +1,183 @@
+{
+  "version": "1.0",
+  "task": "evidence-driven-academic-writing",
+  "total": 100,
+  "note": "把题面五个维度落成可执行条目。每条指向 Skill 运行时真实产出的文件或可跑命令，给的是验收口径，不是自评分数。",
+  "dimensions": [
+    {
+      "id": "actual_effect",
+      "name": "实际效果",
+      "weight": 40,
+      "items": [
+        {
+          "id": "task_completion",
+          "name": "任务完成度",
+          "weight": 15,
+          "acceptance": "交付「论断清单—证据表—成稿」三段：成稿可直接进入修改流程，论断清单覆盖全文论断单元，证据表逐条给原文摘录与定位，不是规则文档或抽样示范。",
+          "evidence": ["/app/output/draft.md", "/app/output/result.json#result.claims", "/app/output/evidence-table.md"],
+          "auto_check": "python scripts/validate_result.py /app/output/result.json --case /input/case.json --text /app/output/draft.md"
+        },
+        {
+          "id": "result_correctness",
+          "name": "结果正确性",
+          "weight": 15,
+          "acceptance": "引用真实存在且著录准确；原文摘录确实支持对应论断；不把相关性写成因果、不把单篇小样本写成领域共识；材料外的事实一律不补。",
+          "evidence": ["/app/output/claim-map.csv", "/app/output/result.json#sources", "/app/output/result.json#uncertainty"],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --draft /app/output/draft.md --out /app/output/scorecard.json"
+        },
+        {
+          "id": "result_completeness",
+          "name": "结果完整性",
+          "weight": 5,
+          "acceptance": "四类要素齐备：论断单元、来源、证据强度标注、不确定性表述；冲突证据被列出或显式说明检索未见。",
+          "evidence": ["/app/output/result.json#result.conflicts", "/app/output/selfcheck.md"],
+          "auto_check": "python scripts/validate_result.py /app/output/result.json --case /input/case.json --text /app/output/draft.md"
+        },
+        {
+          "id": "verifiability",
+          "name": "结果可核验性",
+          "weight": 5,
+          "acceptance": "论断编号、原文摘录、定位（页/节/段）与强度理由四件齐备，第三方可逐条回查并复算；缺任一即不算可核验。",
+          "evidence": ["/app/output/claim-map.csv", "/app/output/evidence-table.md"],
+          "auto_check": "python scripts/build_outputs.py --result /app/output/result.json --draft /app/output/draft.md --outdir /app/output"
+        }
+      ]
+    },
+    {
+      "id": "usage_gain",
+      "name": "使用增益",
+      "weight": 25,
+      "items": [
+        {
+          "id": "quality_gain",
+          "name": "质量增益",
+          "weight": 15,
+          "acceptance": "相同材料下，加载 Skill 后论断—来源绑定率、定位精度、强度标注与表述相称度严格优于基础 Agent；变差项必须如实列出。",
+          "evidence": ["eval/ab-report.md", "examples/ab-report.md"],
+          "auto_check": "python eval/compare_ab.py examples/baseline-scorecard.json examples/scorecard.json --md examples/ab-report.md"
+        },
+        {
+          "id": "efficiency_gain",
+          "name": "效率增益",
+          "weight": 5,
+          "acceptance": "把回原文核对、补引用、改过度推断这三类返工前置到脚本判定，人工确认项数量不高于基线。",
+          "evidence": ["/app/output/selfcheck.md", "eval/ab-protocol.md"],
+          "auto_check": "python eval/compare_ab.py examples/baseline-scorecard.json examples/scorecard.json"
+        },
+        {
+          "id": "gain_verifiability",
+          "name": "增益可验证性",
+          "weight": 5,
+          "acceptance": "对照可用同一脚本、同一 rubric 重跑；无材料时判 n/a 而不是 pass。",
+          "evidence": ["eval/rubric.json", "eval/ab-protocol.md", "eval/acceptance.md"],
+          "auto_check": "python eval/score_output.py --rubric eval/rubric.json --list"
+        }
+      ]
+    },
+    {
+      "id": "innovation",
+      "name": "创新增益",
+      "weight": 15,
+      "items": [
+        {
+          "id": "new_capability",
+          "name": "新增能力",
+          "weight": 5,
+          "acceptance": "提供论断切分（claim_split）与强度判定（grade/hedge_ok）两个基础 Agent 不具备、且结果可复核的能力。",
+          "evidence": ["scripts/claim_split.py", "/app/output/claim-map.csv"],
+          "auto_check": "python scripts/claim_split.py --text /app/output/draft.md --json /app/output/units.json"
+        },
+        {
+          "id": "method_improvement",
+          "name": "方法改进",
+          "weight": 5,
+          "acceptance": "规则化的强度分级（研究设计词 + 样本量线索 + 复现线索）替代主观判断；表述强度与证据强度做机器校验。",
+          "evidence": ["scripts/claim_split.py#DESIGN_RULES", "scripts/evidence_gate.py#hedge_alignment"],
+          "auto_check": "python scripts/claim_split.py --quote \"随机对照试验，n=1200\" --claim \"该方案显著优于对照\" --grade"
+        },
+        {
+          "id": "innovation_evidence",
+          "name": "创新证据",
+          "weight": 5,
+          "acceptance": "相对基础 Agent / 通用写作工具的边界写清楚：能给到哪、给不到哪，并有对照报告。",
+          "evidence": ["references/innovation-boundary.md", "examples/ab-report.md"],
+          "auto_check": "test -f references/innovation-boundary.md"
+        }
+      ]
+    },
+    {
+      "id": "reliability",
+      "name": "可靠体验",
+      "weight": 10,
+      "items": [
+        {
+          "id": "usability",
+          "name": "调用与易用性",
+          "weight": 3,
+          "acceptance": "SKILL.md 写明触发条件、步骤与命令；照说明可完成一次从材料到成稿的完整流程。",
+          "evidence": ["SKILL.md", "examples/minimal-example.md"],
+          "auto_check": "test -f SKILL.md && test -f examples/minimal-example.md"
+        },
+        {
+          "id": "stability",
+          "name": "运行稳定性",
+          "weight": 4,
+          "acceptance": "脚本仅依赖标准库；同一输入重复运行结果一致；不同学科材料下不因缺字段崩溃。",
+          "evidence": ["scripts/", "examples/selftest-result.json"],
+          "auto_check": "python scripts/validate_result.py examples/selftest-result.json --case examples/selftest-case.json --text examples/selftest-draft.md"
+        },
+        {
+          "id": "exception_handling",
+          "name": "异常处理",
+          "weight": 3,
+          "acceptance": "对文献不可得、仅摘要、原文与摘要矛盾、证据冲突、格式不支持、权限不足六类有明确处置，不静默失败。",
+          "evidence": ["references/edge-cases.md", "SKILL.md#异常处理"],
+          "auto_check": "test -f references/edge-cases.md"
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "生态贡献",
+      "weight": 10,
+      "items": [
+        {
+          "id": "documentation",
+          "name": "文档完整性",
+          "weight": 3,
+          "acceptance": "使用说明、依赖、示例、适用范围、限制、强度分级口径、维护信息齐全。",
+          "evidence": ["README.md", "references/evidence-strength.md"],
+          "auto_check": "test -f README.md && test -f references/evidence-strength.md"
+        },
+        {
+          "id": "reusability",
+          "name": "资源可复用性",
+          "weight": 4,
+          "acceptance": "论断切分规则、证据表结构、强度分级表、检查脚本可被他人直接复用或替换。",
+          "evidence": ["scripts/claim_split.py", "references/claim-units.md", "assets/strength-table.json"],
+          "auto_check": "test -f assets/strength-table.json"
+        },
+        {
+          "id": "sharing_value",
+          "name": "分享推广价值",
+          "weight": 3,
+          "acceptance": "沉淀可分享的失败类型、核验方法与真实写作价值，附公开链接。",
+          "evidence": ["GITHUB_URL.txt", "references/edge-cases.md"],
+          "auto_check": "test -f GITHUB_URL.txt"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "min_chars": 1400,
+    "claims_count": 12,
+    "claim_coverage": 0.8,
+    "locator_rate": 0.9,
+    "strength_rate": 1.0,
+    "hedge_alignment": 0.8,
+    "source_count": 12,
+    "source_metadata_rate": 0.9,
+    "evidence_claim_coverage": 0.9,
+    "placeholder_count": 0
+  }
+}
