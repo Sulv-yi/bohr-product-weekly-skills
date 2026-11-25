@@ -1,0 +1,146 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "total_chars": 433,
+    "elements": {
+      "background": {
+        "ok": false,
+        "chars": 140,
+        "need": 350
+      },
+      "question": {
+        "ok": false,
+        "chars": 44,
+        "need": 150
+      },
+      "objectives": {
+        "ok": false,
+        "chars": 39,
+        "need": 150
+      },
+      "approach": {
+        "ok": false,
+        "chars": 0,
+        "need": 300
+      },
+      "schedule": {
+        "ok": false,
+        "chars": 82,
+        "need": 150
+      },
+      "risks": {
+        "ok": false,
+        "chars": 72,
+        "need": 150
+      },
+      "outcomes": {
+        "ok": false,
+        "chars": 0,
+        "need": 120
+      }
+    },
+    "elements_ok": 0,
+    "elements_total": 7,
+    "gap_specific": false,
+    "gap_note": "背景段无缺口线索词（尚未/未见/缺乏…）",
+    "falsifiable": false,
+    "falsifiable_note": "缺 指标、阈值、对照/时间点",
+    "alignment_rate": 0.0,
+    "alignment_bad": [
+      "G1 缺 指标、成果、正文未呼应指标",
+      "G2 缺 路线、指标、成果、正文未呼应指标"
+    ],
+    "schedule_coverage": false,
+    "schedule_gaps": [
+      21,
+      22,
+      23,
+      24
+    ],
+    "schedule_overlap": 1,
+    "effort_ratio": 1.17,
+    "schedule_bad": [],
+    "risk_complete": 0.0,
+    "risk_types": 0,
+    "risk_bad": [
+      "K1 缺 trigger、fallback、decision",
+      "K2 缺 trigger、fallback、decision"
+    ],
+    "binding_rate": 0.0,
+    "binding_claims": 0,
+    "binding_total": 1,
+    "placeholder_count": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "fail",
+      "note": "要素 0/7；字数 433"
+    },
+    "result_correctness": {
+      "verdict": "fail",
+      "note": "问题可证伪 否；缺口空泛；工作量比 1.17；重叠 1；占位符 0"
+    },
+    "result_completeness": {
+      "verdict": "fail",
+      "note": "周期覆盖 否；风险类型 0/4；风险完备 0%"
+    },
+    "verifiability": {
+      "verdict": "fail",
+      "note": "目标对齐 0%；论断挂引用 0%"
+    },
+    "quality_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定（不是通过）"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定"
+    },
+    "gain_verifiability": {
+      "verdict": "fail",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "fail",
+      "note": "目标-路线-指标-成果映射 0% + 排期可行性 1.17 + 问题可证伪"
+    },
+    "method_improvement": {
+      "verdict": "fail",
+      "note": "缺口具体化 + 周期覆盖 + 风险四要素，三项均落在结构上可核"
+    },
+    "innovation_evidence": {
+      "verdict": "fail",
+      "note": "方案边界 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "fail",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "脚本仅用标准库；换学科/周期不崩（见 references/edge-cases.md）"
+    },
+    "exception_handling": {
+      "verdict": "fail",
+      "note": "异常矩阵齐备"
+    },
+    "documentation": {
+      "verdict": "fail",
+      "note": "README 与七要素规范齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "大纲模板 + 度量口径可复用"
+    },
+    "sharing_value": {
+      "verdict": "fail",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 2,
+    "fail": 12,
+    "na": 2
+  },
+  "note": "只报指标与判定，不输出总分；变差项必须写进 result.uncertainty。"
+}
