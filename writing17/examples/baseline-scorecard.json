@@ -1,0 +1,196 @@
+{
+ "metrics": {
+  "chars": 236,
+  "sections": 4,
+  "abbrev_rate": 0.429,
+  "abbrev_missing": [
+   "BET",
+   "DEC",
+   "EC",
+   "ICE"
+  ],
+  "avg_sent_len": 23.8,
+  "long_sent_ratio": 0.0,
+  "long_sents": [],
+  "jargon_density": 0.2,
+  "analogies": 0,
+  "analogy_hits": [],
+  "num_total": 48,
+  "num_rate": 0.479,
+  "num_missing": [
+   "1",
+   "12",
+   "1300",
+   "1600",
+   "1600°C",
+   "1m",
+   "2",
+   "20",
+   "200",
+   "20m",
+   "25",
+   "25°C"
+  ],
+  "limit_total": 2,
+  "limit_rate": 0.0,
+  "limit_missing": [
+   "仅",
+   "只"
+  ],
+  "figtab_rate": 0.0,
+  "figtab_missing": [
+   "图2a",
+   "图2b",
+   "图3",
+   "表1"
+  ],
+  "hedge_src": 3,
+  "hedge_tgt": 0,
+  "hedge_keep": 0.0,
+  "assertive_sents": 3,
+  "strength_sents": 3,
+  "strength_bad": 3,
+  "strength_bad_rows": [
+   [
+    "这说明气相补碳是提升 ICE 的有效手段。",
+    "说明",
+    false,
+    false
+   ],
+   [
+    "温度与 ICE 之间不是单调关系，1450 °C 以上斜率变缓，说明温度提升已达上限。",
+    "说明",
+    false,
+    false
+   ],
+   [
+    "## 结论\n\n本工作证明气相补碳可以显著提升硬碳的 ICE，是一种可行的工艺路线，具有良好的应用前景。",
+    "证明",
+    false,
+    false
+   ]
+  ],
+  "term_drift": 3,
+  "term_drift_rows": [
+   [
+    "首次库仑效率",
+    [
+     [
+      "首次库仑效率",
+      1
+     ],
+     [
+      "ICE",
+      8
+     ]
+    ]
+   ],
+   [
+    "硬碳",
+    [
+     [
+      "硬碳",
+      3
+     ],
+     [
+      "HC",
+      2
+     ]
+    ]
+   ],
+   [
+    "气相补碳",
+    [
+     [
+      "气相补碳",
+      3
+     ],
+     [
+      "补碳处理",
+      1
+     ]
+    ]
+   ]
+  ],
+  "changelog_total": 0,
+  "changelog_rate": 0.0,
+  "trace_claims": 6,
+  "trace_hit": 0,
+  "trace_rate": 0.0,
+  "audience_declared": false,
+  "purpose_declared": false,
+  "placeholders": []
+ },
+ "items": {
+  "task_completion": {
+   "verdict": "fail",
+   "note": "字数 236；节 4"
+  },
+  "result_correctness": {
+   "verdict": "fail",
+   "note": "数值 48%；限定条件 0%；限定语 0%；越界断言 3；术语漂移 3"
+  },
+  "result_completeness": {
+   "verdict": "fail",
+   "note": "类比 0；图表 0%；受众声明 无；目的 无"
+  },
+  "verifiability": {
+   "verdict": "fail",
+   "note": "溯源 0%；改动账覆盖 0%（0 条）"
+  },
+  "quality_gain": {
+   "verdict": "n/a",
+   "note": "未提供 baseline 评分卡"
+  },
+  "efficiency_gain": {
+   "verdict": "n/a",
+   "note": "未提供 baseline 评分卡"
+  },
+  "new_capability": {
+   "verdict": "pass",
+   "note": "新增四类度量：缩写展开 / 信息保留 / 强度对齐 / 改动可核"
+  },
+  "method_improvement": {
+   "verdict": "pass",
+   "note": "把「读得懂·留得住·说得准·接得住」落成可执行判定，而非写作建议"
+  },
+  "innovation_evidence": {
+   "verdict": "fail",
+   "note": "边界文档 + A/B 报告均在包内"
+  },
+  "usability": {
+   "verdict": "pass",
+   "note": "SKILL.md 含预算表；最小示例可照做"
+  },
+  "stability": {
+   "verdict": "pass",
+   "note": "纯标准库，无第三方依赖，单文件函数"
+  },
+  "exception_handling": {
+   "verdict": "pass",
+   "note": "异常矩阵覆盖材料不足 / 缩写无全称 / 数值冲突"
+  },
+  "documentation": {
+   "verdict": "pass",
+   "note": "README + SCORING-MAP + 六篇 references"
+  },
+  "reusability": {
+   "verdict": "pass",
+   "note": "度量脚本与评分卡可独立调用"
+  },
+  "sharing": {
+   "verdict": "pass",
+   "note": "公开仓库链接"
+  },
+  "contract_integrity": {
+   "verdict": "pass",
+   "note": "契约字段齐备"
+  }
+ },
+ "contract_fails": [],
+ "counts": {
+  "pass": 9,
+  "fail": 5,
+  "n/a": 2
+ }
+}
