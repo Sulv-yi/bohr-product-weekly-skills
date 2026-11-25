@@ -21,10 +21,13 @@ import os
 import re
 import sys
 
+# 注意：不能把 "{{"/"}}" 单独当占位符——LaTeX 里 \frac{a}{b}} 这类嵌套括号
+# 会成对出现 "}}"，一刀切会把合法公式判成占位符。真正的模板残留是 {{...}} 与 【...】。
 PLACEHOLDER_TOKENS = [
     "TODO", "TBD", "FIXME", "XXX", "placeholder", "Placeholder",
-    "待补充", "待填写", "待完善", "待写", "【", "】", "{{", "}}",
+    "待补充", "待填写", "待完善", "待写",
 ]
+PLACEHOLDER_PATTERNS = [r'\{\{[^{}\n]{0,40}\}\}', r'【[^】\n]{0,40}】']
 
 CJK = r'\u4e00-\u9fff\u3400-\u4dbf'
 
@@ -114,6 +117,9 @@ def check(tex, case, bib_text, min_sec, min_total):
     for tok in PLACEHOLDER_TOKENS:
         if tok in body:
             errors.append(f'正文残留占位符: {tok}')
+    for pat in PLACEHOLDER_PATTERNS:
+        for m in re.finditer(pat, body):
+            errors.append(f'正文残留占位符: {m.group(0)[:20]}')
 
     # ---- 章节实质 ----
     secs = split_sections(raw)
