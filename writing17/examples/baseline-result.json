@@ -1,0 +1,41 @@
+{
+ "task": "把技术报告摘要改写为面向公众的科普稿",
+ "audience": "公众读者",
+ "purpose": "了解该工艺改动的幅度",
+ "source_path": "selftest-materials.md",
+ "source_ref": "源文 §1–§5",
+ "target_path": "baseline-popular.md",
+ "terms": [
+  [
+   "首次库仑效率",
+   [
+    "首次库仑效率",
+    "ICE"
+   ]
+  ],
+  [
+   "硬碳",
+   [
+    "硬碳",
+    "HC"
+   ]
+  ],
+  [
+   "气相补碳",
+   [
+    "气相补碳",
+    "补碳处理"
+   ]
+  ]
+ ],
+ "changes": [
+  {
+   "op": "改",
+   "where": "全篇",
+   "why": "压缩篇幅"
+  }
+ ],
+ "uncertainty": [
+  "未做受众分析"
+ ]
+}
