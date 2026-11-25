@@ -1,0 +1,135 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "total_chars": 1896,
+    "elements": {
+      "background": {
+        "ok": true,
+        "chars": 400,
+        "need": 350
+      },
+      "question": {
+        "ok": true,
+        "chars": 182,
+        "need": 150
+      },
+      "objectives": {
+        "ok": true,
+        "chars": 154,
+        "need": 150
+      },
+      "approach": {
+        "ok": true,
+        "chars": 310,
+        "need": 300
+      },
+      "schedule": {
+        "ok": true,
+        "chars": 208,
+        "need": 150
+      },
+      "risks": {
+        "ok": true,
+        "chars": 377,
+        "need": 150
+      },
+      "outcomes": {
+        "ok": true,
+        "chars": 149,
+        "need": 120
+      }
+    },
+    "elements_ok": 7,
+    "elements_total": 7,
+    "gap_specific": true,
+    "gap_note": "缺口线索 6 个，主题词重叠 19 个",
+    "falsifiable": true,
+    "falsifiable_note": "可证伪",
+    "alignment_rate": 1.0,
+    "alignment_bad": [],
+    "schedule_coverage": true,
+    "schedule_gaps": [],
+    "schedule_overlap": 0,
+    "effort_ratio": 1.0,
+    "schedule_bad": [],
+    "risk_complete": 1.0,
+    "risk_types": 4,
+    "risk_bad": [],
+    "binding_rate": 0.889,
+    "binding_claims": 8,
+    "binding_total": 9,
+    "placeholder_count": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "pass",
+      "note": "要素 7/7；字数 1896"
+    },
+    "result_correctness": {
+      "verdict": "pass",
+      "note": "问题可证伪 是；缺口具体；工作量比 1.0；重叠 0；占位符 0"
+    },
+    "result_completeness": {
+      "verdict": "pass",
+      "note": "周期覆盖 是；风险类型 4/4；风险完备 100%"
+    },
+    "verifiability": {
+      "verdict": "pass",
+      "note": "目标对齐 100%；论断挂引用 89%"
+    },
+    "quality_gain": {
+      "verdict": "pass",
+      "note": "变好 7 项；变差 无"
+    },
+    "efficiency_gain": {
+      "verdict": "pass",
+      "note": "重叠 0（基线 1）；空月 0（基线 4）"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "目标-路线-指标-成果映射 100% + 排期可行性 1.0 + 问题可证伪"
+    },
+    "method_improvement": {
+      "verdict": "pass",
+      "note": "缺口具体化 + 周期覆盖 + 风险四要素，三项均落在结构上可核"
+    },
+    "innovation_evidence": {
+      "verdict": "pass",
+      "note": "方案边界 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "pass",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "脚本仅用标准库；换学科/周期不崩（见 references/edge-cases.md）"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "异常矩阵齐备"
+    },
+    "documentation": {
+      "verdict": "pass",
+      "note": "README 与七要素规范齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "大纲模板 + 度量口径可复用"
+    },
+    "sharing_value": {
+      "verdict": "pass",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "na": 0
+  },
+  "note": "只报指标与判定，不输出总分；变差项必须写进 result.uncertainty。"
+}
