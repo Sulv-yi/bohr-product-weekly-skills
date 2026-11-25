@@ -1,0 +1,167 @@
+{
+  "version": "1.0",
+  "task": "results-and-discussion-writing",
+  "total": 100,
+  "note": "把题面五个维度落成可执行条目，每条指向运行时真实产物或可跑命令；给的是验收口径，不是自评分数。",
+  "dimensions": [
+    {
+      "id": "actual_effect",
+      "name": "实际效果",
+      "weight": 40,
+      "items": [
+        {
+          "id": "task_completion",
+          "name": "任务完成度",
+          "weight": 15,
+          "acceptance": "交付可编辑的结果段与讨论段，两节职责分离：结果段只写观察，讨论段承担解释、文献对照与局限；不是写作建议或图表罗列。",
+          "auto_check": "python scripts/validate_result.py /app/output/result.json --case /input/case.json --text /app/output/chapter.md"
+        },
+        {
+          "id": "result_correctness",
+          "name": "结果正确性",
+          "weight": 15,
+          "acceptance": "正文数值与图表数据一致（可逐值回溯），显著性表述带统计量，方向与幅度表述不超过数据支持的范围。",
+          "auto_check": "python scripts/build_outputs.py --result /app/output/result.json --text /app/output/chapter.md --outdir /app/output"
+        },
+        {
+          "id": "result_completeness",
+          "name": "结果完整性",
+          "weight": 5,
+          "acceptance": "覆盖主指标、次要指标、安全性指标与阴性结果；不一致文献与局限被如实交代。",
+          "auto_check": "python scripts/validate_result.py /app/output/result.json --case /input/case.json --text /app/output/chapter.md"
+        },
+        {
+          "id": "verifiability",
+          "name": "结果可核验性",
+          "weight": 5,
+          "acceptance": "每个数值能回到某张图/某张表的具体字段，每条论断能对应到本研究数据或具体文献。",
+          "auto_check": "python scripts/build_outputs.py --result /app/output/result.json --text /app/output/chapter.md --outdir /app/output"
+        }
+      ]
+    },
+    {
+      "id": "usage_gain",
+      "name": "使用增益",
+      "weight": 25,
+      "items": [
+        {
+          "id": "quality_gain",
+          "name": "质量增益",
+          "weight": 15,
+          "acceptance": "相同数据下，加载 Skill 后图表一致率、统计支撑率、结论边界表述严格优于基础 Agent；变差项如实列出。",
+          "auto_check": "python eval/compare_ab.py examples/baseline-scorecard.json examples/scorecard.json --md examples/ab-report.md"
+        },
+        {
+          "id": "efficiency_gain",
+          "name": "效率增益",
+          "weight": 5,
+          "acceptance": "把逐值核对图表与统计量前置到脚本判定，减少回查返工。",
+          "auto_check": "python eval/compare_ab.py examples/baseline-scorecard.json examples/scorecard.json"
+        },
+        {
+          "id": "gain_verifiability",
+          "name": "增益可验证性",
+          "weight": 5,
+          "acceptance": "可用同一 rubric 与同一脚本重跑；无基线时判 n/a 而不是 pass。",
+          "auto_check": "python eval/score_output.py --rubric eval/rubric.json --list"
+        }
+      ]
+    },
+    {
+      "id": "innovation",
+      "name": "创新增益",
+      "weight": 15,
+      "items": [
+        {
+          "id": "new_capability",
+          "name": "新增能力",
+          "weight": 5,
+          "acceptance": "图表数值逐值回溯（figure-align）与显著性表述-统计量对齐（stats-align）两项基础 Agent 不具备的能力。",
+          "auto_check": "python scripts/results_gate.py --help"
+        },
+        {
+          "id": "method_improvement",
+          "name": "方法改进",
+          "weight": 5,
+          "acceptance": "结果/讨论分离用解释性措辞检出实现；局限用可检验线索（n、重复、单中心）判定，替代套话。",
+          "auto_check": "python scripts/validate_result.py examples/selftest-result.json --case examples/selftest-case.json --text examples/selftest-chapter.md"
+        },
+        {
+          "id": "innovation_evidence",
+          "name": "创新证据",
+          "weight": 5,
+          "acceptance": "方案边界与对照报告齐备，写清做不到的部分。",
+          "auto_check": "test -f references/innovation-boundary.md && test -f examples/ab-report.md"
+        }
+      ]
+    },
+    {
+      "id": "reliability",
+      "name": "可靠体验",
+      "weight": 10,
+      "items": [
+        {
+          "id": "usability",
+          "name": "调用与易用性",
+          "weight": 3,
+          "acceptance": "SKILL.md 写明步骤与命令，照说明可完成一次从数据表到章节的流程。",
+          "auto_check": "test -f SKILL.md && test -f examples/minimal-example.md"
+        },
+        {
+          "id": "stability",
+          "name": "运行稳定性",
+          "weight": 4,
+          "acceptance": "脚本仅用标准库；换数据量、换学科不因缺字段崩溃。",
+          "auto_check": "python scripts/validate_result.py examples/selftest-result.json --case examples/selftest-case.json --text examples/selftest-chapter.md"
+        },
+        {
+          "id": "exception_handling",
+          "name": "异常处理",
+          "weight": 3,
+          "acceptance": "缺图、缺统计量、单位不明、图表读数不清、引用找不到五类有明确处置。",
+          "auto_check": "test -f references/edge-cases.md"
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "生态贡献",
+      "weight": 10,
+      "items": [
+        {
+          "id": "documentation",
+          "name": "文档完整性",
+          "weight": 3,
+          "acceptance": "使用说明、依赖、示例、适用范围、限制、维护信息齐全。",
+          "auto_check": "test -f README.md && test -f references/stats-language.md"
+        },
+        {
+          "id": "reusability",
+          "name": "资源可复用性",
+          "weight": 4,
+          "acceptance": "figure_data 结构、图表审计表、章节模板、门槛表可被他人直接复用。",
+          "auto_check": "test -f references/figure-reading.md"
+        },
+        {
+          "id": "sharing_value",
+          "name": "分享推广价值",
+          "weight": 3,
+          "acceptance": "沉淀可分享的失败类型与核验方法，附公开链接。",
+          "auto_check": "test -f GITHUB_URL.txt"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "min_chars": 1200,
+    "results_chars": 250,
+    "discussion_chars": 300,
+    "figure_rows": 2,
+    "fig_number_rate": 0.9,
+    "stats_support": 0.8,
+    "leakage": 2,
+    "binding_rate": 0.6,
+    "limitation_markers": 3,
+    "placeholder_count": 0
+  }
+}
