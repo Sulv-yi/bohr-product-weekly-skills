@@ -45,6 +45,23 @@ description: 面向科研稿件的 LaTeX 写作与编译 Skill。围绕"成稿�
 7. **诚实构建**：无引擎、缺宏包/字体、报错级联时如实标注，不伪造"编译成功"。
 8. **早存增量**：先落一版 result.json（哪怕 partial），再逐步改进，每步记 change。
 
+## 成稿门槛（任一条不过，不得写 `status=success`）
+
+| 门槛 | 阈值 | 由谁判 |
+|---|---|---|
+| 章节齐备 | `required_sections` 全在，且 ≥3 节 | `check_manuscript.py` |
+| 每节写实 | 最薄一节实义字数 ≥120 | `check_manuscript.py` |
+| 全篇成稿 | 全文实义字数 ≥400 | `check_manuscript.py` |
+| 摘要齐全 | `abstract` 存在且非空 | `check_manuscript.py` |
+| 公式有内容 | ≥1 个 `equation` 环境且非空 | `check_manuscript.py` |
+| 表格有数据 | 表格 ≥2 行真实数据（只有表头判不合格） | `check_manuscript.py` |
+| 引用闭合 | 每个 `\cite` 键都能在 `.bib` 找到；`\ref` 无悬空 | `check_manuscript.py` + `static_check.py` |
+| 无占位符 | 残留 `TODO` / `TBD` / `【…】` / `{{…}}` = 0 | `check_manuscript.py` |
+| 来源映射 | `source_map` ≥3 条互不重复 | `verify_result.py` |
+
+门槛是脚本判的，不是清单判的：同一份 `.tex` 重跑得到的结论必须一致。
+空骨架能过模板检查，但过不了这张表——这是本 Skill 与模板向导的分界。
+
 ## 工作流
 
 ### 第 0 步 · 探查工程（对应"复现得了"）
@@ -121,7 +138,18 @@ python scripts/compile_and_parse.py <工程根> --out compile_report.json \
 ```
 不猜版本：探测不到写 `"unknown"` 并进 uncertainty。
 
-### 第 9 步 · 契约自检
+### 第 9 步 · 落附件与证据（交付时必须一起给）
+```bash
+python scripts/build_outputs.py --tex /app/output/main.tex --result /app/output/result.json \
+    --outdir /app/output [--bib /app/output/refs.bib] [--no-compile]
+```
+产出四件可核验附件，缺一件就等于让评审去信你的文字：
+- `cite-map.csv`：每个 `\cite` 键 → 是否在 `.bib` 中 → 被哪几节引用 → 条目题名与年份
+- `compile-report.json`：引擎、轮次、`status`、每条错误的 file:line 与根因、PDF 路径
+- `selfcheck.md`：结构指标、未清项、复现要素三节，供人一眼核
+- `preview.pdf`：编译成功时留档；无引擎则不生成并在 `selfcheck.md` 里写明原因
+
+### 第 10 步 · 契约自检
 ```bash
 python scripts/verify_result.py /app/output/result.json --case /input/case.json \
     --static static_check.json --compile compile_report.json --tex /app/output/main.tex
@@ -175,7 +203,13 @@ python scripts/verify_result.py /app/output/result.json --case /input/case.json 
 - `scripts/check_manuscript.py` — **成稿实质门槛：结构/篇幅/占位符/公式表格/引用闭合**
 - `scripts/static_check.py` — 无需引擎的结构硬损伤检查（括号/环境/label/引用）
 - `scripts/compile_and_parse.py` — 多轮编译 + 全量报错定位与根因分类 + 引用收敛
+- `scripts/build_outputs.py` — **落附件：cite-map.csv / compile-report.json / selfcheck.md / preview.pdf**
 - `scripts/verify_result.py` — 五性质 + 契约自检（success 强制过成稿门槛）
+
+配套（不参与写作，只用于验收与对照）：`eval/rubric.json`（五维 100 分的可执行条目）、
+`eval/score_output.py`（算指标与判定，不给自评分）、`eval/compare_ab.py`（A/B 差值）、
+`eval/ab-protocol.md`（对照协议）、`eval/acceptance.md`（人工验收与盲评表）、
+`SCORING-MAP.md`（评分点 → 证据位置对照，含 60 秒自查命令）。
 
 依赖：Python 3.9+ 标准库；编译需环境提供 TeX 引擎（pdflatex/xelatex/lualatex/latexmk/tectonic）与 bibtex/biber，缺失时按上表降级。
 
