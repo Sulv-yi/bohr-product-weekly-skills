@@ -1,26 +1,40 @@
 #!/usr/bin/env python3
-"""输出契约与状态自检 + 成稿实质性检查（防只交骨架/空壳却标 success）。
+"""输出契约与状态自检 + 成稿结构门槛（防只交骨架/空壳/薄稿却标 success）。
 
 用法:
-    python3 validate_result.py <result.json> [--case case.json] [--min-chars 200]
+    python3 validate_result.py <result.json> [--case case.json] [--min-chars 1800] [--text section.md]
 
-检查：case_id 一致、status 合法、result 含目标产物/elements/reproducibility/
-questions_for_author/limitations、sources 可回溯、change 记录、缺口与状态一致；
-标 success 时正文须达最小篇幅且无占位符，六类要素须齐全。
+检查两层：
+1) 契约层——case_id 一致、status 合法、output_contract 字段齐全、sources/uncertainty/changes 存在、
+   blocking 追问与 status 一致。
+2) 结构层——六要素是否各自成段、参数表行数与来源列、正文与参数表取值是否对齐、
+   对照六项（基线/版本/同预算/指标/统计/重复）、复现六项（版本/环境/种子/命令/数据/划分）、
+   限制是否落到具体失效场景。度量实现在 scripts/quality_gate.py。
 """
 import argparse
 import json
+import os
 import re
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from quality_gate import measure  # noqa: E402
 
 VALID_STATUS = {"success", "partial", "unable", "refused"}
 REQUIRED_RESULT = ["section", "elements", "reproducibility", "questions_for_author", "limitations"]
 PLACEHOLDER_RE = re.compile(r'【[^】]*】|\bTODO\b|\bTBD\b|待填|示例文本')
 SIX_ELEMENTS = ["steps", "setup", "parameters", "dataset", "baselines", "reproducibility"]
 
+GATE_PARAM_ROWS = 8          # 参数表至少 8 行，否则等于没给参数
+GATE_PARAM_SOURCE = 0.8      # 带来源列的行占比
+GATE_BASELINE = 0.83         # 对照六项命中率（5/6）
+GATE_REPRO = 0.83            # 复现六项命中率（5/6）
+GATE_ALIGN = 0.8             # 正文与参数表取值对齐率
+
 
 def _collect_text(obj):
     parts = []
+
     def walk(x):
         if isinstance(x, str):
             parts.append(x)
@@ -30,11 +44,12 @@ def _collect_text(obj):
         elif isinstance(x, list):
             for v in x:
                 walk(v)
+
     walk(obj)
     return "\n".join(parts)
 
 
-def validate(result, case, min_chars=200):
+def validate(result, case, min_chars=800, extra_text=""):
     errors, warnings = [], []
     if not isinstance(result, dict):
         return {"status": "failed", "errors": ["result 不是对象"]}
@@ -66,24 +81,47 @@ def validate(result, case, min_chars=200):
         if k not in result:
             errors.append(f"缺少顶层字段: {k}")
 
-    # ---- 成稿实质性 ----
+    # ---- 结构门槛 ----
     section = r.get("section", "")
-    nchars = len(re.sub(r'\s', '', section if isinstance(section, str) else _collect_text(section)))
-    if st == "success" and nchars < min_chars:
-        errors.append(f"status=success 但 section 正文仅 {nchars} 字（<{min_chars}），疑似空壳")
-    ph = PLACEHOLDER_RE.findall(_collect_text(r))
-    if ph:
-        if st == "success":
-            errors.append(f"status=success 但正文残留占位符 {len(ph)} 处：{sorted(set(ph))[:5]}")
-        else:
-            warnings.append(f"正文残留占位符 {len(ph)} 处：{sorted(set(ph))[:5]}")
-    elems = r.get("elements") or {}
+    section_text = section if isinstance(section, str) else _collect_text(section)
+    text = section_text + "\n" + (extra_text or "")
+    m = measure(text, result.get("uncertainty") or [], r.get("questions_for_author") or [],
+                min_chars=min_chars)
+    nchars = m["total_chars"]
+
     if st == "success":
-        miss6 = [e for e in SIX_ELEMENTS if e not in elems or not elems[e]]
-        if miss6:
-            errors.append(f"status=success 但缺六类要素: {', '.join(miss6)}")
+        if nchars < min_chars:
+            errors.append(f"status=success 但 section 正文仅 {nchars} 字（<{min_chars}），疑似空壳/薄稿")
+        if m["missing_elements"]:
+            errors.append(f"六类要素缺件: {', '.join(m['missing_elements'])}（步骤/设置/参数/数据/对照/复现限制须各自成段）")
+        if m["param_rows"] < GATE_PARAM_ROWS:
+            errors.append(f"参数表仅 {m['param_rows']} 行（需 ≥{GATE_PARAM_ROWS} 行，名称/取值/单位/作用对象/来源）")
+        elif m["param_source_rate"] < GATE_PARAM_SOURCE:
+            errors.append(f"参数表带来源的行仅 {m['param_source_rate']:.0%}（需 ≥{GATE_PARAM_SOURCE:.0%}，来源=config/log/作者确认）")
+        if m["baseline_coverage"] < GATE_BASELINE:
+            miss = [k for k in ('baseline_identity', 'baseline_version', 'same_budget', 'metric', 'statistics', 'repeats')
+                    if k not in m["baseline_checks"]]
+            errors.append(f"对照实验缺可比性要件: {', '.join(miss)}（需说明基线对象/版本/是否同预算/指标/统计方式/重复次数）")
+        if m["repro_coverage"] < GATE_REPRO:
+            miss = [k for k in ('code_version', 'env', 'seed', 'command', 'data_source', 'split')
+                    if k not in m["repro_checks"]]
+            errors.append(f"复现清单缺项: {', '.join(miss)}（代码版本/环境/种子/命令/数据获取/划分）")
+        if not m["limitation_specific"]:
+            errors.append("限制条件未落到具体失效场景（需写出触发条件或阈值，如『当体素边长 <0.01 m 时…』）")
+        if m["placeholder_count"]:
+            errors.append(f"status=success 但正文残留占位符 {m['placeholder_count']} 处")
+        bad = [k for k, ok in m["section_min_ok"].items() if not ok]
+        if bad:
+            warnings.append(f"章节厚度偏薄（建议补齐再定稿）: {bad}")
+        if m["param_rows"] and m["param_body_alignment"] < GATE_ALIGN:
+            warnings.append(f"正文与参数表取值对齐率 {m['param_body_alignment']:.0%}，存在正文未引用的表内取值或表外数值")
         if not result.get("sources"):
             errors.append("status=success 但 sources 为空，数值/步骤无法回溯")
+    else:
+        ph = PLACEHOLDER_RE.findall(_collect_text(r))
+        if ph:
+            warnings.append(f"正文残留占位符 {len(ph)} 处：{sorted(set(ph))[:5]}")
+
     rep = r.get("reproducibility") or {}
     if st == "success":
         gaps = [k for k, v in rep.items() if isinstance(v, str) and (not v or '【' in v or 'not_reported' in v)]
@@ -92,7 +130,7 @@ def validate(result, case, min_chars=200):
     return {
         "status": "passed" if not errors else "failed",
         "errors": errors, "warnings": warnings, "case_id": cid,
-        "section_chars": nchars,
+        "section_chars": nchars, "metrics": m,
     }
 
 
@@ -100,11 +138,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("result")
     ap.add_argument("--case")
-    ap.add_argument("--min-chars", type=int, default=200)
+    ap.add_argument("--min-chars", type=int, default=1800)
+    ap.add_argument("--text", help="成稿正文文件（section.md），正文不在 result.json 内时一并度量")
     args = ap.parse_args()
     result = json.load(open(args.result, encoding="utf-8"))
     case = json.load(open(args.case, encoding="utf-8")) if args.case else None
-    rep = validate(result, case, args.min_chars)
+    extra = open(args.text, encoding="utf-8").read() if args.text else ""
+    rep = validate(result, case, args.min_chars, extra)
     print(json.dumps(rep, ensure_ascii=False, indent=2))
     return 0 if rep["status"] == "passed" else 1
 
