@@ -2,13 +2,17 @@
 """校验 result.json：结构契约 + 成稿实质性（防空壳/占位符/零引用却标 success）。
 
 用法:
-    python3 validate_result.py <result.json> [--case case.json] [--min-citations 1]
+    python3 validate_result.py <result.json> [--case case.json] [--min-citations 15]
 退出码：通过 0，否则 1；文件错误 2。
 """
 import argparse
 import json
+import os
 import re
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from citation_gate import measure  # noqa: E402
 
 VALID_STATUS = {'success', 'partial', 'unable', 'refused'}
 PLACEHOLDER_RE = re.compile(r'【[^】]*】|\bTODO\b|\bTBD\b|示例文本|待填')
@@ -33,7 +37,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('result')
     ap.add_argument('--case', default='')
-    ap.add_argument('--min-citations', type=int, default=1)
+    ap.add_argument('--min-citations', type=int, default=15)
     args = ap.parse_args()
     try:
         r = json.load(open(args.result, encoding='utf-8'))
@@ -104,9 +108,40 @@ def main():
         except Exception as e:
             warnings.append("无法读取 case: " + str(e))
 
+    # ---- 结构门槛（四性质，逐项判定；不达标即报错，不允许靠改 status 绕过）----
+    m = measure(r)
+    if st == 'success':
+        if m['claim_rate'] < 1.0:
+            errors.append(f"有引用缺论断原文（claim 覆盖 {m['claim_rate']:.0%}）")
+        if m['claim_location_rate'] < 1.0:
+            errors.append(f"位置未精确到句的引用占 {1 - m['claim_location_rate']:.0%}，应写成 sec2.p3.s2 这类可定位形式")
+        if m['match_basis_rate'] < 1.0:
+            errors.append(f"缺 match_basis 的引用占 {1 - m['match_basis_rate']:.0%}（须逐条说明为何该文献支撑这句话）")
+        if m['position_ok_rate'] < 1.0:
+            errors.append(f"position_ok 为假的引用占 {1 - m['position_ok_rate']:.0%}，应改到论断所在句或删除")
+        if not m['numbering_continuous']:
+            errors.append("numbering 不连续，但 status=success")
+        if m['dangling_count']:
+            errors.append(f"存在悬空引用 {m['dangling_count']} 处，但 status=success")
+        if m['ref_resolved_rate'] < 1.0:
+            errors.append(f"文献键可回溯率 {m['ref_resolved_rate']:.0%}，有引用指向不存在的条目")
+        if m['format_mapping_fields'] < 5:
+            errors.append(f"字段映射仅 {m['format_mapping_fields']} 项（需 ≥5 项：作者/年份/题名/期刊/卷期页/DOI）")
+        if not m['manuscript_delivered']:
+            errors.append("未交付可编辑稿件：本题第一产物是稿件本体，不能只交引用记录")
+        if m['placeholder_count']:
+            errors.append(f"status=success 但正文残留占位符 {m['placeholder_count']} 处")
+        if m['uncited_count']:
+            warnings.append(f"文末有 {m['uncited_count']} 条未被引用的条目（应删除或说明保留理由）")
+        if (m['dedup_merged'] + m['dedup_kept'] + m['dedup_pending']) == 0:
+            warnings.append("去重三类判断均为空：若文献库确无重复，需在 uncertainty 说明")
+        if m['dedup_pending'] and m['dedup_pending_reason_rate'] < 1.0:
+            warnings.append("pending 条目有缺原因的（需写清为何不能自动合并）")
+
     ok = not errors
     print(json.dumps({"ok": ok, "errors": errors, "warnings": warnings,
-                      "cite_count": len(cites) if isinstance(cites, list) else 0}, ensure_ascii=False, indent=2))
+                      "cite_count": len(cites) if isinstance(cites, list) else 0,
+                      "metrics": m}, ensure_ascii=False, indent=2))
     return 0 if ok else 1
 
 
