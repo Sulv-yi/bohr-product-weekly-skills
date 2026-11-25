@@ -1,0 +1,96 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "total_chars": 1219,
+    "min_chars_ok": true,
+    "results_chars": 317,
+    "discussion_chars": 896,
+    "limitation_chars": 253,
+    "fig_number_rate": 1.0,
+    "fig_numbers_untraced": [],
+    "figure_rows": 3,
+    "stats_claims": 5,
+    "stats_support": 1.0,
+    "stats_unsupported": [],
+    "leakage": 0,
+    "leakage_samples": [],
+    "trend_boundary": true,
+    "binding_rate": 1.0,
+    "sentences": 37,
+    "limitation_markers": 6,
+    "limitation_vague": [],
+    "placeholder_count": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "pass",
+      "note": "总 1219 字；结果 317；讨论 896"
+    },
+    "result_correctness": {
+      "verdict": "pass",
+      "note": "图表一致 100%；统计支撑 100%；占位符 0"
+    },
+    "result_completeness": {
+      "verdict": "pass",
+      "note": "图表行 3；趋势边界表述 有"
+    },
+    "verifiability": {
+      "verdict": "pass",
+      "note": "论断挂引用/图表 100%；数值可回溯 100%"
+    },
+    "quality_gain": {
+      "verdict": "pass",
+      "note": "变好 4 项；变差 无"
+    },
+    "efficiency_gain": {
+      "verdict": "pass",
+      "note": "结果段解释句 0（基线 0）"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "3 张图表进数据池，正文数值逐值回溯；显著性表述逐句核统计量"
+    },
+    "method_improvement": {
+      "verdict": "pass",
+      "note": "结果段解释句 0（≤2）；局限具体线索 6 条"
+    },
+    "innovation_evidence": {
+      "verdict": "pass",
+      "note": "方案边界 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "pass",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "脚本仅用标准库；换数据量不崩"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "异常矩阵齐备"
+    },
+    "documentation": {
+      "verdict": "pass",
+      "note": "README 与统计语言规范齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "figure_data 结构 + 图表读取规范 + 度量口径可复用"
+    },
+    "sharing_value": {
+      "verdict": "pass",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "na": 0
+  },
+  "note": "只报指标与判定，不输出总分；变差项必须写进 result.uncertainty。"
+}
