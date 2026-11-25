@@ -35,9 +35,9 @@ def read_text(path):
 
 
 def tokenize(text):
-    """按句子切分，保留位置。"""
-    parts = re.split(r'(?<=[.!?。！？;；])\s+|\n+', text)
-    return [p.strip() for p in parts if p.strip()]
+    """按句子切分，保留位置。中文标点后直接切，英文标点后要求空白，避免 e.g. 误切。"""
+    parts = re.split(r'(?<=[。！？；])|(?<=[.!?;])\s+|\n+', text)
+    return [p.strip() for p in parts if p and p.strip()]
 
 
 def lock_text(text):
