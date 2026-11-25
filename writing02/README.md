@@ -17,10 +17,12 @@
 ```
 SKILL.md                          触发条件、工作流、输入输出、异常处理
 scripts/
+  build_polish_draft.py           建逐段润色工作台（plan + 骨架 + 术语候选）
+  check_polish.py                 成稿门槛（段落对齐/锁定项守恒/强度不变/篇幅合理）
   lock_invariants.py              改前锁定数字/单位/引用/图表/限定词/否定词
   invariant_guard.py              改后守恒校验（强度等级 + 关键项数量）
   term_consistency.py             术语统一与缩写定义回扫
-  validate_result.py              输出契约校验
+  validate_result.py              输出契约校验（success 强制过 check_polish 门槛）
 references/
   hedge-and-modality.md           限定词强度守恒表（L0–L5 + 中文）
   terminology-governance.md       术语表格式与缩写治理规则
@@ -37,7 +39,8 @@ Python 3.9+，**全部脚本仅用标准库，无第三方依赖**。只读输�
 
 ## 核心方法
 
-1. **改前锁定**（`lock_invariants.py`）：把数字、单位、引用编号、图表指向、限定词强度、否定词、因果/相关词全部快照。
+1. **建工作台**（`build_polish_draft.py`）：把原文切成段落，逐段锁定数字/单位/引用/图表指向与限定词，输出一段对一段的润色骨架。润色必须是逐段产出，不是一段概括。
+2. **改前锁定**（`lock_invariants.py`）：把数字、单位、引用编号、图表指向、限定词强度、否定词、因果/相关词全部快照。
 2. **分句最小编辑**：一句一记录，只改语言层，不碰专业含义。
 3. **改后双回扫**：
    - `invariant_guard.py`：任何关键项数量变化或限定词跨级 → 判 failed，禁止交付
