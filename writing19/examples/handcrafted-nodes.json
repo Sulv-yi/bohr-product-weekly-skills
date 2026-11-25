@@ -1,0 +1,316 @@
+{
+ "case_id": "merillas-2026-rpet-foam",
+ "title": "rPET 打印件发泡：减重与保形",
+ "nodes": [
+  {
+   "id": "n0",
+   "parent": null,
+   "title": "rPET 打印件发泡：减重与保形",
+   "type": "root",
+   "evidence": [
+    "P1-S32"
+   ],
+   "level": "summary",
+   "note": "Merillas 等 2026，Mater. Today Sustain. 34:101352"
+  },
+  {
+   "id": "n1",
+   "parent": "n0",
+   "title": "研究问题（1 条）",
+   "type": "question",
+   "evidence": [
+    "P2-S3"
+   ],
+   "level": "summary",
+   "note": ""
+  },
+  {
+   "id": "n2",
+   "parent": "n1",
+   "title": "微孔发泡受限于大泡孔损害力学性能",
+   "type": "question",
+   "evidence": [
+    "P2-S3"
+   ],
+   "level": "summary",
+   "note": "原文把它写成待解决的问题，不是已完成的结论"
+  },
+  {
+   "id": "n3",
+   "parent": "n0",
+   "title": "方法与工艺（4 条）",
+   "type": "method",
+   "evidence": [
+    "P1-S27"
+   ],
+   "level": "summary",
+   "note": ""
+  },
+  {
+   "id": "n4",
+   "parent": "n3",
+   "title": "三种回收料：无色、浅蓝、彩色 PET",
+   "type": "method",
+   "evidence": [
+    "P1-S27"
+   ],
+   "level": "fact",
+   "note": "PET_V / PET_B / PET_C 分别对应原生、浅蓝回收、彩色回收"
+  },
+  {
+   "id": "n5",
+   "parent": "n3",
+   "title": "超临界二氧化碳辅助挤出后发泡",
+   "type": "method",
+   "evidence": [
+    "P2-S4"
+   ],
+   "level": "fact",
+   "note": ""
+  },
+  {
+   "id": "n6",
+   "parent": "n3",
+   "title": "先做材料表征再定加工窗口",
+   "type": "method",
+   "evidence": [
+    "P1-S28"
+   ],
+   "level": "summary",
+   "note": ""
+  },
+  {
+   "id": "n7",
+   "parent": "n3",
+   "title": "以熔融指数与特性黏度区分三料",
+   "type": "method",
+   "evidence": [
+    "P4-S26"
+   ],
+   "level": "fact",
+   "note": "PET_V 的 MFI 最高，符合原生料预期"
+  },
+  {
+   "id": "n8",
+   "parent": "n0",
+   "title": "关键证据（4 条）",
+   "type": "evidence",
+   "evidence": [
+    "P10-S13"
+   ],
+   "level": "summary",
+   "note": ""
+  },
+  {
+   "id": "n9",
+   "parent": "n8",
+   "title": "打印件相对密度降幅超过 40%",
+   "type": "evidence",
+   "evidence": [
+    "P10-S13"
+   ],
+   "level": "fact",
+   "note": "这是相对密度口径，不是质量口径"
+  },
+  {
+   "id": "n10",
+   "parent": "n8",
+   "title": "彩色回收料相对密度最低达 0.17",
+   "type": "evidence",
+   "evidence": [
+    "P10-S48"
+   ],
+   "level": "fact",
+   "note": "220 ℃、30 MPa 饱和；15 MPa 时为 0.18"
+  },
+  {
+   "id": "n11",
+   "parent": "n8",
+   "title": "泡孔尺寸约 2 微米，减重可达 40%",
+   "type": "evidence",
+   "evidence": [
+    "P10-S36"
+   ],
+   "level": "fact",
+   "note": "原文同句里出现 weight reduction 与 cell size 两个口径"
+  },
+  {
+   "id": "n12",
+   "parent": "n8",
+   "title": "彩色回收料泡孔 5 至 18 微米",
+   "type": "evidence",
+   "evidence": [
+    "P11-S8"
+   ],
+   "level": "fact",
+   "note": ""
+  },
+  {
+   "id": "n13",
+   "parent": "n0",
+   "title": "结论与外推（2 条）",
+   "type": "conclusion",
+   "evidence": [
+    "P1-S32"
+   ],
+   "level": "summary",
+   "note": ""
+  },
+  {
+   "id": "n14",
+   "parent": "n13",
+   "title": "首次证明回收打印件可保形发泡",
+   "type": "conclusion",
+   "evidence": [
+    "P1-S32"
+   ],
+   "level": "summary",
+   "note": "作者用 for the first time，未给检索范围"
+  },
+  {
+   "id": "n15",
+   "parent": "n13",
+   "title": "打印帽体密度 1.26，略低于薄膜",
+   "type": "conclusion",
+   "evidence": [
+    "P10-S6"
+   ],
+   "level": "fact",
+   "note": "原文单位写作 kg/m3，按语境应为 g/cm3，引用前需核对"
+  },
+  {
+   "id": "n16",
+   "parent": "n0",
+   "title": "局限与边界（2 条）",
+   "type": "limitation",
+   "evidence": [
+    "P2-S29"
+   ],
+   "level": "summary",
+   "note": ""
+  },
+  {
+   "id": "n17",
+   "parent": "n16",
+   "title": "对照臂是刻意选的低黏度原生料",
+   "type": "limitation",
+   "evidence": [
+    "P2-S24",
+    "P2-S29"
+   ],
+   "level": "summary",
+   "note": "作者自述选 0.63 dl/g 是为避免熔体强度偏高带来偏倚"
+  },
+  {
+   "id": "n18",
+   "parent": "n16",
+   "title": "未给出力学与热学性能的实测",
+   "type": "limitation",
+   "evidence": [
+    "P2-S3"
+   ],
+   "level": "inference",
+   "note": "全文以密度、泡孔、MFI 为主，未见表征力学性能的段落"
+  },
+  {
+   "id": "n19",
+   "parent": "n0",
+   "title": "后续任务（1 条）",
+   "type": "task",
+   "evidence": [
+    "P2-S29"
+   ],
+   "level": "summary",
+   "note": ""
+  },
+  {
+   "id": "n20",
+   "parent": "n19",
+   "title": "换瓶级高黏度料复现以免外推过度",
+   "type": "task",
+   "evidence": [
+    "P2-S29"
+   ],
+   "level": "inference",
+   "note": "原文只说换料会显著提高熔体强度，未写成后续计划，此条为推断"
+  }
+ ],
+ "relations": [
+  {
+   "from": "n4",
+   "to": "n5",
+   "kind": "depend",
+   "evidence": [
+    "P1-S27"
+   ],
+   "why": "发泡工艺按料种分别设定温度与压力"
+  },
+  {
+   "from": "n9",
+   "to": "n10",
+   "kind": "support",
+   "evidence": [
+    "P10-S48"
+   ],
+   "why": "打印件降幅与薄膜最低密度指向同一密度口径"
+  },
+  {
+   "from": "n10",
+   "to": "n12",
+   "kind": "contrast",
+   "evidence": [
+    "P11-S8"
+   ],
+   "why": "彩色料密度更低但泡孔更大，两项指标反向"
+  },
+  {
+   "from": "n17",
+   "to": "n14",
+   "kind": "conflict",
+   "evidence": [
+    "P2-S29"
+   ],
+   "why": "保形发泡的结论建立在低熔体强度对照臂上，外推到瓶级料不成立"
+  },
+  {
+   "from": "n11",
+   "to": "n9",
+   "kind": "support",
+   "evidence": [
+    "P10-S36"
+   ],
+   "why": "同一段里减重与泡孔尺寸共同支撑微孔结构成立"
+  },
+  {
+   "from": "n6",
+   "to": "n7",
+   "kind": "sequence",
+   "evidence": [
+    "P1-S28"
+   ],
+   "why": "先表征后定窗口"
+  }
+ ],
+ "uncertainty": [
+  {
+   "node": "n18",
+   "why": "「未测力学」是从全文主题分布推出的，不是原文明确声明",
+   "needs": "核对是否有支撑信息或补充材料含力学数据"
+  },
+  {
+   "node": "n20",
+   "why": "换料复现是推断的建议，作者未写成计划",
+   "needs": "确认作者是否在结论或展望里提过"
+  },
+  {
+   "node": "n15",
+   "why": "原文密度单位写作 kg/m3，与「略低于薄膜」的表述不自洽",
+   "needs": "回原文表格核对单位，引用时按 g/cm3 处理并注明"
+  },
+  {
+   "node": "n2",
+   "why": "原文把大泡孔问题写在引言，未以问句形式陈述研究问题",
+   "needs": "按案例任务改写为可检验问题（含指标与对照）"
+  }
+ ]
+}
