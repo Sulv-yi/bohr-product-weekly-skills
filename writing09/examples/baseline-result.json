@@ -1,0 +1,17 @@
+{
+  "case_id": "selftest-demo-009",
+  "status": "partial",
+  "note": "示例 baseline 输出：模拟不加载 Skill 时的典型结果，用于演示 A/B 对照脚本，非平台对照结果。",
+  "result": {
+    "section": "见 examples/baseline-draft.md：两段方法概述 + 一句数据集划分 + 一句对比 + 一句局限套话。",
+    "elements": {"steps": ["下采样", "编码解码", "逐点分类"], "setup": {"optimizer": "AdamW"}, "parameters": [], "dataset": {"name": "公开数据集"}, "baselines": ["PointNet++", "RandLA-Net"], "reproducibility": {}},
+    "reproducibility": {"code_version": "not_reported", "env": "服务器 GPU", "seed": "not_reported", "command": "not_reported", "data": "公开数据集", "split": "常规比例"},
+    "limitations": ["存在一定局限性"],
+    "questions_for_author": []
+  },
+  "sources": [
+    {"id": "B1", "claim": "学习率 3e-4", "file": "config.yaml", "section": "train", "quote": "lr: 0.0003"}
+  ],
+  "uncertainty": [{"type": "not_reported", "note": "未给出数据集名称与划分比例"}],
+  "changes": [{"from": "无", "to": "首版", "reason": "基线条件"}]
+}
