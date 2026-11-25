@@ -1,0 +1,16 @@
+{
+  "case_id": "selftest-001",
+  "note": "自测案例，非平台正式案例，不得作为正式答案使用。",
+  "task": "依据材料包写一段关于多孔支架孔隙率与渗透性取舍的讨论，每条实质性论断给出原文依据、定位与证据强度，并处理冲突证据。",
+  "material": "examples/selftest-materials.md",
+  "genre": "discussion",
+  "language": "zh",
+  "audience": "材料与生物医学交叉领域审稿人",
+  "output_contract": [
+    "draft",
+    "claims",
+    "evidence_table",
+    "conflicts",
+    "conflict_search_note"
+  ]
+}
