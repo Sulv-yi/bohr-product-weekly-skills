@@ -1,0 +1,144 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "total_chars": 177,
+    "min_chars_ok": false,
+    "sections": {
+      "abstract": {
+        "chars": 19,
+        "min": 150,
+        "ok": false
+      },
+      "introduction": {
+        "chars": 39,
+        "min": 250,
+        "ok": false
+      },
+      "methods": {
+        "chars": 26,
+        "min": 220,
+        "ok": false
+      },
+      "results": {
+        "chars": 26,
+        "min": 200,
+        "ok": false
+      },
+      "discussion": {
+        "chars": 18,
+        "min": 250,
+        "ok": false
+      },
+      "conclusion": {
+        "chars": 16,
+        "min": 80,
+        "ok": false
+      },
+      "data_availability": {
+        "chars": 8,
+        "min": 20,
+        "ok": false
+      },
+      "references": {
+        "chars": 0,
+        "min": 1,
+        "ok": false
+      }
+    },
+    "section_coverage": 0.0,
+    "fig_pairs": 1,
+    "tab_pairs": 0,
+    "fig_orphan_caps": [],
+    "tab_orphan_caps": [],
+    "cite_keys": 3,
+    "ref_entries": 1,
+    "cite_resolved_rate": 0.333,
+    "cite_dangling": [
+      2,
+      3
+    ],
+    "claim_sentences": 3,
+    "cited_sentences": 2,
+    "binding_rate": 0.667,
+    "material_index_count": 0,
+    "num_trace_rate": 0.0,
+    "num_untraced": [],
+    "declaration_fields": 1,
+    "declarations": [
+      "data_availability"
+    ],
+    "placeholder_count": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "fail",
+      "note": "稿件 177 字；章节齐备度 0%"
+    },
+    "result_correctness": {
+      "verdict": "fail",
+      "note": "引用闭合 33%；占位符 0；数值可回溯 0%"
+    },
+    "result_completeness": {
+      "verdict": "fail",
+      "note": "声明 1 类；图表对 1+0"
+    },
+    "verifiability": {
+      "verdict": "fail",
+      "note": "材料索引 0 条；论断句挂引用 67%"
+    },
+    "quality_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定（不是通过）"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "fail",
+      "note": "0 条材料索引带定位；图表题注双向对齐"
+    },
+    "method_improvement": {
+      "verdict": "fail",
+      "note": "数值可回溯率 0%（正文数值 → 材料摘录）"
+    },
+    "innovation_evidence": {
+      "verdict": "fail",
+      "note": "方案边界 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "pass",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "脚本仅用标准库；同一输入重复运行结果一致"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "异常矩阵齐备"
+    },
+    "documentation": {
+      "verdict": "pass",
+      "note": "README 与章节规范齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "度量口径 + 材料索引规范可复用"
+    },
+    "sharing_value": {
+      "verdict": "pass",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 7,
+    "fail": 7,
+    "na": 2
+  },
+  "note": "只报指标与判定，不输出总分；变差项必须写进 result.uncertainty。"
+}
