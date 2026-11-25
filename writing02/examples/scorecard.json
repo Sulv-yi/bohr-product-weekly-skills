@@ -1,0 +1,29 @@
+{
+ "status": "passed",
+ "case_id": "selftest-001",
+ "metrics": {
+  "segment_coverage": 1.0,
+  "invariant_conservation": 1.0,
+  "hedge_conservation": 1.0,
+  "negation_conservation": 1.0,
+  "term_uniqueness": 1.0,
+  "edit_note_coverage": 1.0,
+  "sentence_change_rate": 0.4,
+  "manual_review_items": 0,
+  "paragraphs": 2,
+  "changed_sentences": 2
+ },
+ "thresholds": {
+  "invariant_conservation": 1.0,
+  "hedge_conservation": 1.0,
+  "term_uniqueness": 1.0,
+  "segment_coverage": 1.0,
+  "edit_note_coverage": 0.9,
+  "max_sentence_change_rate": 0.6
+ },
+ "errors": [],
+ "warnings": [],
+ "computed_by": "eval/score_output.py v1.0",
+ "computed_at": "2026-11-25T12:52:00+08:00",
+ "note": "全部指标由原文与改文实际比对得出，可用同一份输入复现；不含自评输入。"
+}
