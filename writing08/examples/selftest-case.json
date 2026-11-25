@@ -1,0 +1,31 @@
+{
+  "case_id": "selftest-demo-000",
+  "note": "示例案例：为演示输入输出格式而编写的虚构材料，不是平台固定案例，也不是任何真实论文。所有数值与文献条目均为演示用占位，请勿引用。",
+  "task": "依据下列材料，为『增材制造多孔支架的孔隙率控制』一文撰写引言与相关工作（中文，目标期刊为中文核心，正文引用采用顺序编码制 [n]）。",
+  "audience": "材料/机械领域中文核心期刊读者",
+  "language": "zh",
+  "material": {
+    "title": "增材制造多孔支架的孔隙率控制：工艺窗口与结构保真度",
+    "problem": "孔隙率在 60%~75% 区间时支架的力学与渗透性能难以同时满足；现有工艺窗口描述以经验参数为主，缺少可迁移的判据。",
+    "method": "激光粉末床熔融（LPBF），Ti-6Al-4V，单元结构为体心立方（BCC）与金刚石（Diamond）两类，参数扫描范围：激光功率 120~200 W，扫描速度 600~1200 mm/s，层厚 30 μm。",
+    "results": [
+      "孔隙率在 60%~72% 区间内，BCC 结构的实测孔隙率与设计值偏差 <3%；超过 72% 后偏差升至 5%~9%。",
+      "金刚石结构在同等参数下支柱断裂率高于 BCC（12% vs 4%），但渗透率高出约 40%。",
+      "存在一个功率-速度组合的稳定带，带内孔隙率偏差 <4%，带外出现球化与塌陷。"
+    ],
+    "figures": ["Fig.1 两类单元结构的 CAD 与实测形貌对比", "Fig.2 功率-速度-孔隙率偏差热图", "Table 1 参数扫描与实测孔隙率"],
+    "references": [
+      {"id": "r1", "authors": "王某, 李某", "year": 2019, "title": "多孔金属支架的孔隙率与力学性能关系", "venue": "机械工程学报"},
+      {"id": "r2", "authors": "Zhang Y, et al.", "year": 2020, "title": "Lattice strut defects in LPBF: causes and mitigation", "venue": "Additive Manufacturing"},
+      {"id": "r3", "authors": "陈某, 赵某", "year": 2021, "title": "激光功率对 Ti-6Al-4V 成形致密化的影响", "venue": "中国激光"},
+      {"id": "r4", "authors": "Kumar S, et al.", "year": 2018, "title": "Permeability of additively manufactured lattice scaffolds", "venue": "Acta Biomaterialia"},
+      {"id": "r5", "authors": "刘某 等", "year": 2022, "title": "增材制造点阵结构的工艺窗口综述", "venue": "材料导报"}
+    ]
+  },
+  "constraints": [
+    "不得引入材料之外的数值或文献",
+    "引用顺序与正文出现顺序一致",
+    "研究空白须由所引文献的共同限制推出"
+  ],
+  "output_contract": ["introduction", "related_work", "research_gap", "contributions", "references_used"]
+}
