@@ -1,0 +1,240 @@
+{
+  "version": "1.0",
+  "task": "full-paper-writing",
+  "total": 100,
+  "note": "把题面五个维度落成可执行条目，每条指向运行时真实产物或可跑命令；给的是验收口径，不是自评分数。",
+  "dimensions": [
+    {
+      "id": "actual_effect",
+      "name": "实际效果",
+      "weight": 40,
+      "items": [
+        {
+          "id": "task_completion",
+          "name": "任务完成度",
+          "weight": 15,
+          "acceptance": "交付可直接进入论文的引言与相关工作成稿：研究背景、相关工作、研究空白、贡献四部分分别成段且彼此承接，不是大纲、写作建议或校验清单。",
+          "evidence": [
+            "/app/output/draft.md#1-研究背景",
+            "/app/output/result.json#result",
+            "/app/output/selfcheck.md"
+          ],
+          "auto_check": "python scripts/validate_result.py /app/output/result.json --case /input/case.json --text /app/output/draft.md"
+        },
+        {
+          "id": "result_correctness",
+          "name": "结果正确性",
+          "weight": 15,
+          "acceptance": "他人工作的转述与原文一致；引用元数据（作者/年份/题名/来源）真实；研究空白由已引文献的限制推出而非凭空断言；贡献表述与本文方法、图表、实验结果相符。",
+          "evidence": [
+            "/app/output/source-map.csv",
+            "/app/output/result.json#sources",
+            "/app/output/result.json#uncertainty"
+          ],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --draft /app/output/draft.md --out /app/output/scorecard.json"
+        },
+        {
+          "id": "result_completeness",
+          "name": "结果完整性",
+          "weight": 5,
+          "acceptance": "五个要素齐全：背景、相关工作、空白、贡献、引用覆盖；相关工作按 ≥3 组分组比较；主要方法路线、关键工作与必要字段都被覆盖。",
+          "evidence": [
+            "/app/output/selfcheck.md#1-结构指标",
+            "/app/output/scorecard.json#metrics"
+          ],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --draft /app/output/draft.md --out /app/output/scorecard.json"
+        },
+        {
+          "id": "result_verifiability",
+          "name": "结果可核验性",
+          "weight": 5,
+          "acceptance": "每条引用能回到来源（file/page/section/quote 四要素）；相关工作分组依据写清；空白推导过程可见；贡献与证据的对照关系可逐条追。",
+          "evidence": [
+            "/app/output/source-map.csv",
+            "/app/output/selfcheck.md#3-来源定位",
+            "/app/output/draft.md"
+          ],
+          "auto_check": "python scripts/build_outputs.py --draft /app/output/draft.md --result /app/output/result.json --outdir /app/output"
+        }
+      ]
+    },
+    {
+      "id": "usage_gain",
+      "name": "使用增益",
+      "weight": 25,
+      "items": [
+        {
+          "id": "quality_gain",
+          "name": "质量增益",
+          "weight": 15,
+          "acceptance": "相同材料与工具权限下，加载本 Skill 后成稿在论断准确、分组合理、空白成立、引用覆盖上优于基础 Agent。由平台按同一 rubric 对照；本 Skill 提供指标脚本使对照可量化。",
+          "evidence": [
+            "eval/rubric.json",
+            "eval/score_output.py",
+            "eval/ab-protocol.md"
+          ],
+          "auto_check": "python eval/compare_ab.py <baseline-scorecard> <skill-scorecard>"
+        },
+        {
+          "id": "efficiency_gain",
+          "name": "效率增益",
+          "weight": 5,
+          "acceptance": "减少从拿到材料到成稿的往返轮次与逐条核对条目：骨架一次到位、来源映射自动生成、核对项清单化；且不把成本转移到事后返工。",
+          "evidence": [
+            "scripts/build_outputs.py",
+            "/app/output/selfcheck.md#2-未清项",
+            "/app/output/result.json#uncertainty"
+          ],
+          "auto_check": "python scripts/build_outputs.py --help"
+        },
+        {
+          "id": "gain_verifiability",
+          "name": "增益可验证性",
+          "weight": 5,
+          "acceptance": "对照条件一致（同一材料、同一评分表、同一 judge、A/B 匿名、3 次重复取中位），第三方可照 eval/ab-protocol.md 复现；变差的指标如实报告。",
+          "evidence": [
+            "eval/ab-protocol.md",
+            "eval/acceptance.md",
+            "eval/compare_ab.py"
+          ],
+          "auto_check": "python eval/compare_ab.py --help"
+        }
+      ]
+    },
+    {
+      "id": "innovation_gain",
+      "name": "创新增益",
+      "weight": 15,
+      "items": [
+        {
+          "id": "new_capability",
+          "name": "新增能力",
+          "weight": 5,
+          "acceptance": "具备基础 Agent 难以稳定做到的能力：论断-引用绑定率可度量、相关工作按维度分组并可数、空白推导链可判定、贡献条目必须带证据定位才能过闸。",
+          "evidence": [
+            "scripts/quality_gate.py",
+            "scripts/validate_result.py",
+            "references/related-work-grouping.md"
+          ],
+          "auto_check": "python scripts/validate_result.py --help"
+        },
+        {
+          "id": "method_improvement",
+          "name": "方法改进",
+          "weight": 5,
+          "acceptance": "写作与核对分离：先落骨架保证四要素，再填真实内容，最后逐条回查原文；分组→比较→遗留给问题→空白→贡献的推演顺序固定，避免逐篇摘要拼接。",
+          "evidence": [
+            "SKILL.md#执行顺序",
+            "references/background-and-gap.md",
+            "references/contribution-alignment.md"
+          ],
+          "auto_check": "grep -n '写作与核对分离\\|第 3 步\\|第 4 步' SKILL.md"
+        },
+        {
+          "id": "innovation_evidence",
+          "name": "创新证据",
+          "weight": 5,
+          "acceptance": "给出与已有方案（基础 Agent、文献管理工具的综述草稿功能、通用写作助手）的边界与价值对比；不声称优于未实测对象。",
+          "evidence": [
+            "references/innovation-boundary.md"
+          ],
+          "auto_check": "grep -n '基础 Agent\\|文献管理\\|通用写作' references/innovation-boundary.md"
+        }
+      ]
+    },
+    {
+      "id": "reliability",
+      "name": "可靠体验",
+      "weight": 10,
+      "items": [
+        {
+          "id": "invocation",
+          "name": "调用与易用性",
+          "weight": 3,
+          "acceptance": "在「写引言」「整理相关工作」「补引用」「核对贡献」这类真实指令下正确触发；按说明一次就能跑完起草与核对；不越界改写无关内容。",
+          "evidence": [
+            "SKILL.md#何时使用",
+            "SKILL.md#最小示例"
+          ],
+          "auto_check": "grep -n '何时使用\\|不使用' SKILL.md"
+        },
+        {
+          "id": "stability",
+          "name": "运行稳定性",
+          "weight": 4,
+          "acceptance": "不同学科、不同篇幅、不同引用格式、重复运行时持续产出可用稿件；同一材料 3 次运行的四要素结构一致。",
+          "evidence": [
+            "eval/ab-protocol.md#3-重复性与取数",
+            "scripts/draft_skeleton.py"
+          ],
+          "auto_check": "python scripts/draft_skeleton.py --help"
+        },
+        {
+          "id": "exception_handling",
+          "name": "异常处理",
+          "weight": 3,
+          "acceptance": "对材料不足、文献库为空、引用查不到原文、目标期刊格式未知、语言切换、空白缺乏依据六类情况有明确处置，写入 uncertainty 并按实标 partial，不静默猜测。",
+          "evidence": [
+            "SKILL.md#异常处理",
+            "references/source-handling.md",
+            "/app/output/result.json#uncertainty"
+          ],
+          "auto_check": "grep -c '材料不足\\|查不到\\|格式未知\\|语言切换\\|空白缺' SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "生态贡献",
+      "weight": 10,
+      "items": [
+        {
+          "id": "docs",
+          "name": "文档完整性",
+          "weight": 3,
+          "acceptance": "使用说明、依赖与版本、配置项、示例、适用学科与语言范围、支持的引用格式、限制与维护信息齐全。",
+          "evidence": [
+            "README.md",
+            "SKILL.md",
+            "examples/minimal-example.md"
+          ],
+          "auto_check": "cat README.md"
+        },
+        {
+          "id": "reusability",
+          "name": "资源可复用性",
+          "weight": 4,
+          "acceptance": "Skill 本体、结构度量脚本、来源映射表、分组模板、核对清单、评分表与示例题集可被他人直接用于自己的论文，不依赖作者本地文件或手工步骤。",
+          "evidence": [
+            "scripts/quality_gate.py",
+            "eval/rubric.json",
+            "examples/"
+          ],
+          "auto_check": "python eval/score_output.py --result examples/selftest-result.json --case examples/selftest-case.json --draft examples/selftest-draft.md --out /tmp/card.json"
+        },
+        {
+          "id": "sharing",
+          "name": "分享推广价值",
+          "weight": 3,
+          "acceptance": "沉淀可分享的写作案例、分组方法、失败分析与自检表；有公开可访问的仓库地址。",
+          "evidence": [
+            "GITHUB_URL.txt",
+            "examples/"
+          ],
+          "auto_check": "cat GITHUB_URL.txt"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "min_chars": 1800,
+    "section_coverage": 0.75,
+    "ref_entries": 12,
+    "figtab_pairs": 2,
+    "material_index": 8,
+    "binding_rate": 0.5,
+    "declaration_fields": 2,
+    "num_trace_rate": 0.9,
+    "placeholder_count": 0
+  }
+}
