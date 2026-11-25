@@ -1,0 +1,15 @@
+{
+  "case_id": "selftest-demo-013",
+  "status": "partial",
+  "note": "示例 baseline 输出：模拟不加载 Skill 时的典型形态（两节概述、无公式无表格、引用键不存在），非平台对照结果。",
+  "result": {
+    "artifacts": [{"path": "examples/baseline-manuscript.tex", "type": "source"}],
+    "manuscript": {"path": "examples/baseline-manuscript.tex", "sections": ["引言", "方法"]},
+    "build": {"compile_status": "not_run"},
+    "reproduction": {"engine": "xelatex", "command": "xelatex baseline.tex"},
+    "source_map": [{"claim": "孔隙率与性能关系", "file": "examples/baseline-manuscript.tex", "locator": "sec1"}]
+  },
+  "sources": [{"source_id": "s1", "path": "examples/baseline-manuscript.tex"}],
+  "uncertainty": [{"type": "not_reported", "note": "未编译、无参数表与公式"}],
+  "changes": [{"from": "无", "to": "两节概述", "reason": "基线条件"}]
+}
