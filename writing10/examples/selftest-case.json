@@ -1,0 +1,12 @@
+{
+  "case_id": "selftest-001",
+  "note": "自测案例，非平台正式案例，不得作为正式答案使用。",
+  "task": "依据数据表、图表与统计输出写出结果与讨论章节：正文数值必须与图表一致，显著性表述必须带统计量，结果段只写观察，讨论段承担解释与文献对照。",
+  "material": "examples/selftest-materials.md",
+  "genre": "results_and_discussion",
+  "language": "zh",
+  "output_contract": [
+    "manuscript",
+    "figure_data"
+  ]
+}
