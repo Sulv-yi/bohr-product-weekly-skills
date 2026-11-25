@@ -22,10 +22,11 @@ references/
   gap-questioning.md            缺口追问清单与状态规则
   verification-checklist.md     交付前逐条自查
 scripts/
+  draft_skeleton.py             成稿骨架生成（六要素齐全，先跑，防空壳）
   extract_params.py             从配置/日志抽取参数骨架
   align_params.py               正文数值 vs 参数表，抓无来源/串位
   check_reproducibility.py      复现六要素完整性
-  validate_result.py            输出契约自检
+  validate_result.py            输出契约 + 成稿实质性校验（空壳/占位符拦截）
 examples/minimal-example.md     最小输入输出示例（示意）
 ```
 
