@@ -1,0 +1,261 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "segments": 10,
+    "pair_coverage": 1.0,
+    "order_preserved": true,
+    "missing_segments": [],
+    "marker_keep": 0.111,
+    "marker_rows": {
+      "fig": [
+        0.0,
+        0,
+        1
+      ],
+      "cite_bracket": [
+        0.0,
+        0,
+        5
+      ],
+      "cite_author": [
+        0.0,
+        0,
+        1
+      ],
+      "table": [
+        1.0,
+        1,
+        1
+      ],
+      "formula": [
+        0.0,
+        0,
+        1
+      ]
+    },
+    "term_coverage": 0.368,
+    "term_variant_leak": 24,
+    "term_leak_rows": [
+      [
+        "P01",
+        "scaffold",
+        "支架→缺失"
+      ],
+      [
+        "P01",
+        "scaffold",
+        "脚手架"
+      ],
+      [
+        "P02",
+        "scaffold",
+        "支架→缺失"
+      ],
+      [
+        "P02",
+        "scaffold",
+        "脚手架"
+      ],
+      [
+        "P02",
+        "fused deposition modelling",
+        "熔融沉积成型→缺失"
+      ],
+      [
+        "P02",
+        "fused deposition modelling",
+        "熔融沉积建模"
+      ],
+      [
+        "P02",
+        "porosity",
+        "孔隙率→缺失"
+      ],
+      [
+        "P02",
+        "porosity",
+        "孔隙度"
+      ],
+      [
+        "P02",
+        "compressive modulus",
+        "压缩模量→缺失"
+      ],
+      [
+        "P02",
+        "compressive modulus",
+        "压缩强度"
+      ],
+      [
+        "P02",
+        "micro-computed tomography",
+        "微型计算机断层扫描→缺失"
+      ],
+      [
+        "P02",
+        "micro-computed tomography",
+        "微计算机断层扫描"
+      ],
+      [
+        "P03",
+        "porosity",
+        "孔隙率→缺失"
+      ],
+      [
+        "P03",
+        "porosity",
+        "孔隙度"
+      ],
+      [
+        "P03",
+        "compressive modulus",
+        "压缩模量→缺失"
+      ],
+      [
+        "P03",
+        "compressive modulus",
+        "抗压强度"
+      ],
+      [
+        "P05",
+        "filler fraction",
+        "填料分数→缺失"
+      ],
+      [
+        "P05",
+        "filler fraction",
+        "填料比例"
+      ],
+      [
+        "P05",
+        "piezoelectric coefficient",
+        "压电系数→缺失"
+      ],
+      [
+        "P05",
+        "piezoelectric coefficient",
+        "压电常数"
+      ],
+      [
+        "P09",
+        "scaffold",
+        "支架→缺失"
+      ],
+      [
+        "P09",
+        "scaffold",
+        "脚手架"
+      ],
+      [
+        "P09",
+        "printability",
+        "可打印性→缺失"
+      ],
+      [
+        "P09",
+        "printability",
+        "打印性能"
+      ]
+    ],
+    "term_conflict": 0,
+    "number_transfer_rate": 0.625,
+    "numbers_total": 24,
+    "magnitude_errors": 0,
+    "sigfig_loss": 4,
+    "boundary_violation": 3,
+    "boundary_rows": [
+      [
+        "P07",
+        "strength_up",
+        "associated with→导致"
+      ],
+      [
+        "P08",
+        "scope_dropped",
+        "in vitro"
+      ],
+      [
+        "P08",
+        "scope_dropped",
+        "pilot"
+      ]
+    ],
+    "hedge_alignment": 0.0,
+    "target_chars": 320,
+    "source_words": 228,
+    "length_ratio": 1.4,
+    "placeholder_count": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "pass",
+      "note": "段覆盖 100%；段序保持；译文 320 字（1.4 字/词）"
+    },
+    "result_correctness": {
+      "verdict": "fail",
+      "note": "数值落地 62%；量级错 0；边界改动 3；占位符 0"
+    },
+    "result_completeness": {
+      "verdict": "fail",
+      "note": "标记保留 11%；限制语保留 0%"
+    },
+    "verifiability": {
+      "verdict": "fail",
+      "note": "术语落地 37%；术语表矛盾 0；数值台账 24 条"
+    },
+    "quality_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定（不是通过）"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定"
+    },
+    "gain_verifiability": {
+      "verdict": "fail",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "10 段段级对齐 + 24 个数值逐个落地 + 术语表锁定到段"
+    },
+    "method_improvement": {
+      "verdict": "fail",
+      "note": "术语漂移 24；边界改动 3"
+    },
+    "innovation_evidence": {
+      "verdict": "fail",
+      "note": "方案边界 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "fail",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "脚本仅用标准库；换语向/篇幅不崩（见 references/edge-cases.md）"
+    },
+    "exception_handling": {
+      "verdict": "fail",
+      "note": "异常矩阵齐备"
+    },
+    "documentation": {
+      "verdict": "fail",
+      "note": "README 与术语一致性规范齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "术语表可直接换领域复用 + 度量口径可复用"
+    },
+    "sharing_value": {
+      "verdict": "fail",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 4,
+    "fail": 10,
+    "na": 2
+  },
+  "note": "只报指标与判定，不输出总分；变差项必须写进 result.uncertainty。"
+}
