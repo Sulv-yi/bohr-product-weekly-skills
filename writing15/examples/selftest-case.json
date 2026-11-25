@@ -1,0 +1,15 @@
+{
+ "case_id": "selftest-001",
+ "task": "依据课题指南与前期数据撰写开题报告：七要素齐全，研究问题可证伪，目标-路线-指标-成果一一对应，阶段计划落在给定周期与人力内，风险写触发信号与备选方案，论断挂引用。",
+ "discipline": "生物材料 / 骨组织工程",
+ "cycle_months": 24,
+ "capacity_pm": 36,
+ "materials": "examples/selftest-materials.md",
+ "output_contract": [
+  "manuscript",
+  "plan",
+  "sources",
+  "uncertainty",
+  "changes"
+ ]
+}
