@@ -60,20 +60,23 @@ NOISE_RES = [
 HINT_PATTERNS = [
     ("question", re.compile(
         r"研究问题|旨在|拟解决|是否|有待回答|尚不清楚|仍不清楚|"
+        r"障碍|瓶颈|挑战|制约|限制因素|challenge|obstacle|bottleneck|"
         r"hypothes[ie]s|we ask|aim of|objective|本文(?:探究|考察|回答)|"
         r"this (?:study|work) (?:asks|investigat|examin|address)|"
         r"we (?:investigat|examin|address|explore|seek|test)|"
         r"remains? (?:unclear|unknown|open)|open question|knowledge gap|"
         r"如何(?:提高|降低|表征|实现|选择)|why |how (?:to|does|do) ", re.I)),
     ("method", re.compile(
-        r"采用|使用|通过|基于|制备|测试|表征|试样|仪器|protocol|we (?:used|applied|"
-        r"performed|measured|prepared)|method|synthes|characteri[sz]", re.I)),
+        r"采用|使用|通过|基于|制备|测试|表征|试样|仪器|本文用|溶于|配制|组装|"
+        r"处理|合成|退火|干燥|protocol|we (?:used|applied|performed|measured|"
+        r"prepared)|method|synthes|characteri[sz]", re.I)),
     ("evidence", re.compile(
         r"Fig(?:ure)?\.?\s*\d|Table\s*\d|图\s*\d|表\s*\d|"
         r"\d+(?:\.\d+)?\s*(?:%|°C|℃|MPa|kPa|GPa|nm|μm|µm|mm|cm|mL|mg|g/L|h|min|s)\b", re.I)),
     ("conclusion", re.compile(
-        r"表明|说明|因此|可见|证明|揭示|indicate|suggest|demonstrat|reveal|"
-        r"conclu|consistent with|in line with|confirm", re.I)),
+        r"表明|说明|因此|可见|证明|揭示|提出|据此|机制|归因|认为|推断|"
+        r"indicate|suggest|demonstrat|reveal|conclu|consistent with|"
+        r"in line with|confirm|attribute|propose", re.I)),
     ("limitation", re.compile(
         r"局限|不足|未能|仅在|尚需|有待|further (?:work|study)|limited to|"
         r"caveat|however,? (?:the|this) (?:study|work)|do(?:es)? not", re.I)),
