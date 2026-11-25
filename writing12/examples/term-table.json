@@ -1,0 +1,19 @@
+{
+  "domain": "生物材料 / 骨组织工程",
+  "note": "锁定译法；variants 是必须避免的漂移写法，脚本会把它们出现在译文中的位置逐条列出。",
+  "terms": [
+    {"en": "polylactic acid", "zh": "聚乳酸", "variants": ["聚乳酸酯", "聚乳酸树脂"], "section": "abstract/body"},
+    {"en": "scaffold", "zh": "支架", "variants": ["脚手架", "骨架", "支撑体"], "section": "abstract/body/caption"},
+    {"en": "piezoelectric", "zh": "压电", "variants": ["压电性"], "section": "abstract/body"},
+    {"en": "barium titanate", "zh": "钛酸钡", "variants": ["钛酸钡盐"], "section": "methods"},
+    {"en": "fused deposition modelling", "zh": "熔融沉积成型", "variants": ["熔融沉积建模", "熔融挤出"], "section": "methods"},
+    {"en": "porosity", "zh": "孔隙率", "variants": ["孔隙度", "孔隙比例"], "section": "methods/results"},
+    {"en": "compressive modulus", "zh": "压缩模量", "variants": ["抗压模量", "压缩强度", "抗压强度"], "section": "methods/results"},
+    {"en": "micro-computed tomography", "zh": "微型计算机断层扫描", "variants": ["微计算机断层扫描", "微型CT"], "section": "methods"},
+    {"en": "osteogenic differentiation", "zh": "成骨分化", "variants": ["成骨诱导分化"], "section": "results"},
+    {"en": "filler fraction", "zh": "填料分数", "variants": ["填料比例", "填充率"], "section": "results"},
+    {"en": "piezoelectric coefficient", "zh": "压电系数", "variants": ["压电常数"], "section": "results"},
+    {"en": "murine osteoblasts", "zh": "小鼠成骨细胞", "variants": ["鼠成骨细胞", "小鼠骨细胞"], "section": "discussion"},
+    {"en": "printability", "zh": "可打印性", "variants": ["打印性能", "可印刷性"], "section": "conclusion"}
+  ]
+}
