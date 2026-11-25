@@ -1,0 +1,25 @@
+# 抽取与清洗记录（真实运行输出）
+
+时间：2026-11-25（本地）
+宿主：Windows / WorkBuddy 会话
+
+## 1. PDF 抽取（workbuddy-pdf 0.1.0）
+```
+$ workbuddy-pdf "Merillas 等 - 2026 - Upcycling post-consumer PET bottles into low-density films and 3D-printed materials.pdf" work/merillas.md --format md-plain
+wrote work/merillas.md: 379 paragraph(s), 4 table(s), 57209 byte(s) of text, 18 image(s) marked in place
+note: 18 picture(s) were left out; pass --image-dir DIR to write them and link them from the Markdown
+```
+
+## 2. 清洗（scripts/clean_extract.py）
+```
+$ python3 scripts/clean_extract.py --in work/merillas.md --out materials/paper.md
+in=59346 bytes, out=59213 bytes, ctrl_removed=133
+```
+
+## 3. 规模
+```
+$ wc -l -c materials/paper.md
+  712 59467 materials/paper.md
+$ grep -c '<!-- page' materials/paper.md
+12
+```
