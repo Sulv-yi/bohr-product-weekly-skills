@@ -1,0 +1,124 @@
+{
+  "rubric_version": "1.0",
+  "task": "methods-experiment-section-writing",
+  "case_id": "selftest-demo-009",
+  "status": "partial",
+  "note": "本文件只记录指标与逐项判定，不含自评分；增益结论须由 compare_ab.py 与 baseline 对比得出。",
+  "metrics": {
+    "total_chars": 1034,
+    "min_chars_ok": true,
+    "element_coverage": 1.0,
+    "missing_elements": [],
+    "section_chars": {
+      "steps": 224,
+      "setup": 126,
+      "parameters": 132,
+      "dataset": 114,
+      "baselines": 142,
+      "reproducibility": 199
+    },
+    "section_min_ok": {
+      "steps": true,
+      "setup": true,
+      "parameters": true,
+      "dataset": true,
+      "baselines": true,
+      "reproducibility": true
+    },
+    "param_rows": 9,
+    "param_source_rate": 1.0,
+    "param_body_alignment": 1.0,
+    "baseline_checks": [
+      "baseline_identity",
+      "baseline_version",
+      "same_budget",
+      "metric",
+      "statistics",
+      "repeats"
+    ],
+    "baseline_coverage": 1.0,
+    "repro_checks": [
+      "code_version",
+      "env",
+      "seed",
+      "command",
+      "data_source",
+      "split"
+    ],
+    "repro_coverage": 1.0,
+    "limitation_specific": true,
+    "placeholder_count": 0,
+    "open_gaps": 3
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "pass",
+      "note": "六要素覆盖 100%；正文 1034 字"
+    },
+    "result_correctness": {
+      "verdict": "pass",
+      "note": "参数带来源 100%；正文-表对齐 100%；取值是否与 config/log 一致需逐条核，本项只查可核条件"
+    },
+    "result_completeness": {
+      "verdict": "pass",
+      "note": "六节字数 {'steps': 224, 'setup': 126, 'parameters': 132, 'dataset': 114, 'baselines': 142, 'reproducibility': 199}；参数表 9 行"
+    },
+    "result_verifiability": {
+      "verdict": "pass",
+      "note": "来源 6 条；限制落到失效场景 是"
+    },
+    "quality_gain": {
+      "verdict": "pass",
+      "note": "对照六项 6/6；复现六项 6/6；增益方向须用 eval/compare_ab.py 与 baseline 对比得出"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "缺口/待确认 3 条；耗时与轮次由平台记录，本脚本不代填"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "对照口径见 eval/ab-protocol.md，指标可被同一脚本重跑"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "六要素度量 + 参数表可核性 + 来源定位 + 自检表生成"
+    },
+    "method_improvement": {
+      "verdict": "pass",
+      "note": "骨架先落 → 要素抽取 → 数值对齐 → 缺口追问 → 结构复核，写作与核对分离"
+    },
+    "innovation_evidence": {
+      "verdict": "fail",
+      "note": "边界与取舍见 references/innovation-boundary.md"
+    },
+    "invocation": {
+      "verdict": "pass",
+      "note": "case_id='selftest-demo-009'"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "重复运行一致性由 eval/ab-protocol.md 第 3 节定义，需 3 次重复取中位"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "uncertainty 2 条；追问 3 条"
+    },
+    "docs": {
+      "verdict": "pass",
+      "note": "SKILL.md + README.md + examples/ 齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "eval/ 评分表与脚本、references/ 模板、参数表与追问清单可复用"
+    },
+    "sharing": {
+      "verdict": "pass",
+      "note": "公开仓库地址见 GITHUB_URL.txt"
+    }
+  },
+  "counts": {
+    "pass": 14,
+    "fail": 1,
+    "na": 1
+  }
+}
