@@ -1,0 +1,26 @@
+{
+  "case_id": "selftest-001",
+  "note": "baseline 对照：同数据、同章节要求，不带图表回溯与统计量校验。",
+  "status": "success",
+  "result": {
+    "manuscript": "## 3 结果\n\n给药后肿瘤体积下降，高剂量组效果最好（图 1）。体重有一定下降（图 2）。体外实验显示化合物有抑制作用（表 1）。\n\n## 4 讨论\n\n本研究结果说明该化合物具有明显的抗肿瘤作用。与文献报道一致[4]。机制可能是抑制增殖。本研究的局限是样本较少，有待进一步研究。\n",
+    "figure_data": []
+  },
+  "sources": [
+    {
+      "id": "s4",
+      "cite_key": "4",
+      "file": "examples/selftest-materials.md",
+      "section": "文献 §3.2",
+      "quote": "同类化合物在皮下移植模型中的体积降幅为 45%–65%。"
+    }
+  ],
+  "uncertainty": [],
+  "changes": [
+    {
+      "from": "—",
+      "to": "baseline 稿",
+      "reason": "对照用"
+    }
+  ]
+}
