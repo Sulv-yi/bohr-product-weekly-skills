@@ -1,0 +1,19 @@
+{
+  "case_id": "selftest-demo-004",
+  "note": "示例案例：为演示输入输出格式而编写的虚构材料，不是平台固定案例，也不是任何真实稿件。文献条目均为演示占位。",
+  "task": "为给定稿件补引用、重排编号、归并重复条目、转换为 GB/T 7714-2015，并给出来源核验记录。",
+  "target_format": "GB/T 7714-2015 顺序编码制",
+  "manuscript": "多孔钛支架的孔隙率与渗透性能之间存在方向相反的取舍[1]。激光粉末床熔融可在较宽参数区间内成形这类结构[2]。已有综述指出，工艺窗口多以定性描述给出[2]。因此，孔隙率偏差的可迁移判据仍缺。",
+  "library": {
+    "format": "BibTeX",
+    "entries": [
+      {"key": "wang2019", "author": "王某, 李某", "year": 2019, "title": "多孔金属支架的孔隙率与力学性能关系", "journal": "机械工程学报", "volume": "55", "issue": "8", "pages": "120-128", "doi": "10.3901/JME.2019.08.120"},
+      {"key": "wang2019dup", "author": "王某, 李某", "year": 2019, "title": "多孔金属支架的孔隙率与力学性能关系", "journal": "机械工程学报", "volume": "55", "issue": "8", "pages": "120-128", "doi": "10.3901/JME.2019.08.120"},
+      {"key": "zhang2020", "author": "Zhang Y, Li X", "year": 2020, "title": "Lattice strut defects in LPBF: causes and mitigation", "journal": "Additive Manufacturing", "volume": "34", "pages": "101-112", "doi": "10.1016/j.addma.2020.101112"},
+      {"key": "liu2022", "author": "刘某, 张某", "year": 2022, "title": "增材制造点阵结构的工艺窗口综述", "journal": "材料导报", "volume": "36", "issue": "4", "pages": "1-10"},
+      {"key": "wang2019_zh", "author": "王某某, 李某某", "year": 2019, "title": "多孔金属支架孔隙率与力学性能的关系研究", "journal": "机械工程学报", "volume": "55", "issue": "8", "pages": "120-128"}
+    ]
+  },
+  "missing": ["liu2022 缺 DOI", "标准要求给出文献类型标识，材料未提供文献类型字段"],
+  "output_contract": ["manuscript_text", "citations", "numbering", "deduplication", "format_conversion"]
+}
