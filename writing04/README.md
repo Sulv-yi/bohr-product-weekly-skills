@@ -6,11 +6,12 @@
 
 - `SKILL.md`：主说明（用途、输入输出、工作流、四性质保证、异常处理）。
 - `scripts/`
+  - `draft_skeleton.py`：先生成六类交付清单骨架（防空壳，先跑）。
   - `parse_library.py`：解析 BibTeX/RIS/JSON 文献库为统一条目。
   - `dedupe_entries.py`：去重归并建议（可解释判据 D1-D5）。
   - `check_numbering.py`：编号连续性/悬空/未引用/样式一致性检查。
   - `verify_citations.py`：**核心核验**（四性质 + 元数据 + 主题匹配）。
-  - `validate_result.py`：结果结构契约校验。
+  - `validate_result.py`：结构契约 + 成稿实质性校验（空壳/占位符/零引用拦截）。
 - `assets/format_mapping.json`：BibTeX/RIS → 标准字段映射 + GB/T 7714 类型标识。
 - `references/`：结果 schema、去重判据、编号规则、格式核验、边界案例。
 - `examples/minimal-example.md`：完整最小调用示例（示意）。
@@ -21,7 +22,7 @@ Python 3 标准库，无需第三方包。
 
 ## 使用顺序
 
-parse_library → dedupe_entries → check_numbering → 逐句填 citations → verify_citations → validate_result。
+draft_skeleton（先落骨架）→ parse_library → dedupe_entries → check_numbering → 逐句填 citations → verify_citations → validate_result。
 
 ## 关键规则
 
