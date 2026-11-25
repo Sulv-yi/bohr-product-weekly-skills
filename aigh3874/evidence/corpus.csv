@@ -1,0 +1,16 @@
+page,subject,metric,value,quote
+1,PET_B,relative_density,"0.2,0.28",relative densities of 0.2 to 0.28
+7,PET_B,relative_density,"0.35,0.20","with a value of 0.35; and at 200 °C for psat = 30 MPa, reaching a value of 0.20"
+6,PET_V,relative_density,"0.16,0.18",reaching values of 0.16 and 0.18 at 15 MPa and 30 MPa
+7,PET_C,relative_density,"0.20,0.17","with values of 0.20 at 15 MPa, and 0.17 at 30 MPa"
+10,PET_C,relative_density,"0.18,0.17",achieving relative densities of 0.18 at 15 MPa saturation pressure and 0.17 for the ones saturated at 30 MPa
+1,PET_C,cell_size,"5,18",cell sizes from 5 to 18 μm
+9,PET_C,cell_size,"3,6,20","PET_C has two clear primary cell sizes in 3 and 6 μm, but it has some even bigger cells (some up to 20 μm)"
+9,PET_B,cell_size,2,remains almost constant around 2 μm
+1,PET_B,cell_size,2,PET_B shows cell sizes close to 2 μm
+4,PET_V,mfi,46.70,46.70 ±0.68
+4,PET_B,mfi,11.52,11.52 ±1.04
+4,PET_C,mfi,26.26,26.26 ± 2.60
+10,3D-printed,relative_density,1.26,This 3D printed cap presents a density of 1.26 kg/m3
+10,3D-printed,density_reduction,40,a reduction of more than 40% in relative density in the 3D printed materials has been achieved
+10,3D-printed,density_reduction,40,weight reductions of up to 40%
