@@ -1,0 +1,205 @@
+{
+  "case_id": "selftest-demo-009",
+  "status": "partial",
+  "note": "示例输出：配合 examples/selftest-case.json 的演示结果，材料与数值均为虚构占位，不是平台固定案例成绩。",
+  "result": {
+    "section": "见 examples/selftest-draft.md（方法步骤/实验设置/参数表/数据集与划分/对照实验/可复现性与限制 六节成稿）",
+    "elements": {
+      "steps": [
+        "体素下采样 0.02 m",
+        "24 层 384 宽骨干编码",
+        "三次最大池化聚合",
+        "线性分类头输出 13 类"
+      ],
+      "setup": {
+        "hardware": "2×A100 40GB",
+        "cuda": "12.1",
+        "torch": "2.3.0",
+        "batch_size": 8,
+        "epochs": 120
+      },
+      "parameters": [
+        {
+          "name": "学习率",
+          "value": "3e-4",
+          "unit": "-",
+          "target": "AdamW",
+          "source": "config.yaml"
+        },
+        {
+          "name": "权重衰减",
+          "value": "0.05",
+          "unit": "-",
+          "target": "AdamW",
+          "source": "config.yaml"
+        },
+        {
+          "name": "批大小",
+          "value": 8,
+          "unit": "块",
+          "target": "训练",
+          "source": "config.yaml"
+        },
+        {
+          "name": "训练轮数",
+          "value": 120,
+          "unit": "epoch",
+          "target": "训练",
+          "source": "config.yaml"
+        },
+        {
+          "name": "预热步数",
+          "value": 2000,
+          "unit": "step",
+          "target": "调度",
+          "source": "config.yaml"
+        },
+        {
+          "name": "梯度裁剪",
+          "value": 1.0,
+          "unit": "L2",
+          "target": "全参数",
+          "source": "config.yaml"
+        },
+        {
+          "name": "体素边长",
+          "value": 0.02,
+          "unit": "m",
+          "target": "预处理",
+          "source": "config.yaml"
+        },
+        {
+          "name": "随机种子",
+          "value": 42,
+          "unit": "-",
+          "target": "划分与初始化",
+          "source": "config.yaml"
+        },
+        {
+          "name": "邻点数量",
+          "value": 16,
+          "unit": "个",
+          "target": "局部聚合",
+          "source": "作者确认"
+        }
+      ],
+      "dataset": {
+        "name": "S3DIS",
+        "version": "v1.2",
+        "voxel": 0.02,
+        "split": "按区域 4/1/1",
+        "resampled": false
+      },
+      "baselines": [
+        {
+          "name": "PointNet++",
+          "version": "commit 8f5c2a1",
+          "same_budget": true
+        },
+        {
+          "name": "RandLA-Net",
+          "version": "commit 1a7b3de",
+          "same_budget": true
+        }
+      ],
+      "reproducibility": {
+        "code_version": "内部仓库 commit 未给出",
+        "env": "torch 2.3.0 + CUDA 12.1",
+        "seed": 42,
+        "command": "python train.py --config config.yaml",
+        "data": "S3DIS v1.2 官方页面",
+        "split": "按区域 4/1/1"
+      }
+    },
+    "reproducibility": {
+      "code_version": "not_reported",
+      "env": "torch 2.3.0, CUDA 12.1, 2×A100 40GB",
+      "seed": "42",
+      "command": "python train.py --config config.yaml",
+      "data": "S3DIS v1.2 官方站点下载",
+      "split": "按区域 4/1/1，未随机重划"
+    },
+    "limitations": [
+      "体素边长 <0.01 m 时单块点数超过 2e5，显存需求 >40 GB，现有硬件无法运行",
+      "测试区与训练区存在重叠建筑时 mIoU 被高估约 3~5 个百分点"
+    ],
+    "questions_for_author": [
+      {
+        "question": "最佳 epoch 对应 checkpoint 的名称与保存路径是哪一份？",
+        "blocking": false
+      },
+      {
+        "question": "测试时是否使用多尺度投票？重复评测次数是多少？",
+        "blocking": false
+      },
+      {
+        "question": "训练/验证/测试划分是否与 S3DIS 官方划分一致，还是按区域重划？",
+        "blocking": true
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "C1",
+      "claim": "学习率 3e-4、权重衰减 0.05、批大小 8、120 epoch、warmup 2000、梯度裁剪 1.0",
+      "file": "config.yaml",
+      "section": "train",
+      "quote": "optimizer: AdamW, lr: 0.0003, weight_decay: 0.05, batch_size: 8, epochs: 120, warmup_steps: 2000, grad_clip: 1.0"
+    },
+    {
+      "id": "C2",
+      "claim": "体素 0.02 m、种子 42、比例 0.8/0.1/0.1",
+      "file": "config.yaml",
+      "section": "data",
+      "quote": "voxel: 0.02, seed: 42, train_ratio: 0.8, val_ratio: 0.1, test_ratio: 0.1"
+    },
+    {
+      "id": "H1",
+      "claim": "硬件与环境：A100 40GB×2、cuda 12.1、torch 2.3.0",
+      "file": "train.log",
+      "section": "末尾环境行",
+      "quote": "gpu: A100 40GB x2, cuda 12.1, torch 2.3.0"
+    },
+    {
+      "id": "D1",
+      "claim": "S3DIS v1.2、6 区域、按区域 4/1/1 划分且未随机重划",
+      "file": "data.md",
+      "section": "全文",
+      "quote": "按区域划分训练/验证/测试为 4/1/1，未做随机重划",
+      "locator": "S3DIS v1.2"
+    },
+    {
+      "id": "B1",
+      "claim": "两个基线的版本号与同预算条件",
+      "file": "selftest-case.json",
+      "section": "material.baselines",
+      "locator": "8f5c2a1",
+      "quote": "PointNet++ 官方实现 commit 8f5c2a1，同预算：相同体素与 batch size"
+    },
+    {
+      "id": "M1",
+      "claim": "材料缺口：checkpoint 名称与测试投票策略未提供",
+      "file": "selftest-case.json",
+      "section": "material.missing",
+      "locator": "投票策略",
+      "quote": "未提供最佳 epoch 的 checkpoint 名称；未说明测试时的投票策略与重复次数"
+    }
+  ],
+  "uncertainty": [
+    {
+      "type": "not_reported",
+      "note": "代码版本仅给到内部仓库，未给出 commit 哈希"
+    },
+    {
+      "type": "needs_human_confirmation",
+      "note": "测试集划分是否与官方一致，需作者确认（已作为 blocking 追问）"
+    }
+  ],
+  "changes": [
+    {
+      "from": "无（首版）",
+      "to": "六节成稿 + 9 行参数表 + 6 条来源映射 + 3 条追问",
+      "reason": "按 SKILL.md 第 1~4 步生成骨架并填入材料内事实"
+    }
+  ]
+}
