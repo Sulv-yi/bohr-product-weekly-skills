@@ -1,0 +1,200 @@
+{
+ "case_id": "selftest-001",
+ "status": "success",
+ "result": {
+  "target_lang": "zh",
+  "bilingual": "# 双语对照稿（示例：由本 Skill 生成，非正式案例结果）\n\n> 段级对照：每段一个 `Pxx` 单元，`EN` 为原文，`ZH` 为译文。术语按 `examples/term-table.json`\n> 锁定；数值、引用、图表与公式标记原样落位；否定与情态强度不改。\n\n## P01\n\nEN: Three-dimensional printing of polylactic acid (PLA) scaffolds has become a common route to porous bone substitutes. However, the poor piezoelectric response of PLA limits its use in electrically active tissue.\n\nZH: 三维打印聚乳酸（PLA）支架已成为制备多孔骨替代物的常用途径。然而，PLA 的压电响应较差，这限制了其在电活性组织中的应用。\n\n## P02\n\nEN: Here we fabricated barium titanate (BaTiO3)-loaded PLA scaffolds by fused deposition modelling at loadings of 3.5, 7.0 and 10.5 wt%. Porosity was measured by micro-computed tomography, and the compressive modulus was obtained from uniaxial compression (n = 24 per group).\n\nZH: 本研究以熔融沉积成型制备了钛酸钡（BaTiO3）负载的 PLA 支架，负载量分别为 3.5、7.0 与 10.5 wt%。孔隙率以微型计算机断层扫描测定，压缩模量由单轴压缩获得（每组 n = 24）。\n\n## P03\n\nEN: At 7.0 wt% the compressive modulus reached 62.4 MPa, 1.8-fold that of pure PLA (p = 0.012, two-tailed t-test), while porosity decreased from 78.3% to 71.6% (Fig. 2a).\n\nZH: 在 7.0 wt% 时，压缩模量达到 62.4 MPa，为纯 PLA 的 1.8 倍（p = 0.012，双尾 t 检验）；同时孔隙率由 78.3% 降至 71.6%（图 2a）。\n\n## P04\n\nEN: The 3.5 wt% group did not differ significantly from pure PLA in modulus (p = 0.068), and we cannot exclude a contribution from pore size.\n\nZH: 3.5 wt% 组的模量与纯 PLA 相比未见显著差异（p = 0.068），且无法排除孔径的贡献。\n\n## P05\n\nEN: As summarized in Table 1 and reported previously [12,13–15], the piezoelectric coefficient d33 of BaTiO3/PLA composites scales with filler fraction (Zhang et al., 2021).\n\nZH: 如表 1 所列，且与此前报道一致 [12,13–15]，BaTiO3/PLA 复合材料的压电系数 d33 随填料分数变化（Zhang et al., 2021）。\n\n## P06\n\nEN: The modulus was computed as $E = \\sigma / \\varepsilon$ from the linear region between 10% and 40% strain.\n\nZH: 模量按 $E = \\sigma / \\varepsilon$ 由 10% 至 40% 应变之间的线性区段计算。\n\n## P07\n\nEN: The increase in modulus may be associated with the rigid ceramic phase restricting polymer chain mobility, a mechanism that appears consistent with earlier reports [16].\n\nZH: 模量的提高可能与刚性陶瓷相限制聚合物链段运动有关，这一机制似乎与此前报道一致 [16]。\n\n## P08\n\nEN: Because the present work is an in vitro study using a single-centre pilot cohort of murine osteoblasts, the osteogenic differentiation results should be interpreted with caution.\n\nZH: 由于本研究为体外研究，所用为单中心预实验的小鼠成骨细胞队列，成骨分化结果应谨慎解读。\n\n## P09\n\nEN: BaTiO3 loading up to 7.0 wt% improves the compressive modulus of PLA scaffolds without compromising printability; higher loadings were not evaluated in vivo.\n\nZH: BaTiO3 负载量至 7.0 wt% 可提高 PLA 支架的压缩模量而不损害可打印性；更高负载量未在体内评价。\n\n## P10\n\nEN: Data are available from the corresponding author upon reasonable request; the micro-CT stacks (12.4 GB) are archived under DOI 10.5281/zenodo.4123456.\n\nZH: 数据可向通讯作者合理索取；微型 CT 原始数据（12.4 GB）已按 DOI 10.5281/zenodo.4123456 归档。\n\n---\n\n## 人工确认项\n\n1. P05 `d33` 为张量分量写法，按学科惯例保留原符号，未改为中文「压电常数」。\n2. P08 `pilot cohort` 译为「预实验队列」；若作者原意为「探索性队列」，请按团队惯例替换。\n3. P10 DOI 未拆行，保持可点击原样。\n",
+  "terms": [
+   {
+    "en": "polylactic acid",
+    "zh": "聚乳酸",
+    "variants": [
+     "聚乳酸酯",
+     "聚乳酸树脂"
+    ],
+    "section": "abstract/body"
+   },
+   {
+    "en": "scaffold",
+    "zh": "支架",
+    "variants": [
+     "脚手架",
+     "骨架",
+     "支撑体"
+    ],
+    "section": "abstract/body/caption"
+   },
+   {
+    "en": "piezoelectric",
+    "zh": "压电",
+    "variants": [
+     "压电性"
+    ],
+    "section": "abstract/body"
+   },
+   {
+    "en": "barium titanate",
+    "zh": "钛酸钡",
+    "variants": [
+     "钛酸钡盐"
+    ],
+    "section": "methods"
+   },
+   {
+    "en": "fused deposition modelling",
+    "zh": "熔融沉积成型",
+    "variants": [
+     "熔融沉积建模",
+     "熔融挤出"
+    ],
+    "section": "methods"
+   },
+   {
+    "en": "porosity",
+    "zh": "孔隙率",
+    "variants": [
+     "孔隙度",
+     "孔隙比例"
+    ],
+    "section": "methods/results"
+   },
+   {
+    "en": "compressive modulus",
+    "zh": "压缩模量",
+    "variants": [
+     "抗压模量",
+     "压缩强度",
+     "抗压强度"
+    ],
+    "section": "methods/results"
+   },
+   {
+    "en": "micro-computed tomography",
+    "zh": "微型计算机断层扫描",
+    "variants": [
+     "微计算机断层扫描",
+     "微型CT"
+    ],
+    "section": "methods"
+   },
+   {
+    "en": "osteogenic differentiation",
+    "zh": "成骨分化",
+    "variants": [
+     "成骨诱导分化"
+    ],
+    "section": "results"
+   },
+   {
+    "en": "filler fraction",
+    "zh": "填料分数",
+    "variants": [
+     "填料比例",
+     "填充率"
+    ],
+    "section": "results"
+   },
+   {
+    "en": "piezoelectric coefficient",
+    "zh": "压电系数",
+    "variants": [
+     "压电常数"
+    ],
+    "section": "results"
+   },
+   {
+    "en": "murine osteoblasts",
+    "zh": "小鼠成骨细胞",
+    "variants": [
+     "鼠成骨细胞",
+     "小鼠骨细胞"
+    ],
+    "section": "discussion"
+   },
+   {
+    "en": "printability",
+    "zh": "可打印性",
+    "variants": [
+     "打印性能",
+     "可印刷性"
+    ],
+    "section": "conclusion"
+   }
+  ],
+  "human_review": [
+   "P05 d33 写法",
+   "P08 pilot cohort 用词",
+   "P10 DOI 原样"
+  ],
+  "output_contract": {
+   "bilingual": true,
+   "terms": true,
+   "human_review": true,
+   "uncertainty": true,
+   "changes": true
+  }
+ },
+ "sources": [
+  {
+   "id": "S1",
+   "locator": "examples/selftest-materials.md P01–P10",
+   "kind": "原文",
+   "use": "所有译文段的唯一事实来源"
+  },
+  {
+   "id": "S2",
+   "locator": "examples/term-table.json",
+   "kind": "术语表",
+   "use": "13 条锁定译法与禁用漂移写法"
+  }
+ ],
+ "uncertainty": [
+  {
+   "item": "P05 d33",
+   "status": "needs_human",
+   "note": "张量分量写法保留原符号，未中文化"
+  },
+  {
+   "item": "P08 pilot cohort",
+   "status": "needs_human",
+   "note": "译为「预实验队列」；若原意为探索性队列需按团队惯例替换"
+  },
+  {
+   "item": "P10 DOI",
+   "status": "not_translated",
+   "note": "DOI 为标识符，按原样保留"
+  }
+ ],
+ "changes": [
+  {
+   "seg": "P01",
+   "kind": "术语",
+   "detail": "scaffolds → 支架（锁定），未用「脚手架」"
+  },
+  {
+   "seg": "P03",
+   "kind": "数值",
+   "detail": "62.4 / 78.3 / 71.6 / 0.012 原样，未取整"
+  },
+  {
+   "seg": "P05",
+   "kind": "标记",
+   "detail": "[12,13–15] 与 (Zhang et al., 2021) 原样保留"
+  },
+  {
+   "seg": "P06",
+   "kind": "公式",
+   "detail": "$E = \\sigma / \\varepsilon$ 原样，未改排版"
+  },
+  {
+   "seg": "P07",
+   "kind": "边界",
+   "detail": "may be associated with → 可能与…有关（未升级为因果）"
+  },
+  {
+   "seg": "P08",
+   "kind": "边界",
+   "detail": "in vitro / single-centre / pilot 三项限定条件全部保留"
+  }
+ ]
+}
