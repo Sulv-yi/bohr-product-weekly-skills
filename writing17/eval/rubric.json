@@ -1,0 +1,101 @@
+{
+ "task": "科研成果转化写作（论文/报告 → 面向特定读者的稿）",
+ "dimensions": [
+  {
+   "key": "task_completion",
+   "weight": 15,
+   "desc": "字数与节数达到预算表下限"
+  },
+  {
+   "key": "result_correctness",
+   "weight": 15,
+   "desc": "数值/限定/限定语/越界/漂移五项全过"
+  },
+  {
+   "key": "result_completeness",
+   "weight": 5,
+   "desc": "类比≥2、图表全保留、受众与目的声明"
+  },
+  {
+   "key": "verifiability",
+   "weight": 5,
+   "desc": "溯源≥80%、改动账覆盖≥80%"
+  },
+  {
+   "key": "quality_gain",
+   "weight": 15,
+   "desc": "对基线变好≥3项且变差0项"
+  },
+  {
+   "key": "efficiency_gain",
+   "weight": 5,
+   "desc": "三项返工量不高于基线"
+  },
+  {
+   "key": "gain_verifiable",
+   "weight": 5,
+   "desc": "rubric + 协议 + 对照脚本三件套"
+  },
+  {
+   "key": "new_capability",
+   "weight": 5,
+   "desc": "四类度量函数存在且可调用"
+  },
+  {
+   "key": "method_improvement",
+   "weight": 5,
+   "desc": "四把尺落成判定而非建议"
+  },
+  {
+   "key": "innovation_evidence",
+   "weight": 5,
+   "desc": "边界文档 + A/B 报告"
+  },
+  {
+   "key": "usability",
+   "weight": 3,
+   "desc": "预算表 + 最小示例"
+  },
+  {
+   "key": "stability",
+   "weight": 4,
+   "desc": "纯标准库，无网络依赖"
+  },
+  {
+   "key": "exception_handling",
+   "weight": 3,
+   "desc": "异常矩阵覆盖 8 类"
+  },
+  {
+   "key": "documentation",
+   "weight": 3,
+   "desc": "README + SCORING-MAP + references"
+  },
+  {
+   "key": "reusability",
+   "weight": 4,
+   "desc": "度量与评分卡可独立调用"
+  },
+  {
+   "key": "sharing",
+   "weight": 3,
+   "desc": "公开仓库链接"
+  }
+ ],
+ "thresholds": {
+  "min_chars": 900,
+  "min_sections": 3,
+  "abbrev_rate": 0.9,
+  "num_rate": 0.9,
+  "limit_rate": 0.7,
+  "hedge_keep": 0.8,
+  "strength_bad": 0,
+  "term_drift": 0,
+  "changelog_rate": 0.8,
+  "trace_rate": 0.8,
+  "long_ratio_max": 0.3,
+  "jargon_max": 0.35,
+  "min_analogy": 2
+ },
+ "note": "评分卡只输出 pass/fail/n-a 与指标值，不给自评分。"
+}
