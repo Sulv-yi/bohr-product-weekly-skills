@@ -1,0 +1,76 @@
+{
+  "task": "academic-translation-bilingual",
+  "note": "评分维度与题面一致；每项只判 pass/fail/n-a，不给自评分。阈值可被 run 参数覆盖，但不允许在下游放宽。",
+  "dimensions": [
+    {
+      "id": "effect",
+      "name": "实际效果",
+      "weight": 40,
+      "items": [
+        {"id": "task_completion", "name": "任务完成度", "weight": 15},
+        {"id": "result_correctness", "name": "结果正确性", "weight": 15},
+        {"id": "result_completeness", "name": "结果完整性", "weight": 5},
+        {"id": "verifiability", "name": "结果可核验性", "weight": 5}
+      ]
+    },
+    {
+      "id": "gain",
+      "name": "使用增益",
+      "weight": 25,
+      "items": [
+        {"id": "quality_gain", "name": "质量增益", "weight": 15},
+        {"id": "efficiency_gain", "name": "效率增益", "weight": 5},
+        {"id": "gain_verifiability", "name": "增益可验证性", "weight": 5}
+      ]
+    },
+    {
+      "id": "innovation",
+      "name": "创新增益",
+      "weight": 15,
+      "items": [
+        {"id": "new_capability", "name": "新增能力", "weight": 5},
+        {"id": "method_improvement", "name": "方法改进", "weight": 5},
+        {"id": "innovation_evidence", "name": "创新证据", "weight": 5}
+      ]
+    },
+    {
+      "id": "reliability",
+      "name": "可靠体验",
+      "weight": 10,
+      "items": [
+        {"id": "usability", "name": "调用与易用性", "weight": 3},
+        {"id": "stability", "name": "运行稳定性", "weight": 4},
+        {"id": "exception_handling", "name": "异常处理", "weight": 3}
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "生态贡献",
+      "weight": 10,
+      "items": [
+        {"id": "documentation", "name": "文档完整性", "weight": 3},
+        {"id": "reusability", "name": "资源可复用性", "weight": 4},
+        {"id": "sharing_value", "name": "分享推广价值", "weight": 3}
+      ]
+    }
+  ],
+  "thresholds": {
+    "pair_coverage": 0.95,
+    "marker_keep": 0.9,
+    "term_coverage": 0.95,
+    "term_variant_leak": 0,
+    "term_conflict": 0,
+    "number_transfer_rate": 0.95,
+    "magnitude_errors": 0,
+    "boundary_violation": 1,
+    "hedge_alignment": 0.8,
+    "length_ratio": 1.2,
+    "min_target_chars": 200
+  },
+  "auto_check": {
+    "metrics_source": "scripts/validate_result.py --json（与门槛同一口径）",
+    "baseline_source": "eval/score_output.py --baseline examples/baseline-scorecard.json",
+    "ab_source": "eval/compare_ab.py examples/baseline-scorecard.json examples/scorecard.json --md examples/ab-report.md",
+    "gate_source": "scripts/validate_result.py <result.json> --case <case.json> --text <bilingual.md>"
+  }
+}
