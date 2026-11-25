@@ -1,0 +1,230 @@
+{
+  "version": "1.0",
+  "task": "latex-writing-compile",
+  "total": 100,
+  "note": "把题面五个评分维度落成可执行条目。每条指向运行时实际产出的文件或可运行的检查命令；给的是验收口径，不是自评分数。",
+  "dimensions": [
+    {
+      "id": "actual_effect",
+      "name": "实际效果",
+      "weight": 40,
+      "items": [
+        {
+          "id": "task_completion",
+          "name": "任务完成度",
+          "weight": 15,
+          "acceptance": "交付可继续编辑的 .tex 成稿（章节完整、摘要齐全、公式与表格有真实内容）与编译产物，不是片段、截图或只有报错清单。",
+          "evidence": [
+            "/app/output/manuscript.tex",
+            "/app/output/preview.pdf",
+            "/app/output/selfcheck.md"
+          ],
+          "auto_check": "python scripts/check_manuscript.py /app/output/manuscript.tex"
+        },
+        {
+          "id": "result_correctness",
+          "name": "结果正确性",
+          "weight": 15,
+          "acceptance": "公式符号与编号、表格数值与列宽、交叉引用与参考文献在编译后正确呈现；报错定位到文件行号与根因。",
+          "evidence": [
+            "/app/output/compile-report.json",
+            "/app/output/selfcheck.md#2-未清项"
+          ],
+          "auto_check": "python scripts/build_outputs.py --tex /app/output/manuscript.tex --outdir /app/output"
+        },
+        {
+          "id": "result_completeness",
+          "name": "结果完整性",
+          "weight": 5,
+          "acceptance": "必需章节不缺、每节有实质篇幅、公式与表格齐备、\\cite 全部能在 .bib 找到。",
+          "evidence": [
+            "/app/output/selfcheck.md#1-结构指标",
+            "/app/output/cite-map.csv"
+          ],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --tex /app/output/manuscript.tex --out /app/output/scorecard.json"
+        },
+        {
+          "id": "result_verifiability",
+          "name": "结果可核验性",
+          "weight": 5,
+          "acceptance": "事实/来源映射逐条可回溯；引用键与条目一一对应；编译证据（轮次、引擎版本、日志）可复核。",
+          "evidence": [
+            "/app/output/cite-map.csv",
+            "/app/output/compile-report.json"
+          ],
+          "auto_check": "cat /app/output/cite-map.csv"
+        }
+      ]
+    },
+    {
+      "id": "usage_gain",
+      "name": "使用增益",
+      "weight": 25,
+      "items": [
+        {
+          "id": "quality_gain",
+          "name": "质量增益",
+          "weight": 15,
+          "acceptance": "相同工程与模板下，加载 Skill 后成稿完整度、编译通过率、引用闭合率提升。由平台按同一 rubric 对照；本 Skill 提供指标脚本使对照可量化。",
+          "evidence": [
+            "eval/rubric.json",
+            "eval/score_output.py",
+            "eval/ab-protocol.md"
+          ],
+          "auto_check": "python eval/compare_ab.py <baseline> <skill>"
+        },
+        {
+          "id": "efficiency_gain",
+          "name": "效率增益",
+          "weight": 5,
+          "acceptance": "减少在报错信息间反复试探：结构预检先拦、编译一次跑完、错误按 file:line 归并。",
+          "evidence": [
+            "scripts/build_outputs.py",
+            "/app/output/compile-report.json"
+          ],
+          "auto_check": "python scripts/build_outputs.py --help"
+        },
+        {
+          "id": "gain_verifiability",
+          "name": "增益可验证性",
+          "weight": 5,
+          "acceptance": "对照条件一致（同一工程、同一引擎、同一评分表、A/B 匿名、3 次重复取中位），第三方可复现；变差如实报告。",
+          "evidence": [
+            "eval/ab-protocol.md",
+            "eval/acceptance.md",
+            "eval/compare_ab.py"
+          ],
+          "auto_check": "python eval/compare_ab.py --help"
+        }
+      ]
+    },
+    {
+      "id": "innovation_gain",
+      "name": "创新增益",
+      "weight": 15,
+      "items": [
+        {
+          "id": "new_capability",
+          "name": "新增能力",
+          "weight": 5,
+          "acceptance": "成稿门槛可计算（章节实质/公式内容/表格数据行/引用闭合）、编译错误定位到行、引用映射可逐条核。",
+          "evidence": [
+            "scripts/check_manuscript.py",
+            "scripts/build_outputs.py"
+          ],
+          "auto_check": "python scripts/check_manuscript.py --help"
+        },
+        {
+          "id": "method_improvement",
+          "name": "方法改进",
+          "weight": 5,
+          "acceptance": "先出成稿再检查；结构预检→编译→报错定位→引用收敛→复现记录，顺序固定；生成与核验分离。",
+          "evidence": [
+            "SKILL.md#核心原则",
+            "references/error-taxonomy.md"
+          ],
+          "auto_check": "grep -n '先出成稿\\|先出' SKILL.md"
+        },
+        {
+          "id": "innovation_evidence",
+          "name": "创新证据",
+          "weight": 5,
+          "acceptance": "给出与已有方案（基础 Agent、在线编辑器、模板向导）的边界与价值对比；不声称优于未实测对象。",
+          "evidence": [
+            "references/innovation-boundary.md"
+          ],
+          "auto_check": "grep -n '基础 Agent\\|编辑器\\|模板向导' references/innovation-boundary.md"
+        }
+      ]
+    },
+    {
+      "id": "reliability",
+      "name": "可靠体验",
+      "weight": 10,
+      "items": [
+        {
+          "id": "invocation",
+          "name": "调用与易用性",
+          "weight": 3,
+          "acceptance": "在「写 LaTeX 章节」「修编译错误」「适配模板」「收敛引用」指令下正确触发；一次跑通。",
+          "evidence": [
+            "SKILL.md#适用",
+            "examples/minimal-example.md"
+          ],
+          "auto_check": "grep -n '适用\\|不适用' SKILL.md"
+        },
+        {
+          "id": "stability",
+          "name": "运行稳定性",
+          "weight": 4,
+          "acceptance": "不同工程规模、不同模板与引擎下重复运行结果一致；脚本只读输入、写独立输出。",
+          "evidence": [
+            "eval/ab-protocol.md#3-重复性与取数",
+            "scripts/probe_project.py"
+          ],
+          "auto_check": "python scripts/probe_project.py --help"
+        },
+        {
+          "id": "exception_handling",
+          "name": "异常处理",
+          "weight": 3,
+          "acceptance": "对缺引擎、缺宏包、缺字体、报错级联、模板必填项缺失五类情况有明确处置，写入 uncertainty，不臆造编译成功。",
+          "evidence": [
+            "SKILL.md#异常处理",
+            "references/error-taxonomy.md"
+          ],
+          "auto_check": "grep -c '引擎\\|宏包\\|字体\\|级联\\|必填' SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "生态贡献",
+      "weight": 10,
+      "items": [
+        {
+          "id": "docs",
+          "name": "文档完整性",
+          "weight": 3,
+          "acceptance": "使用说明、依赖、模板与宏包清单、示例、适用边界、维护信息齐全。",
+          "evidence": [
+            "README.md",
+            "SKILL.md",
+            "examples/minimal-example.md"
+          ],
+          "auto_check": "cat README.md"
+        },
+        {
+          "id": "reusability",
+          "name": "资源可复用性",
+          "weight": 4,
+          "acceptance": "模板与公式规则、错误分类表、度量脚本、核查表可被他人直接用于自己的工程。",
+          "evidence": [
+            "references/",
+            "scripts/",
+            "eval/",
+            "examples/"
+          ],
+          "auto_check": "python eval/score_output.py --list"
+        },
+        {
+          "id": "sharing",
+          "name": "分享推广价值",
+          "weight": 3,
+          "acceptance": "沉淀可分享的编译排错案例与失败模式；有公开可访问的仓库地址。",
+          "evidence": [
+            "GITHUB_URL.txt",
+            "references/error-taxonomy.md"
+          ],
+          "auto_check": "cat GITHUB_URL.txt"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "min_total": 400,
+    "min_sec": 120,
+    "source_map": 3,
+    "cite_resolved_rate": 1.0
+  }
+}
