@@ -7,6 +7,8 @@ description: 参考文献与引用管理 Skill。从真实稿件与文献库出�
 
 围绕真实、高频的引用管理任务，形成可运行、可核验、可改进的最小闭环。聚焦四个问题：**挂得对 / 编得顺 / 收得净 / 对得上**。用同一份稿件与同一个文献库做前后对照时可给出可核验的改进证据。
 
+**核心原则：交付的是可核对的产物本体，不是脚本运行结果本身。** 先落交付清单骨架（保证六类产物齐全），再填真实内容，最后才跑核验；标 success 必须有可编辑稿件、逐条 citations 与可回溯 sources，缺一即为不完整。
+
 ## 何时使用 / 不适用
 
 - **适用**：给定稿件 + 文献库（BibTeX/RIS/JSON）+ 目标格式规范，需要做引用定位、编号重排、去重、格式转换、来源核验与一致性检查。
@@ -51,12 +53,13 @@ description: 参考文献与引用管理 Skill。从真实稿件与文献库出�
 
 ## 工作流（严格顺序）
 
+0. **先落交付清单骨架（防空壳）**：`scripts/draft_skeleton.py --case /input/case.json --out /app/output/deliverables.md`。生成六类产物的标题、要求与占位槽；即使后续中断也留完整半成品。定稿前清空所有 【…】 占位。
 1. **解析文献库**：`scripts/parse_library.py <refs.bib|refs.ris|refs.json>... --out entries.json`。支持三种格式，字段缺失留空不臆造，`_source_file` 标来源。
 2. **去重归并建议**：`scripts/dedupe_entries.py entries.json --out dedupe.json`。产出 `merge` / `uncertain` / `do_not_merge` 三类建议，每条带可解释判据。人工确认后写入 `result.deduplication`。
 3. **编号与一致性检查**：`scripts/check_numbering.py manuscript.md --out numbering.json [--style numeric|superscript|author-year|auto] [--bib-count N]`。检查连续性、悬空引用、未引用条目、样式混用。把结果写入 `result.numbering`。
 4. **引用定位与匹配**：逐句识别需支撑的论断，选正确引用位置，绑定文献条目并写 match_basis。`verify_citations.py` 会检查 claim 是否在稿件原文、位置是否落在图表注附近、主题是否匹配。
 5. **核验（核心）**：`scripts/verify_citations.py result.json --library entries.json --manuscript manuscript.md [--dedupe dedupe.json] [--numbering numbering.json] --out verify.json [--strict]`。四性质有 error 必须修复；warning 要么修复要么写入 uncertainty。
-6. **契约校验**：`scripts/validate_result.py result.json --case case.json`。
+6. **契约 + 实质性校验**：`scripts/validate_result.py result.json --case case.json`。标 success 必须：citations 非空且每条有 claim+ref_key、sources 非空、无占位符、编号连续无悬空；否则降 partial 并写入 uncertainty，**不要靠改 status 绕过**。
 
 ## 四个关注点如何被脚本保证
 
@@ -87,7 +90,7 @@ description: 参考文献与引用管理 Skill。从真实稿件与文献库出�
 ## 资源
 
 - `assets/format_mapping.json`：BibTeX/RIS → 标准字段映射 + GB/T 7714 类型标识 + 关键保留字段。
-- `scripts/`：6 个标准库脚本（parse_library / dedupe_entries / check_numbering / verify_citations / validate_result）。
+- `scripts/`：6 个标准库脚本（draft_skeleton / parse_library / dedupe_entries / check_numbering / verify_citations / validate_result）。
 - `references/`：工作流、去重判据、编号规则、格式规范、边界案例。
 - `examples/minimal-example.md`：完整最小调用示例（示意输出已标注）。
 
