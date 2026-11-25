@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "note": "证据强度四档的判定口径。等级由线索推出，不由语气决定；命中不了线索写 insufficient，不允许默认 moderate。",
+  "levels": {
+    "strong": {
+      "rank": 3,
+      "definition": "直接支撑该论断，研究设计或共识级别足够，结论方向不依赖单一研究。",
+      "design_clues": ["系统综述", "meta 分析", "荟萃分析", "随机对照", "randomized", "多中心", "指南", "共识声明"],
+      "sample_clue": "n ≥ 100 或跨多个数据集/队列",
+      "language": "可直接陈述结论；如与本文不一致，应写'与…不一致'并给可能原因。"
+    },
+    "moderate": {
+      "rank": 2,
+      "definition": "有对照或重复验证，但样本、场景或复现范围有限。",
+      "design_clues": ["队列", "cohort", "前瞻性", "对照实验", "消融实验", "ablation", "重复实验", "多个数据集", "复现"],
+      "sample_clue": "10 ≤ n < 100，或单中心/单批次",
+      "language": "用'在本研究的条件下''在该体系中'限定；不用'证明''必然'。"
+    },
+    "weak": {
+      "rank": 1,
+      "definition": "单一研究、小样本、体外或个案，方向可参考但不足以定论。",
+      "design_clues": ["单例", "个案", "体外", "in vitro", "初步", "预印本", "preprint", "单次实验", "未重复", "会议摘要"],
+      "sample_clue": "n < 10",
+      "language": "必须带限定语（可能/提示/初步/尚不能）；不得写成领域共识。"
+    },
+    "insufficient": {
+      "rank": 0,
+      "definition": "线索不足或只有摘要级信息，无法判定支撑强度。",
+      "design_clues": [],
+      "sample_clue": "未知",
+      "language": "写成'尚不清楚''需进一步验证'，或把该论断移出正文放进待核清单。"
+    }
+  },
+  "relations": {
+    "supports": "原文直接支持该论断",
+    "supports_partially": "只支持论断的一部分（部分对象/范围/条件）",
+    "contradicts": "原文结论与该论断相反，必须写进 conflicts",
+    "context": "只提供背景，不构成支撑，不能作为该论断的证据行"
+  },
+  "hedge_rules": {
+    "strong": "允许无 hedge；出现绝对化词也不算错。",
+    "moderate": "不得出现证明/证实/必然/唯一/完全等绝对化词。",
+    "weak": "必须有 hedge 或范围限定，否则判为表述过强。",
+    "insufficient": "必须有 hedge 或明确写未知，否则判为表述过强。"
+  },
+  "escalation": "同一论断收集到 ≥3 条独立 weak 证据且方向一致时，可标注为'多条一致但各自证据有限'，但不得升格为 strong。"
+}
