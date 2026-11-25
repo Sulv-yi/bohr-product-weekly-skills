@@ -1,0 +1,106 @@
+{
+  "rubric_version": "1.0",
+  "task": "introduction-related-work-writing",
+  "case_id": "selftest-demo-000",
+  "status": "success",
+  "note": "本文件只记录指标与逐项判定，不含自评分；增益结论须由 compare_ab.py 与 baseline 对比得出。",
+  "metrics": {
+    "total_chars": 1550,
+    "min_chars_ok": true,
+    "four_part_coverage": 1.0,
+    "missing_parts": [],
+    "section_chars": {
+      "background": 321,
+      "related_work": 463,
+      "gap": 269,
+      "contributions": 150
+    },
+    "section_min_ok": {
+      "background": true,
+      "related_work": true,
+      "gap": true,
+      "contributions": true
+    },
+    "related_groups": 3,
+    "contributions": 3,
+    "contributions_with_evidence": 3,
+    "contribution_evidence_rate": 1.0,
+    "claim_binding_rate": 0.381,
+    "gap_chain_present": true,
+    "source_count": 6,
+    "source_metadata_rate": 1.0,
+    "placeholder_count": 0,
+    "manual_review_items": 2
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "pass",
+      "note": "四要素覆盖 100%；正文 1550 字"
+    },
+    "result_correctness": {
+      "verdict": "pass",
+      "note": "来源元数据完整率 100%；占位符 0 （事实对错需对着 quote 逐条核，本项只查可核条件是否齐备）"
+    },
+    "result_completeness": {
+      "verdict": "pass",
+      "note": "各节字数 {'background': 321, 'related_work': 463, 'gap': 269, 'contributions': 150}；相关工作 3 组"
+    },
+    "result_verifiability": {
+      "verdict": "pass",
+      "note": "来源 6 条；贡献带证据 100%"
+    },
+    "quality_gain": {
+      "verdict": "pass",
+      "note": "论断-引用绑定率 38%；空白推导链 有；增益方向须用 eval/compare_ab.py 与 baseline 对比得出"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "需人工确认项 2 条；耗时与轮次由平台记录，本脚本不代填"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "对照口径见 eval/ab-protocol.md，指标可被同一脚本重跑"
+    },
+    "new_capability": {
+      "verdict": "pass",
+      "note": "结构度量 + 来源定位 + 自检表生成，基础 Agent 无同等机制"
+    },
+    "method_improvement": {
+      "verdict": "pass",
+      "note": "骨架先落 → 分组比较 → 空白推导 → 贡献对齐 → 结构复核，写作与核对分离"
+    },
+    "innovation_evidence": {
+      "verdict": "pass",
+      "note": "边界与取舍见 references/innovation-boundary.md"
+    },
+    "invocation": {
+      "verdict": "pass",
+      "note": "case_id='selftest-demo-000'"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "重复运行一致性由 eval/ab-protocol.md 第 3 节定义，需 3 次重复取中位"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "uncertainty 2 条；status=success"
+    },
+    "docs": {
+      "verdict": "pass",
+      "note": "SKILL.md + README.md + examples/ 齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "eval/ 评分表与脚本、references/ 模板可被他人直接复用"
+    },
+    "sharing": {
+      "verdict": "pass",
+      "note": "公开仓库地址见 GITHUB_URL.txt"
+    }
+  },
+  "counts": {
+    "pass": 15,
+    "fail": 0,
+    "na": 1
+  }
+}
