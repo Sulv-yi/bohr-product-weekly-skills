@@ -1,0 +1,9 @@
+{
+  "case_id": "selftest-latex-013",
+  "task": "按给定结构写出一份可编译的 LaTeX 成稿：交代研究问题与既有工作、给出方法与参数、给出结果与表、给出结论与适用范围。",
+  "template": "article",
+  "engine": "pdflatex",
+  "required_sections": ["引言", "方法", "结果", "结论"],
+  "output_contract": ["artifacts", "manuscript", "changed_files", "source_map", "build", "reproduction"],
+  "note": "示例用虚构材料，只用于验证 Skill 流程可跑通，不代表任何正式案例或评分。"
+}
