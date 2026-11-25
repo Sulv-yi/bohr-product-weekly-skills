@@ -1,0 +1,179 @@
+{
+  "version": "1.0",
+  "task": "academic-language-polishing",
+  "total": 100,
+  "note": "把题面的五个评分维度落成可执行条目。每一项都指向 Skill 运行时实际产出的文件或可运行的检查命令，便于第三方复核：这里给的是验收口径，不是自评分数。",
+  "dimensions": [
+    {
+      "id": "actual_effect",
+      "name": "实际效果",
+      "weight": 40,
+      "items": [
+        {
+          "id": "task_completion",
+          "name": "任务完成度",
+          "weight": 15,
+          "acceptance": "逐段交付「润色后文本＋逐句修改说明」，不交整段重写建议、不交写作指导。覆盖任务要求的全部处理项：指定章节逐段处理、术语表建全、缩写与符号首次出现统一、双语对照与修改清单齐全。",
+          "evidence": ["/app/output/result.json#result.paragraphs", "/app/output/result.json#result.change_log"],
+          "auto_check": "python scripts/check_polish.py /app/output/result.json --plan /app/work/polish_plan.json"
+        },
+        {
+          "id": "result_correctness",
+          "name": "结果正确性",
+          "weight": 15,
+          "acceptance": "改写后仍表达作者主张：限定强度未被加强或削弱、数据与单位未被改动、引用编号与图表指向仍对得上、术语译法符合领域惯例。",
+          "evidence": ["/app/output/scorecard.json#metrics.invariant_conservation", "/app/output/scorecard.json#metrics.hedge_conservation"],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --out /app/output/scorecard.json"
+        },
+        {
+          "id": "result_completeness",
+          "name": "结果完整性",
+          "weight": 5,
+          "acceptance": "原文每一段都有对应润色段，无漏段；术语表覆盖材料中出现的全部专业术语；每条修改带类型标签与理由。",
+          "evidence": ["/app/output/scorecard.json#metrics.segment_coverage", "/app/output/scorecard.json#metrics.edit_note_coverage"],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --out /app/output/scorecard.json"
+        },
+        {
+          "id": "result_verifiability",
+          "name": "结果可核验性",
+          "weight": 5,
+          "acceptance": "原文—改文对照、修改类型标签、修改理由三者齐备，第三方可据此逐条判断「这处该不该改」；每条证据带原文定位（段落 id 或行号）。",
+          "evidence": ["/app/output/result.json#result.change_log", "/app/output/result.json#sources"],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --out /app/output/scorecard.json"
+        }
+      ]
+    },
+    {
+      "id": "usage_gain",
+      "name": "使用增益",
+      "weight": 25,
+      "items": [
+        {
+          "id": "quality_gain",
+          "name": "质量增益",
+          "weight": 15,
+          "acceptance": "在相同输入、相同术语表、相同风格规则下，加载 Skill 相对基础 Agent 在语法修正、术语一致性、语义保持、语气贴合上稳定更好。由平台按同一 rubric 做对照；本 Skill 提供 rubric 与指标计算脚本，保证对照可量化。",
+          "evidence": ["eval/rubric.json", "eval/score_output.py", "eval/ab-protocol.md"],
+          "auto_check": "python eval/score_output.py --rubric eval/rubric.json --help"
+        },
+        {
+          "id": "efficiency_gain",
+          "name": "效率增益",
+          "weight": 5,
+          "acceptance": "减少人工返修条目、往返轮次与逐句核对条目，且不把成本转移到事后校对。运行结束输出人工确认项清单（questions_for_author），条目越少越好且必须真实。",
+          "evidence": ["/app/output/result.json#uncertainty", "/app/output/scorecard.json#metrics.manual_review_items"],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --out /app/output/scorecard.json"
+        },
+        {
+          "id": "gain_verifiability",
+          "name": "增益可验证性",
+          "weight": 5,
+          "acceptance": "对照条件一致：同一份原文、同一术语表、同一评分标准、同一评分人；必要时盲评。Skill 内置 A/B 匿名对照协议与验收阈值，第三方可照做复现。",
+          "evidence": ["eval/ab-protocol.md", "eval/acceptance.md", "/app/output/scorecard.json#thresholds"],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --out /app/output/scorecard.json"
+        }
+      ]
+    },
+    {
+      "id": "innovation_gain",
+      "name": "创新增益",
+      "weight": 15,
+      "items": [
+        {
+          "id": "new_capability",
+          "name": "新增能力",
+          "weight": 5,
+          "acceptance": "具备基础 Agent 难以稳定实现的能力：术语表驱动的全篇一致性回扫、限定强度守恒检查、双语术语对齐、按目标文体整体改写。",
+          "evidence": ["scripts/term_consistency.py", "scripts/check_polish.py", "references/terminology-governance.md"],
+          "auto_check": "python scripts/term_consistency.py --help"
+        },
+        {
+          "id": "method_improvement",
+          "name": "方法改进",
+          "weight": 5,
+          "acceptance": "方法层面有明确取舍：最小编辑原则、分句级编辑策略、术语表与风格指南注入方式、改后回读校验、改写与审校双通道。",
+          "evidence": ["references/minimal-edit.md", "SKILL.md#工作流"],
+          "auto_check": "grep -c '最小编辑\\|分句级\\|回读' references/minimal-edit.md"
+        },
+        {
+          "id": "innovation_evidence",
+          "name": "创新证据",
+          "weight": 5,
+          "acceptance": "给出与已有方案的边界与价值对比，比较对象包含基础 Agent、通用写作工具、翻译工具、人工润色基线中适用者；不自称优于未比较的对象。",
+          "evidence": ["references/innovation-boundary.md"],
+          "auto_check": "grep -c '基础 Agent\\|通用写作工具\\|翻译工具\\|人工润色' references/innovation-boundary.md"
+        }
+      ]
+    },
+    {
+      "id": "reliability",
+      "name": "可靠体验",
+      "weight": 10,
+      "items": [
+        {
+          "id": "invocation",
+          "name": "调用与易用性",
+          "weight": 3,
+          "acceptance": "该润色时触发；纯内容问答、纯翻译、纯格式转换时不擅自改写。输出可直接粘贴回 Markdown / LaTeX / 纯文本，不夹带解释性前缀。",
+          "evidence": ["SKILL.md#触发与不触发", "references/exception-matrix.md"],
+          "auto_check": "grep -c '不触发\\|不应触发\\|纯问答' SKILL.md references/exception-matrix.md"
+        },
+        {
+          "id": "stability",
+          "name": "运行稳定性",
+          "weight": 4,
+          "acceptance": "长文本、分章节、多次重复运行、不同学科术语下持续产出可用结果；同一段落重复润色结论不漂移（三次重复的中位结果一致）。",
+          "evidence": ["eval/ab-protocol.md#重复性", "scripts/build_polish_draft.py"],
+          "auto_check": "python scripts/build_polish_draft.py --help"
+        },
+        {
+          "id": "exception_handling",
+          "name": "异常处理",
+          "weight": 3,
+          "acceptance": "识别并处置：超长输入、编码混乱、公式与引用混杂、中英日混排、术语表内部冲突、目标文体不明。处置方式写入 uncertainty 并标 partial，不静默猜测。",
+          "evidence": ["references/exception-matrix.md", "/app/output/result.json#uncertainty"],
+          "auto_check": "grep -c '超长\\|编码\\|公式\\|混排\\|冲突\\|文体不明' references/exception-matrix.md"
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "生态贡献",
+      "weight": 10,
+      "items": [
+        {
+          "id": "docs",
+          "name": "文档完整性",
+          "weight": 3,
+          "acceptance": "SKILL.md、术语表与风格指南格式、输入输出示例、适用范围、限制与维护信息齐全。",
+          "evidence": ["SKILL.md", "README.md", "examples/minimal-example.md"],
+          "auto_check": "python scripts/validate_result.py --help"
+        },
+        {
+          "id": "reusability",
+          "name": "资源可复用性",
+          "weight": 4,
+          "acceptance": "术语表、风格规则、测试文本、评分表与脚本可被他人直接用于自己的稿件与学科，不依赖作者本地文件或手工步骤。",
+          "evidence": ["eval/rubric.json", "eval/score_output.py", "references/terminology-governance.md", "examples/"],
+          "auto_check": "python eval/score_output.py --result examples/selftest-result.json --case examples/selftest-case.json --out /tmp/scorecard.json"
+        },
+        {
+          "id": "sharing",
+          "name": "分享推广价值",
+          "weight": 3,
+          "acceptance": "沉淀可分享的案例、评测集、术语治理经验与真实应用价值；有公开可访问的仓库地址。",
+          "evidence": ["GITHUB_URL.txt"],
+          "auto_check": "cat GITHUB_URL.txt"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "invariant_conservation": 1.0,
+    "hedge_conservation": 1.0,
+    "term_uniqueness": 1.0,
+    "segment_coverage": 1.0,
+    "edit_note_coverage": 0.9,
+    "max_sentence_change_rate": 0.6
+  }
+}
