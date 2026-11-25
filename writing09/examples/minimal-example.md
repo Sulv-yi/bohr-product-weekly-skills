@@ -67,3 +67,28 @@ python3 scripts/validate_result.py result.json --case case.json
 - 对齐：正文数值 1e-4/32/100/42 均在参数表且有来源 → passed
 - 复现：split 缺失 → partial（blocking）
 - 契约：status=partial 且 uncertainty 非空 → passed
+
+---
+
+## 附：真实材料参数映射演示（用公开文献元数据，标注为示例）
+
+> 本段只演示“材料事实 → sources 条目 → 正文数值”的映射形态，文献元数据取自本地 PDF 文件名/首页。
+> **实际数值与 quote 必须在运行时从原文逐字提取**，此处不预填、不冒充正式案例结果。
+
+示例材料（本地文献，非官方案例）：Li et al., 2024, "A low mobility UV-LED benzophenone photoinitiator"（题目见本地 PDF 文件名）；另一篇 Huang & Chen, 2022, "Synthesis and free radical photopolymerization of one-component type II photoinitiator based on benzophenone..."。
+
+演示映射（参数取值须来自原文，示例仅示形态）：
+
+```json
+{
+  "element": "photoinitiator",
+  "value": "<运行时从原文提取的化合物/迁移率数值，示例不预填>",
+  "source": "Li et al. 2024 - A low mobility UV-LED benzophenone photoinitiator.pdf",
+  "locator": "p.<运行时确认> / section <运行时确认>",
+  "quote": "<运行时从该页逐字提取；示例不预填>"
+}
+```
+
+要点：写作方法章节时，任何迁移率、吸收波长、引发效率等数值都必须有对应 sources 条目；
+材料中未报告的项写入 `questions_for_author` + `uncertainty`，标 `partial`，绝不为段落顺畅补数值。
+换成组织方固定案例时流程相同——只换材料与 case_id，不复用本示例的任何数值或文字。
