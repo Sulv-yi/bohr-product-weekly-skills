@@ -1,0 +1,12 @@
+{
+  "case_id": "selftest-001",
+  "note": "自测案例，非平台正式案例，不得作为正式答案使用。",
+  "task": "依据研究材料与文献写出一份结构完整、可进入修改环节的学术论文初稿，事实性内容可回溯到材料位置与文献条目。",
+  "material": "examples/selftest-materials.md",
+  "genre": "research_article",
+  "language": "zh",
+  "output_contract": [
+    "manuscript",
+    "material_index"
+  ]
+}
