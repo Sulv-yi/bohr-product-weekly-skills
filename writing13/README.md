@@ -14,9 +14,11 @@ README.md                       本说明
 GITHUB_URL.txt                  公开作品链接
 scripts/
   probe_project.py              引擎/模板/主文件/依赖探查（不臆造软件状态）
+  build_manuscript.py           按案例生成结构完整可编译的 .tex 成稿骨架 + refs.bib + 章节计划
+  check_manuscript.py           成稿实质门槛（结构/篇幅/占位符/公式表格/引用闭合）
   static_check.py               无引擎结构硬损伤检查（括号/环境/label/引用）
   compile_and_parse.py          多轮编译 + 全量报错定位与根因分类 + 引用收敛
-  verify_result.py              四性质 + 契约自检
+  verify_result.py              五性质 + 契约自检（success 强制过成稿门槛）
 references/
   error-taxonomy.md             编译错误分类与修复策略
   reproducibility.md            可重复构建记录规范
@@ -27,9 +29,10 @@ examples/
 
 ## 设计动机（对应题面四问）
 
+- **成稿齐** → `build_manuscript.py` 先建出章节齐全、可直接编译的 .tex，再逐节写实；`check_manuscript.py` 卡住空骨架、占位符、凑不够篇幅的稿子。
 - **编译得通** → `compile_and_parse.py` 多轮编译到收敛，全量解析每条 `!` 错误到 file:line + 根因，不止于首错。
 - **改得对** → `static_check.py` 预检 label/引用/cite/环境；`source_map` 逐条绑定事实来源与改动记录。
-- **交得可用** → `verify_result.py` 强制交付可编辑 .tex，禁止 PDF/截图/片段顶替。
+- **交得可用** → `verify_result.py` 强制交付通过实质门槛的可编辑 .tex，禁止 PDF/截图/片段/检查报告顶替。
 - **复现得了** → `probe_project.py` 探测真实引擎/版本/依赖，`reproduction` 记录命令与轮次；探测不到写 unknown。
 
 ## 引擎缺失降级
