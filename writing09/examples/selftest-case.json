@@ -1,0 +1,33 @@
+{
+  "case_id": "selftest-demo-009",
+  "note": "示例案例：为演示输入输出格式而编写的虚构材料，不是平台固定案例，也不是任何真实实验。所有数值与日志均为演示用占位，请勿引用。",
+  "task": "依据 config.yaml、train.log 与 data.md，撰写『点云语义分割模型训练方法』的方法与实验设置章节（中文，含参数表与复现清单）。",
+  "audience": "中文期刊方法章节审稿人",
+  "language": "zh",
+  "material": {
+    "config.yaml": {
+      "model": {"name": "PointSeg-S", "layers": 24, "width": 384, "dropout": 0.1},
+      "train": {"optimizer": "AdamW", "lr": 0.0003, "weight_decay": 0.05, "batch_size": 8, "epochs": 120, "warmup_steps": 2000, "grad_clip": 1.0},
+      "data": {"name": "S3DIS", "version": "v1.2", "areas": 6, "voxel": 0.02, "train_ratio": 0.8, "val_ratio": 0.1, "test_ratio": 0.1, "seed": 42},
+      "aug": {"rot_z": 15, "scale": [0.9, 1.1], "jitter": 0.01}
+    },
+    "train.log": [
+      "epoch 40 lr 3.00e-04 loss 0.412 val_mIoU 0.531",
+      "epoch 80 lr 1.20e-04 loss 0.298 val_mIoU 0.612",
+      "epoch 120 lr 4.00e-05 loss 0.271 val_mIoU 0.628",
+      "gpu: A100 40GB x2, cuda 12.1, torch 2.3.0"
+    ],
+    "data.md": "S3DIS v1.2，6 个区域，体素下采样 0.02 m；按区域划分训练/验证/测试为 4/1/1，未做随机重划；测试集仅在最终评估使用。",
+    "baselines": [
+      {"name": "PointNet++", "version": "官方实现 commit 8f5c2a1", "note": "同预算：相同体素与 batch size"},
+      {"name": "RandLA-Net", "version": "官方实现 commit 1a7b3de", "note": "同预算：相同体素与 batch size"}
+    ],
+    "missing": ["未提供最佳 epoch 的 checkpoint 名称", "未说明测试时的投票策略与重复次数"]
+  },
+  "constraints": [
+    "不得引入 config.yaml 之外的超参数取值",
+    "参数表每行须标注来源（config.yaml / train.log / 作者确认）",
+    "基线比较须说明是否同预算与统计方式"
+  ],
+  "output_contract": ["section", "elements", "reproducibility", "questions_for_author"]
+}
