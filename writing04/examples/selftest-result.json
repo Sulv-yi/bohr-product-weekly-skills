@@ -1,0 +1,384 @@
+{
+  "case_id": "selftest-demo-004",
+  "status": "success",
+  "note": "示例输出：配合 examples/selftest-case.json 的演示结果，材料与文献条目均为虚构占位，不是平台固定案例成绩。",
+  "result": {
+    "manuscript_path": "examples/selftest-manuscript.md",
+    "library_path": "examples/selftest-case.json#library",
+    "manuscript_text": "多孔钛支架的孔隙率与渗透性能之间存在方向相反的取舍[1]。激光粉末床熔融可在较宽参数区间内成形这类结构[2]。已有综述指出，工艺窗口多以定性描述给出[3]。\n\n偏差的物理来源包括支柱断裂与层间未熔合[2]，其幅度受激光功率影响显著[4]。相同孔隙率下不同拓扑的渗透率可相差数十个百分点[5]。产业经验窗口多按设备与粉末批次分别标定[6]。评价口径本身也不统一，致密度与相对偏差混用使数据难以横向比较[7]。\n\n为提升同孔隙率下的刚度，有工作采用节点加粗，但渗透性同步下降[8]。扫描策略改变热积累分布，同一功率速度组合下致密度可差 1.5 个百分点[9]。用孔道迂曲度统一不同拓扑的渗透数据在致密区间拟合良好[10]。\n\n近年有工作用代理模型预测相对密度[11]，也有工作尝试跨设备迁移工艺窗口[12]。疲劳寿命对孔隙形貌敏感，缺陷主导样本的寿命离散度显著更高[13]。生物相容性研究显示孔径分布影响骨长入速率[14]。原位监测可捕捉熔池异常，但尚未与设计孔隙率建立闭环[15]。",
+    "citations": [
+      {
+        "cite_id": "c1",
+        "claim": "多孔钛支架的孔隙率与渗透性能之间存在方向相反的取舍",
+        "claim_location": "sec1.p1.s1",
+        "ref_key": "wang2019",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "孔隙率",
+            "渗透性能"
+          ],
+          "match_basis": "该文直接给出孔隙率与力学性能的定量关系，并讨论与渗透性的反向取舍，支撑本句论断",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c2",
+        "claim": "激光粉末床熔融可在较宽参数区间内成形这类结构",
+        "claim_location": "sec1.p1.s2",
+        "ref_key": "zhang2020",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "LPBF",
+            "成形"
+          ],
+          "match_basis": "该文报告了 LPBF 成形点阵的可用参数区间与缺陷类型，支撑'可在较宽区间成形'的表述",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c3",
+        "claim": "已有综述指出，工艺窗口多以定性描述给出",
+        "claim_location": "sec1.p1.s3",
+        "ref_key": "liu2022",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "工艺窗口",
+            "综述"
+          ],
+          "match_basis": "该综述明确指出现有窗口研究以定性描述为主，未给可迁移判据",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c4",
+        "claim": "偏差的物理来源包括支柱断裂与层间未熔合",
+        "claim_location": "sec2.p1.s1",
+        "ref_key": "zhang2020",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "支柱断裂",
+            "未熔合"
+          ],
+          "match_basis": "该文逐类分析支柱断裂与未熔合的成因，与本句列举一致",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c5",
+        "claim": "其幅度受激光功率影响显著",
+        "claim_location": "sec2.p1.s2",
+        "ref_key": "chen2021",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "激光功率",
+            "致密化"
+          ],
+          "match_basis": "该文给出功率与致密度的一一对应曲线，支撑'影响显著'",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c6",
+        "claim": "相同孔隙率下不同拓扑的渗透率可相差数十个百分点",
+        "claim_location": "sec2.p1.s3",
+        "ref_key": "kumar2018",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "渗透率",
+            "拓扑"
+          ],
+          "match_basis": "该文实测三种拓扑在同孔隙率下的渗透率差异，最大差距约 40%",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c7",
+        "claim": "产业经验窗口多按设备与粉末批次分别标定",
+        "claim_location": "sec2.p1.s4",
+        "ref_key": "sun2020",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "跨设备",
+            "标定"
+          ],
+          "match_basis": "该文讨论窗口跨设备不可迁移的成因，指出标定按设备分别进行",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c8",
+        "claim": "评价口径本身也不统一，致密度与相对偏差混用使数据难以横向比较",
+        "claim_location": "sec2.p1.s5",
+        "ref_key": "park2021",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "口径",
+            "致密度"
+          ],
+          "match_basis": "该文统计 42 篇文献的报告口径，证实三种口径并存导致横向比较失效",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c9",
+        "claim": "为提升同孔隙率下的刚度，有工作采用节点加粗，但渗透性同步下降",
+        "claim_location": "sec3.p1.s1",
+        "ref_key": "wu2023",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "节点加粗",
+            "刚度"
+          ],
+          "match_basis": "该文报告节点加粗使刚度提升约 10%，同时渗透率下降，支撑取舍表述",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c10",
+        "claim": "扫描策略改变热积累分布，同一功率速度组合下致密度可差 1.5 个百分点",
+        "claim_location": "sec3.p1.s2",
+        "ref_key": "rossi2022",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "扫描策略",
+            "热积累"
+          ],
+          "match_basis": "该文用高速摄影与致密度测量对比两种扫描策略，差值 1.5 个百分点",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c11",
+        "claim": "用孔道迂曲度统一不同拓扑的渗透数据在致密区间拟合良好",
+        "claim_location": "sec3.p1.s3",
+        "ref_key": "zheng2023",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "迂曲度",
+            "渗透"
+          ],
+          "match_basis": "该文以迂曲度为单一变量拟合两类拓扑的渗透数据，样本限于致密区间",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c12",
+        "claim": "近年有工作用代理模型预测相对密度",
+        "claim_location": "sec4.p1.s1",
+        "ref_key": "lin2024",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "代理模型",
+            "相对密度"
+          ],
+          "match_basis": "该文训练代理模型预测 LPBF 相对密度，以偏差可稳定测量为前提",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c13",
+        "claim": "也有工作尝试跨设备迁移工艺窗口",
+        "claim_location": "sec4.p1.s2",
+        "ref_key": "huang2024",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "迁移学习",
+            "工艺窗口"
+          ],
+          "match_basis": "该文把某设备窗口迁移到另一设备，迁移前提是源域偏差已标定",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c14",
+        "claim": "疲劳寿命对孔隙形貌敏感，缺陷主导样本的寿命离散度显著更高",
+        "claim_location": "sec4.p1.s3",
+        "ref_key": "tan2017",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "疲劳",
+            "孔隙形貌"
+          ],
+          "match_basis": "该文对比设计主导与缺陷主导样本的疲劳寿命分布，后者离散度显著更大",
+          "strength": "direct"
+        }
+      },
+      {
+        "cite_id": "c15",
+        "claim": "生物相容性研究显示孔径分布影响骨长入速率",
+        "claim_location": "sec4.p1.s4",
+        "ref_key": "ferreira2020",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "生物相容性",
+            "孔径"
+          ],
+          "match_basis": "该文动物实验显示 300-500 μm 孔径的骨长入速率最高",
+          "strength": "supporting"
+        }
+      },
+      {
+        "cite_id": "c16",
+        "claim": "原位监测可捕捉熔池异常，但尚未与设计孔隙率建立闭环",
+        "claim_location": "sec4.p1.s5",
+        "ref_key": "yamada2022",
+        "position_ok": true,
+        "match": {
+          "topic_terms": [
+            "原位监测",
+            "熔池"
+          ],
+          "match_basis": "该文用同轴成像检出熔池异常，但未把信号反馈到孔隙率设计",
+          "strength": "supporting"
+        }
+      }
+    ],
+    "deduplication": {
+      "merged": [
+        {
+          "a": "wang2019",
+          "b": "wang2019dup",
+          "basis": "DOI 完全一致（10.3901/JME.2019.08.120），题名/卷期页相同，判为同一条目"
+        }
+      ],
+      "kept_separate": [
+        {
+          "a": "wang2019",
+          "b": "wang2019_zh",
+          "reason": "DOI 不同、题名不同（“关系”vs“关系研究”）且作者写法不同，可能是不同版本或不同文，保留并标待核"
+        }
+      ],
+      "pending": [
+        {
+          "pair": [
+            "wang2019",
+            "wang2019_zh"
+          ],
+          "reason": "卷期页相同但题名与作者写法有差异，需人工确认是否为同一文的两种著录"
+        }
+      ]
+    },
+    "numbering": {
+      "body_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "list_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "continuous": true,
+      "dangling": [],
+      "uncited": []
+    },
+    "format_conversion": {
+      "from": "BibTeX",
+      "to": "GB/T 7714-2015",
+      "field_mapping": {
+        "author": "主要责任者",
+        "title": "题名",
+        "journal": "刊名",
+        "year": "出版年",
+        "volume": "卷",
+        "issue": "期",
+        "pages": "页码",
+        "doi": "DOI"
+      },
+      "preserved_fields": [
+        "doi",
+        "volume",
+        "issue",
+        "pages"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "source_id": "s1",
+      "path": "examples/selftest-case.json#library",
+      "note": "文献库快照（17 条，含 1 组重复与 1 组待核）",
+      "ref_keys": [
+        "wang2019",
+        "wang2019dup",
+        "zhang2020",
+        "liu2022",
+        "wang2019_zh",
+        "chen2021",
+        "kumar2018",
+        "sun2020",
+        "park2021",
+        "wu2023",
+        "rossi2022",
+        "zheng2023",
+        "lin2024",
+        "huang2024",
+        "tan2017",
+        "ferreira2020",
+        "yamada2022"
+      ]
+    },
+    {
+      "source_id": "s2",
+      "path": "examples/selftest-case.json#manuscript",
+      "note": "原稿快照"
+    }
+  ],
+  "uncertainty": [
+    {
+      "type": "not_reported",
+      "note": "liu2022 无 DOI，无法做 DOI 级核验；已做题名+卷期页的一致性检查"
+    },
+    {
+      "type": "needs_human_confirmation",
+      "note": "wang2019 与 wang2019_zh 是否同一文，需作者确认（已列入 pending）"
+    }
+  ],
+  "changes": [
+    {
+      "from": "首版（4 处引文 4 条记录）",
+      "to": "15 处引文 15 条记录 + 三分去重 + 8 项字段映射",
+      "reason": "按 SKILL.md 覆盖预算把整篇引文账做全，而非抽样核对"
+    }
+  ]
+}
