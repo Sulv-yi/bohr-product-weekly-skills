@@ -9,8 +9,9 @@ SKILL.md                          主文件：触发条件、工作流、输入�
 README.md                         本说明
 GITHUB_URL.txt                    作品公开链接（提交前填写真实地址）
 scripts/
+  draft_skeleton.py               成稿骨架生成（四要素齐全，先跑，防空壳）
   citation_check.py               引用键覆盖、元数据完整性、编号连续性
-  validate_result.py              输出契约与证据一致性校验
+  validate_result.py              输出契约 + 成稿实质性校验（空壳/占位符拦截）
 references/
   background-and-gap.md           背景与研究空白推导
   related-work-grouping.md        相关工作分组比较框架
