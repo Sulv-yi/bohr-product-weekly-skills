@@ -49,3 +49,33 @@ python <skill_dir>/scripts/validate_result.py /app/output/result.json --case /in
 ```
 
 要点：`result` 覆盖全部 `output_contract` 字段；每条论断有 `sources`；quote 逐字来自原文；无依据处写入 uncertainty。
+
+---
+
+## 附：来源映射演示（用公开文献元数据，标注为示例）
+
+> 本段仅演示“论断 → sources 条目”的映射形态，文献元数据取自本地 PDF 文件名/首页，
+> **quote 字段在实际案例中必须运行时从原文逐字提取**，此处不预填逐字引文、不冒充正式答案。
+
+示例材料（本地文献，非官方案例）：Carmenini et al., *Green Chemistry*, 2025, 27, 12830–12843,
+"One-pot depolymerization–repolymerization of PET waste into sustainable photocurable liquid copolyesters for high-performance additive manufacturing"（14 页，文本层可用）。
+
+演示映射：
+
+```json
+{
+  "id": "S1",
+  "claim": "已有研究把消费后 PET 废料经一锅解聚-再聚合转为可光固化的共聚酯，用于增材制造",
+  "author": "Carmenini, Rosario; Sanz de León, Alberto; Benelli, Tiziana; et al.",
+  "year": 2025,
+  "venue": "Green Chemistry, 27, 12830-12843",
+  "file": "Carmenini et al. 2025 - One-pot depolymerization-repolymerization of PET waste.pdf",
+  "page": 1,
+  "section": "Abstract / Introduction",
+  "quote": "<运行时用 PDF 工具从该页逐字提取，例如摘要首句；此处为示例不预填>"
+}
+```
+
+要点：元数据（作者/年份/卷页/题名）真实且可核；`quote` 留待运行时提取而非编造；
+正文论断 `PET 废料可转为光固化共聚酯 [S1]` 与该条目一一对应。换成组织方固定案例时，
+流程完全相同——只换材料与 case_id，不复用本示例的任何文字。
