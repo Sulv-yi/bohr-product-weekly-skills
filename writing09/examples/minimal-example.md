@@ -18,17 +18,26 @@ dataset: CIFAR-10 v1
 
 ## 步骤
 ```bash
-# 1. 抽取参数骨架
+# 1. 先落六要素骨架（防只交两段概述）
+python3 scripts/draft_skeleton.py --case case.json --out /app/work/draft_skeleton.json
+
+# 2. 抽取要素表（含来源列），确认 unit/scope/source
 python3 scripts/extract_params.py config.yaml --out params.json
-#    确认 unit/scope/source，设 confirmed=true
 
-# 2. 写章节正文（section.txt），数值与参数表对齐
-python3 scripts/align_params.py section.txt params.json
+# 3. 写章节正文 section.md（六节），数值与参数表对齐
+python3 scripts/align_params.py section.md params.json
 
-# 3. 复现要素检查 + 契约自检
+# 4. 复现要素检查
 python3 scripts/check_reproducibility.py result.json
-python3 scripts/validate_result.py result.json --case case.json
+
+# 5. 落可核验附件：来源映射表 + 自检表（有 pandoc 时含 preview.pdf）
+python3 scripts/build_outputs.py --draft section.md --result result.json --outdir /app/output
+
+# 6. 契约 + 结构门槛
+python3 scripts/validate_result.py result.json --case case.json --text section.md
 ```
+
+`/app/output` 最终应是：`section.md`、`result.json`、`source-map.csv`、`selfcheck.md`（+ 有环境时 `preview.pdf`）。
 
 ## 示意输出 result.json（片段）
 ```json
