@@ -1,0 +1,130 @@
+{
+ "metrics": {
+  "chars": 1575,
+  "sections": 9,
+  "abbrev_rate": 1.0,
+  "abbrev_missing": [],
+  "avg_sent_len": 47.8,
+  "long_sent_ratio": 0.061,
+  "long_sents": [
+   "## 结果\n\n下表数据出自源文结果节的表 1 与图 2a、图 2b【源：源文 §3 表 1、图 2a",
+   "## 修改清单\n\n- [改:把\"首次库仑效率 82.3%\"的表述从定义入手，先解释\"进去的钠第二次取"
+  ],
+  "jargon_density": 0.121,
+  "analogies": 6,
+  "analogy_hits": [
+   [
+    "像",
+    4
+   ],
+   [
+    "相当于",
+    1
+   ],
+   [
+    "打个比方",
+    1
+   ]
+  ],
+  "num_total": 48,
+  "num_rate": 0.958,
+  "num_missing": [
+   "1m",
+   "6"
+  ],
+  "limit_total": 2,
+  "limit_rate": 1.0,
+  "limit_missing": [],
+  "figtab_rate": 1.0,
+  "figtab_missing": [],
+  "hedge_src": 3,
+  "hedge_tgt": 3,
+  "hedge_keep": 1.0,
+  "assertive_sents": 0,
+  "strength_sents": 0,
+  "strength_bad": 0,
+  "strength_bad_rows": [],
+  "term_drift": 0,
+  "term_drift_rows": [],
+  "changelog_total": 14,
+  "changelog_rate": 0.875,
+  "trace_claims": 19,
+  "trace_hit": 18,
+  "trace_rate": 0.947,
+  "audience_declared": true,
+  "purpose_declared": true,
+  "placeholders": []
+ },
+ "items": {
+  "task_completion": {
+   "verdict": "pass",
+   "note": "字数 1575；节 9"
+  },
+  "result_correctness": {
+   "verdict": "pass",
+   "note": "数值 96%；限定条件 100%；限定语 100%；越界断言 0；术语漂移 0"
+  },
+  "result_completeness": {
+   "verdict": "pass",
+   "note": "类比 6；图表 100%；受众声明 有；目的 有"
+  },
+  "verifiability": {
+   "verdict": "pass",
+   "note": "溯源 95%；改动账覆盖 88%（14 条）"
+  },
+  "quality_gain": {
+   "verdict": "pass",
+   "note": "变好 7 项；变差 0 项"
+  },
+  "efficiency_gain": {
+   "verdict": "pass",
+   "note": "越界断言 3→0；术语漂移 3→0；占位符 0→0"
+  },
+  "new_capability": {
+   "verdict": "pass",
+   "note": "新增四类度量：缩写展开 / 信息保留 / 强度对齐 / 改动可核"
+  },
+  "method_improvement": {
+   "verdict": "pass",
+   "note": "把「读得懂·留得住·说得准·接得住」落成可执行判定，而非写作建议"
+  },
+  "innovation_evidence": {
+   "verdict": "pass",
+   "note": "边界文档 + A/B 报告均在包内"
+  },
+  "usability": {
+   "verdict": "pass",
+   "note": "SKILL.md 含预算表；最小示例可照做"
+  },
+  "stability": {
+   "verdict": "pass",
+   "note": "纯标准库，无第三方依赖，单文件函数"
+  },
+  "exception_handling": {
+   "verdict": "pass",
+   "note": "异常矩阵覆盖材料不足 / 缩写无全称 / 数值冲突"
+  },
+  "documentation": {
+   "verdict": "pass",
+   "note": "README + SCORING-MAP + 六篇 references"
+  },
+  "reusability": {
+   "verdict": "pass",
+   "note": "度量脚本与评分卡可独立调用"
+  },
+  "sharing": {
+   "verdict": "pass",
+   "note": "公开仓库链接"
+  },
+  "contract_integrity": {
+   "verdict": "pass",
+   "note": "契约字段齐备"
+  }
+ },
+ "contract_fails": [],
+ "counts": {
+  "pass": 16,
+  "fail": 0,
+  "n/a": 0
+ }
+}
