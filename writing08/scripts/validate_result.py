@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""校验 result.json：契约字段、状态、证据映射、不确定性、变更记录，
-以及【成稿实质性】——防止只交空壳/占位符却标 success 拿到高分的漏洞。
+"""校验 result.json：契约字段、状态、四要素成稿质量、证据映射、不确定性、变更记录。
 
-用法: python validate_result.py <result.json> [--case case.json] [--min-chars 200]
+设计取向：**拦住空壳，不放过薄稿**。
+- 挡住的是：标 success 却只交骨架/原则/几句空话、sources 为空、四要素缺件。
+- 挤出来的是：段落厚度、相关工作分组数、贡献条数与证据定位、论断-引用绑定率。
+结构度量在 scripts/quality_gate.py，本文件只做判定与报错，不重复实现。
+
+用法: python validate_result.py <result.json> [--case case.json] [--min-chars 600] [--text draft.md]
 退出码 0=通过, 1=有问题, 2=文件错误。
 """
 import sys
@@ -11,14 +15,21 @@ import os
 import re
 import argparse
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from quality_gate import measure, PLACEHOLDER  # noqa: E402
+
 VALID_STATUS = {'success', 'partial', 'blocked', 'unanswerable'}
 VALID_UNC = {'not_reported', 'undetermined', 'conflict', 'needs_human_confirmation'}
-# 成稿中禁止残留的占位标记（骨架阶段的槽位，定稿必须清空）
-PLACEHOLDER_RE = re.compile(r'【[^】]*】|\[证据槽\]|\[evidence slot\]|\bTODO\b|\bTBD\b|示例文本|非正式结果')
+
+# 题面硬要求对应的门槛（success 未达即判失败）
+GATE_GROUPS = 3          # 相关工作至少 3 组
+GATE_CONTRIB = 3         # 贡献至少 3 条
+GATE_SOURCES = 12        # 可回溯来源至少 12 条（覆盖关键工作与近期进展）
 
 
 def collect_text(obj):
     parts = []
+
     def walk(x):
         if isinstance(x, str):
             parts.append(x)
@@ -28,15 +39,16 @@ def collect_text(obj):
         elif isinstance(x, list):
             for v in x:
                 walk(v)
+
     walk(obj)
     return "\n".join(parts)
 
 
-def check(result, case, min_chars=200):
+def check(result, case, min_chars=600, extra_text=''):
     errors = []
     warnings = []
     if not isinstance(result, dict):
-        return ['顶层必须是对象'], []
+        return ['顶层必须是对象'], [], {}
 
     status = result.get('status')
     if status not in VALID_STATUS:
@@ -60,26 +72,42 @@ def check(result, case, min_chars=200):
     elif payload is None:
         errors.append('缺少 result 字段')
 
-    # ---- 成稿实质性：标 success 必须交出成稿本体，不是骨架/空话 ----
-    draft_text = collect_text(payload)
-    nchars = len(re.sub(r'\s', '', draft_text))
-    if status == 'success' and nchars < min_chars:
-        errors.append(f'status=success 但成稿正文仅 {nchars} 字（<{min_chars}），疑似空壳')
-    ph = PLACEHOLDER_RE.findall(draft_text)
-    if ph:
-        if status == 'success':
-            errors.append(f'status=success 但正文残留占位符 {len(ph)} 处：{sorted(set(ph))[:5]}')
-        else:
-            warnings.append(f'正文残留占位符 {len(ph)} 处（partial 可接受但定稿须清）：{sorted(set(ph))[:5]}')
-
-    # 四要素齐全性（背景/相关工作/空白/贡献）——正文或键名任一命中即可
-    four = ['背景', '相关工作', '研究空白', '贡献']
-    hit = {name: (name in draft_text or any(name in str(k) for k in keys)) for name in four}
-    missing = [name for name, ok in hit.items() if not ok]
-    if status == 'success' and missing:
-        warnings.append(f'success 但未显式覆盖四要素中的: {", ".join(missing)}（请确认是否被合并表述）')
-
+    # ---- 成稿质量：结构指标 + 硬门槛 ----
+    draft_text = collect_text(payload) + "\n" + (extra_text or '')
     sources = result.get('sources', [])
+    unc = result.get('uncertainty', [])
+    m = measure(draft_text, sources if isinstance(sources, list) else [], unc if isinstance(unc, list) else [],
+                min_chars=min_chars)
+
+    if status == 'success':
+        if m['total_chars'] < min_chars:
+            errors.append(f'status=success 但成稿正文仅 {m["total_chars"]} 字（<{min_chars}），疑似空壳/薄稿')
+        if m['missing_parts']:
+            errors.append(f'status=success 但四要素缺件: {m["missing_parts"]}（背景/相关工作/空白/贡献须分别成段）')
+        if m['related_groups'] < GATE_GROUPS:
+            errors.append(f'相关工作只有 {m["related_groups"]} 组比较（需 ≥{GATE_GROUPS} 组，按问题/方法/路线分组）')
+        if m['contributions'] < GATE_CONTRIB:
+            errors.append(f'贡献仅 {m["contributions"]} 条（需 ≥{GATE_CONTRIB} 条逐条列点）')
+        if m['source_count'] < GATE_SOURCES:
+            errors.append(f'sources 仅 {m["source_count"]} 条（需 ≥{GATE_SOURCES} 条，零来源不能算完整解答）')
+        if m['placeholder_count']:
+            errors.append(f'status=success 但正文残留占位符 {m["placeholder_count"]} 处，定稿前必须清空')
+        bad = [k for k, ok in m['section_min_ok'].items() if not ok]
+        if bad:
+            warnings.append(f'段落厚度未达标（建议补齐再定稿）: {bad}')
+        if m['contribution_evidence_rate'] < 1.0:
+            warnings.append(f'仅 {m["contribution_evidence_rate"]:.0%} 贡献条目带证据定位（§/Fig./Table/实验结果）')
+        if m['claim_binding_rate'] < 0.3:
+            warnings.append(f'论断-引用绑定率仅 {m["claim_binding_rate"]:.0%}，多数论点未落到具体来源')
+        if not m['gap_chain_present']:
+            warnings.append('研究空白缺少「已引工作限制 → 空白 → 本文对应」推导链')
+        if m['source_metadata_rate'] < 0.8:
+            warnings.append(f'来源元数据完整率 {m["source_metadata_rate"]:.0%}（claim/quote/file + page 或 section 需齐备）')
+    else:
+        ph = PLACEHOLDER.findall(draft_text)
+        if ph:
+            warnings.append(f'正文残留占位符 {len(ph)} 处（partial 可接受，定稿须清）')
+
     if not isinstance(sources, list):
         errors.append('sources 必须是数组')
     else:
@@ -91,10 +119,7 @@ def check(result, case, min_chars=200):
                 warnings.append(f'sources[{i}] 缺 claim')
             if not s.get('quote'):
                 warnings.append(f'sources[{i}] 缺 quote（需可回溯原文）')
-        if status == 'success' and not sources:
-            errors.append('status=success 但 sources 为空，无法逐条回溯（零来源不能算完整解答）')
 
-    unc = result.get('uncertainty', [])
     if not isinstance(unc, list):
         errors.append('uncertainty 必须是数组')
     else:
@@ -106,16 +131,17 @@ def check(result, case, min_chars=200):
         warnings.append('缺少 changes 记录')
     if status in ('blocked', 'unanswerable', 'partial') and not unc:
         warnings.append(f'status={status} 但 uncertainty 为空，应说明原因')
-    return errors, warnings
+    return errors, warnings, m
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('result')
     ap.add_argument('--case')
-    ap.add_argument('--min-chars', type=int, default=200)
+    ap.add_argument('--min-chars', type=int, default=1600)
+    ap.add_argument('--text', help='成稿正文文件（draft.md），若正文不在 result.json 内则一并度量')
     args = ap.parse_args()
-    for p in (args.result, args.case):
+    for p in (args.result, args.case, args.text):
         if p and not os.path.isfile(p):
             print(json.dumps({'error': 'file not found', 'path': p}, ensure_ascii=False))
             return 2
@@ -125,9 +151,13 @@ def main():
     if args.case:
         with open(args.case, encoding='utf-8') as f:
             case = json.load(f)
-    errors, warnings = check(result, case, args.min_chars)
+    extra = ''
+    if args.text:
+        with open(args.text, encoding='utf-8') as f:
+            extra = f.read()
+    errors, warnings, m = check(result, case, args.min_chars, extra)
     print(json.dumps({'ok': not errors, 'errors': errors, 'warnings': warnings,
-                      'error_count': len(errors)}, ensure_ascii=False, indent=2))
+                      'error_count': len(errors), 'metrics': m}, ensure_ascii=False, indent=2))
     return 0 if not errors else 1
 
 
