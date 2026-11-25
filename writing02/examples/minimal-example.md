@@ -82,3 +82,47 @@ python scripts/validate_result.py /app/output/result.json --case /input/case.jso
 ```
 
 **注意**：上面第三条 change_log 是**故意演示的失败模式**——把 `clearly demonstrate`（L4）改成 `suggest`（L1）会造成限定强度漂移，实际运行中 `invariant_guard.py` 会判 failed 并阻止交付。正确做法见 `references/hedge-and-modality.md`：保持 L4，只做术语统一与搭配修正。
+
+---
+
+## 附：逐段润色链路最小示例（示意，非正式案例结果）
+
+> 下面用两段自造文本演示接口与判定形态，**不是任何正式案例的内容，也不得作为预制答案**。
+
+```bash
+# 1) 建工作台：切段 + 逐段锁定
+python scripts/build_polish_draft.py --case /input/case.json --out /app/work
+# -> polish_plan.json / polished_skeleton.md / term_seed.md
+
+# 2) 按骨架逐段填润色（Agent 的主要工作，不能跳过、不能合并段落）
+
+# 3) 成稿门槛
+python scripts/check_polish.py /app/output/result.json --plan /app/work/polish_plan.json
+```
+
+只给一段总结会被判失败：
+
+```json
+{"status": "failed",
+ "errors": ["result.paragraphs 为空：润色成稿必须逐段对齐（pid/original/polished），只给一段总结或一份检查报告不算成稿"]}
+```
+
+润色时丢了数字也会被判失败：
+
+```json
+{"status": "failed",
+ "errors": ["P02 丢失锁定项 number_unit=42%（原文 1 次，现 0 次）"]}
+```
+
+把"存在相关性"写成"存在相关性（R²=0.87）"这种凭空补数据同样会被拦住：
+
+```json
+{"status": "failed",
+ "errors": ["P03 新增了原文没有的 number=0.87（现 1 次，原文 0 次）"]}
+```
+
+全部段落对齐且锁定项守恒时：
+
+```json
+{"status": "passed", "warnings": [], "stats": {"paragraphs": 3, "src_chars": 210, "out_chars": 214}}
+```
