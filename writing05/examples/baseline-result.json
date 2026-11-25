@@ -1,0 +1,85 @@
+{
+  "case_id": "selftest-001",
+  "note": "baseline 对照：同一材料、同一字数要求，但不做论断切分与强度校验。",
+  "status": "success",
+  "result": {
+    "draft": "## 一、孔隙率与渗透性的取舍\n\n多孔钛支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升[1]。激光粉末床熔融可以成形孔隙率 55%–80% 的点阵结构[2]。现有工艺窗口研究多以定性描述给出[3]。偏差来自支柱断裂与层间未熔合[4]。相同孔隙率下不同拓扑的渗透率差异明显[5]。\n\n## 二、机制与测量口径\n\n激光功率影响熔池长度与支柱成形质量[6]。扫描策略不同会导致致密度差异[7]。三种口径并存使数据无法横向比较[8]。孔径 300–500 μm 的骨长入速率最高[9]。\n\n## 三、冲突证据\n\n孔径与渗透率的关系已有研究[10][11]。测量方法不同可能给出不同结果[12]。\n\n## 四、适用边界\n\n结论限于 Ti-6Al-4V 与 30 μm 层厚[2]。\n",
+    "claims": [],
+    "evidence_table": [],
+    "conflicts": [],
+    "conflict_search_note": ""
+  },
+  "sources": [
+    {
+      "id": "M01",
+      "cite_key": "1",
+      "file": "examples/selftest-materials.md",
+      "section": "M01 §2.1",
+      "quote": "多孔支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反。"
+    },
+    {
+      "id": "M02",
+      "cite_key": "2",
+      "file": "examples/selftest-materials.md",
+      "section": "M02 §3.2 Table 2",
+      "quote": "激光粉末床熔融在 120–200 W 功率与 600–1200 mm/s 扫描速度区间内可稳定成形孔隙率 55%–80% 的点阵结构。"
+    },
+    {
+      "id": "M03",
+      "cite_key": "3",
+      "file": "examples/selftest-materials.md",
+      "section": "M03 §4.1",
+      "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。"
+    },
+    {
+      "id": "M04",
+      "cite_key": "4",
+      "file": "examples/selftest-materials.md",
+      "section": "M04 §3.3",
+      "quote": "支柱断裂与层间未熔合是偏差的两类主要来源，前者多出现在支柱倾角小于 35° 时。"
+    },
+    {
+      "id": "M05",
+      "cite_key": "5",
+      "file": "examples/selftest-materials.md",
+      "section": "M05 §5 Fig. 6",
+      "quote": "在相同孔隙率下，三种点阵拓扑的渗透率相差 28 至 43 个百分点。"
+    },
+    {
+      "id": "M06",
+      "cite_key": "6",
+      "file": "examples/selftest-materials.md",
+      "section": "M06 §3.1 Fig. 3",
+      "quote": "激光功率由 140 W 提高到 180 W 时，熔池长度增加约 30%，支柱成形质量随之改变。"
+    },
+    {
+      "id": "M07",
+      "cite_key": "7",
+      "file": "examples/selftest-materials.md",
+      "section": "M07 §4.2 Table 4",
+      "quote": "条带分区与棋盘分区两种扫描策略下，同一功率速度组合的致密度差值为 1.5 个百分点。"
+    },
+    {
+      "id": "M08",
+      "cite_key": "8",
+      "file": "examples/selftest-materials.md",
+      "section": "M08 §2.4",
+      "quote": "42 篇文献中，致密度、相对密度与相对偏差三种口径并存，导致数据无法直接横向比较。"
+    },
+    {
+      "id": "M09",
+      "cite_key": "9",
+      "file": "examples/selftest-materials.md",
+      "section": "M09 §6.2 Fig. 9",
+      "quote": "在兔股骨模型中，孔径 300–500 μm 组的骨长入速率高于其他两组。"
+    }
+  ],
+  "uncertainty": [],
+  "changes": [
+    {
+      "from": "—",
+      "to": "baseline 稿",
+      "reason": "对照用，不含方法"
+    }
+  ]
+}
