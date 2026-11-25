@@ -149,7 +149,9 @@ def core_phrase(s, limit=34):
     取第一个够长的实义片段（英文常见的"main clause + 从句"结构正好适用）。
     """
     t = clean_head(s)
-    parts = [x.strip() for x in re.split(r"[，,；;。．.：:、（）()\[\]【】/|]+", t) if x.strip()]
+    # 不在 / 和 · 上切：会把 "1.2 mol/L" "0.8 Ω·cm²" 这类单位切碎
+    # 不按英文句点切：会把 1.2、0.8 切成 1 和 2
+    parts = [x.strip() for x in re.split(r"[，,；;。．：:、（）()\[\]【】|]+", t) if x.strip()]
     best = ""
     for p in parts:
         p = LEAD_CONN.sub("", p).strip()
@@ -261,6 +263,26 @@ def draft_nodes(blocks, case_id):
                 rels.append({"from": prev, "to": nid, "kind": kind,
                              "evidence": [b["id"]], "why": "同分支相邻句，按句内连接词定类型"})
             prev_by_branch[t] = nid
+
+    # 关系太少时补"证据支撑结论"：这是图上唯一必须存在的跨支关系
+    if len(rels) < 3:
+        def first(tp):
+            return next((n for n in nodes if n["type"] == tp and n["parent"] != "n0"), None)
+
+        ev, cc, mm2, qq = first("evidence"), first("conclusion"), first("method"), first("question")
+        cands = [(ev, cc, "support", "证据支撑结论"),
+                 (mm2, ev, "depend", "证据由该方法产出"),
+                 (qq, cc, "depend", "结论回应问题")]
+        for a, b, kind, why in cands:
+            if len(rels) >= 3:
+                break
+            if not a or not b or a["id"] == b["id"]:
+                continue
+            if any(r["from"] == a["id"] and r["to"] == b["id"] for r in rels):
+                continue
+            w = (a.get("evidence") or [None])[0]
+            rels.append({"from": a["id"], "to": b["id"], "kind": kind,
+                         "evidence": [w] if w else [], "why": why + "（兜底补链）"})
 
     uncertainty = []
     for n in nodes:
