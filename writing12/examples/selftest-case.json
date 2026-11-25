@@ -1,0 +1,26 @@
+{
+ "case_id": "selftest-001",
+ "task": "把节选英文学术稿逐段译为中文，输出段级双语对照稿；锁定领域术语；数值、引用、图表与公式标记原样保留；不改否定范围与情态强度。",
+ "source_lang": "en",
+ "target_lang": "zh",
+ "segments": [
+  "P01",
+  "P02",
+  "P03",
+  "P04",
+  "P05",
+  "P06",
+  "P07",
+  "P08",
+  "P09",
+  "P10"
+ ],
+ "materials": "examples/selftest-materials.md",
+ "output_contract": [
+  "bilingual",
+  "terms",
+  "human_review",
+  "uncertainty",
+  "changes"
+ ]
+}
