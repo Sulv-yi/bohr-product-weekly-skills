@@ -9,16 +9,57 @@
   改得对   -> 事实/来源映射 exists，改动逐条带 source/修改记录；
   交得可用 -> 交付物是可编辑 .tex（非 PDF/截图片段）、列出 changed_files；
   复现得了 -> reproduction 记录 engine/engine_version/packages/command/rounds 齐全；
+  成稿门槛 -> status=success 时必须有通过 check_manuscript 的 .tex 成稿，且 source_map >=3 条；
   契约     -> case_id / status / output_contract 字段 / sources / uncertainty / changes。
 """
 import argparse
+import importlib.util
 import json
+import os
 import sys
 
 VALID_STATUS = {'success', 'partial', 'unable', 'refused'}
 
 
-def verify(result, case, static, compile_rep):
+def _load_check_manuscript():
+    """同目录载入成稿核验器，避免要求使用者安装成包。"""
+    here = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(here, 'check_manuscript.py')
+    if not os.path.isfile(path):
+        return None
+    spec = importlib.util.spec_from_file_location('check_manuscript_mod', path)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+    except Exception:
+        return None
+    return mod
+
+
+def _resolve_tex(result, result_dir, tex_arg):
+    """定位本次交付的 .tex 成稿。"""
+    if tex_arg and os.path.isfile(tex_arg):
+        return tex_arg
+    arts = (result.get('result') or {}).get('artifacts') or []
+    own = (result.get('result') or {}).get('manuscript') or {}
+    cands = []
+    if isinstance(own, dict) and own.get('path'):
+        cands.append(own['path'])
+    for a in arts:
+        if isinstance(a, dict):
+            p = a.get('path') or a.get('file')
+            if p and str(p).lower().endswith('.tex'):
+                cands.append(p)
+    for c in cands:
+        for base in (result_dir, os.path.join(result_dir or '.', 'output'), '.'):
+            p = c if os.path.isabs(c) else os.path.join(base, c)
+            if os.path.isfile(p):
+                return p
+    return None
+
+
+def verify(result, case, static, compile_rep, tex_path=None, result_dir=None,
+           min_sec=120, min_total=400):
     errors, warnings = [], []
     if not isinstance(result, dict):
         return {'status': 'failed', 'errors': ['result 不是对象']}
@@ -92,15 +133,42 @@ def verify(result, case, static, compile_rep):
     if static:
         if static.get('status') == 'failed' and st == 'success':
             errors.append('静态检查未通过但声明 success')
+
+    # 交得可用（硬门槛）：success 必须真的交付一份通过实质核验的 .tex 成稿
+    manuscript = None
+    if st == 'success':
+        resolved = _resolve_tex(result, result_dir, tex_path)
+        if not resolved:
+            errors.append('status=success 但定位不到 .tex 成稿（不接受只交检查报告/片段/PDF）')
+        else:
+            mod = _load_check_manuscript()
+            if mod is None:
+                warnings.append('未能加载 check_manuscript.py，已跳过成稿实质核验')
+            else:
+                tex_text = open(resolved, encoding='utf-8', errors='replace').read()
+                pool = tex_text
+                bp = os.path.join(os.path.dirname(resolved), 'refs.bib')
+                if os.path.isfile(bp):
+                    pool += open(bp, encoding='utf-8', errors='replace').read()
+                manuscript = mod.check(tex_text, case, pool, min_sec, min_total)
+                if manuscript['status'] != 'passed':
+                    for e in manuscript['errors'][:8]:
+                        errors.append('成稿未过硬门槛: ' + e)
+                    warnings.append('空骨架/占位稿会被评测判为 incomplete，应继续写实后重跑')
+        smap_n = len([x for x in (r.get('source_map') or []) if isinstance(x, dict)])
+        if smap_n < 3:
+            errors.append(f'source_map 仅 {smap_n} 条，success 需 >=3 条可回溯的事实/来源映射')
+
     return {
         'status': 'passed' if not errors else 'failed',
         'errors': errors, 'warnings': warnings,
         'checks': {
             'compilable': 'ok' if not any('编译' in e for e in errors) else 'failed',
-            'correct_edit': 'ok' if not any('来源' in e for e in errors) else 'failed',
-            'usable_source': 'ok' if not any('可编辑' in e for e in errors) else 'failed',
+            'correct_edit': 'ok' if not any('来源' in e or 'source_map' in e for e in errors) else 'failed',
+            'usable_source': 'ok' if not any('可编辑' in e or '成稿' in e or '.tex' in e for e in errors) else 'failed',
             'reproducible': 'ok' if not any('复现要素' in e for e in errors) else 'failed',
         },
+        'manuscript': (manuscript or {}).get('stats'),
         'case_id': cid, 'status_value': st,
     }
 
@@ -111,12 +179,19 @@ def main():
     ap.add_argument('--case')
     ap.add_argument('--static')
     ap.add_argument('--compile')
+    ap.add_argument('--tex', help='本次交付的 .tex 成稿路径（缺省从 result.artifacts 推断）')
+    ap.add_argument('--min-section-chars', type=int, default=120)
+    ap.add_argument('--min-total-chars', type=int, default=400)
     args = ap.parse_args()
     result = json.load(open(args.result, encoding='utf-8'))
     case = json.load(open(args.case, encoding='utf-8')) if args.case else None
     static = json.load(open(args.static, encoding='utf-8')) if args.static else None
     compile_rep = json.load(open(args.compile, encoding='utf-8')) if args.compile else None
-    rep = verify(result, case, static, compile_rep)
+    rep = verify(result, case, static, compile_rep,
+                 tex_path=args.tex,
+                 result_dir=os.path.dirname(os.path.abspath(args.result)),
+                 min_sec=args.min_section_chars,
+                 min_total=args.min_total_chars)
     print(json.dumps(rep, ensure_ascii=False, indent=2))
     return 0 if rep['status'] == 'passed' else 1
 
