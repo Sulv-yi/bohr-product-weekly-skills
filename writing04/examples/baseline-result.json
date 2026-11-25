@@ -1,0 +1,17 @@
+{
+  "case_id": "selftest-demo-004",
+  "status": "partial",
+  "note": "示例 baseline 输出：模拟不加载 Skill、只做粗加工的典型结果，用于演示 A/B 对照脚本，非平台对照结果。",
+  "result": {
+    "manuscript_text": "多孔钛支架的孔隙率与渗透性能之间存在方向相反的取舍[1]。激光粉末床熔融可成形这类结构[1]。已有综述指出工艺窗口多以定性描述给出[1]。因此判据仍缺[1]。",
+    "citations": [
+      {"cite_id": "c1", "claim": "多孔钛支架的孔隙率与渗透性能之间存在方向相反的取舍", "claim_location": "", "ref_key": "wang2019", "position_ok": false}
+    ],
+    "numbering": {"body_numbers": [1, 1, 1, 1], "list_numbers": [1], "continuous": false, "dangling": [2, 3], "uncited": [2, 3, 4]},
+    "deduplication": {"merged": [], "kept_separate": [], "pending": []},
+    "format_conversion": {"from": "BibTeX", "to": "GB/T 7714-2015", "field_mapping": {}, "preserved_fields": []}
+  },
+  "sources": [{"source_id": "s1", "path": "examples/selftest-case.json#library", "ref_keys": ["wang2019", "wang2019dup", "zhang2020", "liu2022", "wang2019_zh"]}],
+  "uncertainty": [{"type": "not_reported", "note": "未做去重与格式映射"}],
+  "changes": [{"from": "原稿", "to": "粗加工", "reason": "基线条件"}]
+}
