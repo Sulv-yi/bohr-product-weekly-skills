@@ -1,0 +1,184 @@
+{
+ "version": "1.0",
+ "total": 100,
+ "github_bonus": 5,
+ "note": "每条列出：分值、本包对应的可核查证据、自查方法。不写自评分数。",
+ "dimensions": [
+  {
+   "name": "实际效果",
+   "max": 40,
+   "items": [
+    {
+     "name": "任务完成度",
+     "max": 15,
+     "evidence": [
+      "mm_run.py 在只有 case.json 时也能产出 mindmap.mm/.opml/.md/.svg 与 result.json",
+      "examples/minimal-example.md 给出完整输入→输出链路",
+      "SKILL.md 的「输入/输出契约」列出每个文件的用途"
+     ],
+     "check": "按 minimal-example.md 跑一遍，四个格式文件是否都能打开"
+    },
+    {
+     "name": "结果正确性",
+     "max": 15,
+     "evidence": [
+      "C7 数字可核：标题里每个数字必须出现在所挂原文块（实测抓到 0.20 vs 0.17）",
+      "C6 证据：引用的块必须在 blocks.json 里真实存在",
+      "examples/ab-report.md 第 3 节记录了一次真实的数字纠错过程"
+     ],
+     "check": "python3 scripts/mm_check.py --blocks ... --nodes ... 看 C6/C7"
+    },
+    {
+     "name": "结果完整性",
+     "max": 5,
+     "evidence": [
+      "C3 覆盖：问题/方法/证据/结论四类必查，局限或待确认至少一条",
+      "材料缺问题句时不硬凑，登记为 uncertainty（SKILL.md 第「三种如实标注」节）"
+     ],
+     "check": "check.md 的 C3 一行，以及 uncertainty 是否非空"
+    },
+    {
+     "name": "结果可核验性",
+     "max": 5,
+     "evidence": [
+      "每个节点带 P页-S句，导出到 .svg 时标在节点右下角、在 .mm 里写进 NOTE",
+      "blocks.md 提供句子块清单，可逐条回原文"
+     ],
+     "check": "任取三个节点，按编号回 blocks.json 找原文，看是否对得上"
+    }
+   ]
+  },
+  {
+   "name": "使用增益",
+   "max": 25,
+   "items": [
+    {
+     "name": "质量增益",
+     "max": 15,
+     "evidence": [
+      "ab-report.md：兜底草稿 32 节点中 11 个以连接词开头，改写后 0 个",
+      "标题长度 CV 由 0.44 降到 0.23"
+     ],
+     "check": "对比 out_draft/mindmap.md 与 out_hand/mindmap.md 的可读性"
+    },
+    {
+     "name": "效率增益",
+     "max": 5,
+     "evidence": [
+      "mm_scaffold 把 12 页论文切成 759 个带编号的句子，读 blocks.md 比读原文快",
+      "编号一次生成，改写时不必反复翻原文找页码"
+     ],
+     "check": "计时：读 blocks.md 定位一句 vs 在 PDF 里检索同一句"
+    },
+    {
+     "name": "增益可验证性",
+     "max": 5,
+     "evidence": [
+      "ab-report.md 给出同一材料、同一门槛下的两组实测指标",
+      "eval/score_output.py 可对任意 nodes.json 复算结构分"
+     ],
+     "check": "python3 eval/score_output.py --blocks work/blocks.json --nodes <任意>"
+    }
+   ]
+  },
+  {
+   "name": "创新增益",
+   "max": 15,
+   "items": [
+    {
+     "name": "新增能力",
+     "max": 5,
+     "evidence": [
+      "把「导图是否可核对」变成可执行检查：C1–C10 十项，任一不过则退出码 1",
+      "截断容忍、表格识别、噪声过滤三处是针对真实抽取文本的改进"
+     ],
+     "check": "构造一份漏证据的 nodes.json，看 C6 是否拦住"
+    },
+    {
+     "name": "方法改进",
+     "max": 5,
+     "evidence": [
+      "先编号后建图：证据定位在流程第一步就固定，避免事后补引用",
+      "六类节点 + 七型关系，把「画得乱」拆成可判定的约束"
+     ],
+     "check": "SKILL.md 第 2 步与第 5 步的分类表"
+    },
+    {
+     "name": "创新证据",
+     "max": 5,
+     "evidence": [
+      "ab-report.md 记录校验器在人工产物上抓到小数点错误，并给出改法",
+      "references/edge-cases.md 给出 7 类异常的具体处置"
+     ],
+     "check": "复现 ab-report.md 第 3 节的报错"
+    }
+   ]
+  },
+  {
+   "name": "可靠体验",
+   "max": 10,
+   "items": [
+    {
+     "name": "调用与易用性",
+     "max": 3,
+     "evidence": [
+      "两个入口（材料 / case.json），一条命令出全套产物",
+      "SKILL.md 写清何时用、何时不用"
+     ],
+     "check": "只给一个 .md 文件，跑 mm_run.py 是否能出图"
+    },
+    {
+     "name": "运行稳定性",
+     "max": 4,
+     "evidence": [
+      "纯标准库，无网络依赖；同一材料重复运行输出一致（无随机项）",
+      "单段超长自动二次切块，759 句不 OOM"
+     ],
+     "check": "连续跑三次，md5 是否相同"
+    },
+    {
+     "name": "异常处理",
+     "max": 3,
+     "evidence": [
+      "无材料时输出 result.json status=blocked + reason，而不是崩溃",
+      "无页码时 page=0 并在统计里标 pages_missing"
+     ],
+     "check": "给一个只有 PDF 的目录，看是否返回 blocked 而不编内容"
+    }
+   ]
+  },
+  {
+   "name": "生态贡献",
+   "max": 10,
+   "items": [
+    {
+     "name": "文档完整性",
+     "max": 3,
+     "evidence": [
+      "README 含问题、方法、实测、复现、未做到的事、来源与贡献",
+      "references/ 三篇分别讲节点类型、布局规则、异常处理"
+     ],
+     "check": "按 README 第五节复现一遍"
+    },
+    {
+     "name": "资源可复用性",
+     "max": 4,
+     "evidence": [
+      "四个脚本可单独用：scaffold 只切块、check 只校验、export 只导出",
+      "nodes.json 是公开 schema，可接入其它渲染器"
+     ],
+     "check": "用 mm_check.py 校验一份别人写的 nodes.json"
+    },
+    {
+     "name": "分享推广价值",
+     "max": 3,
+     "evidence": [
+      "六类/七型/十项可作为导图评审的共同口径",
+      "ab-report.md 的指标可直接用于比较其它导图工具"
+     ],
+     "check": "把 eval/acceptance.md 当作第三方验收清单使用"
+    }
+   ]
+  }
+ ]
+}
