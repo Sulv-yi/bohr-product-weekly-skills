@@ -1,0 +1,26 @@
+{
+  "case_id": "selftest-001",
+  "note": "baseline 对照：同材料、同题目，不带章节清单与材料索引。",
+  "status": "success",
+  "result": {
+    "manuscript": "## 摘要\n\n多孔钛支架的孔隙率影响力学性能与渗透性[1]。\n\n## 1 引言\n\n多孔钛支架在骨修复中应用广泛，孔隙率是关键参数[1]。已有研究讨论了孔隙率与强度的关系[2]。\n\n## 2 材料与方法\n\n采用激光粉末床熔融制备 Ti-6Al-4V 试样，测试压缩强度与渗透率[3]。\n\n## 3 结果\n\n孔隙率升高后强度下降，渗透性上升（图 1）[1]。\n\n图 1　孔隙率与性能关系。\n\n## 4 讨论\n\n结果与前人一致[2]。本研究的局限是样本较少。\n\n## 5 结论\n\n孔隙率需要在强度与渗透性之间折中[1]。\n\n## 数据可得性\n\n数据可向作者索取。\n",
+    "material_index": []
+  },
+  "sources": [
+    {
+      "id": "s1",
+      "cite_key": "1",
+      "file": "examples/selftest-materials.md",
+      "section": "§2.1",
+      "quote": "孔隙率由 55% 升至 80% 时，压缩强度由 148 MPa 降至 56 MPa，降幅 62%。"
+    }
+  ],
+  "uncertainty": [],
+  "changes": [
+    {
+      "from": "—",
+      "to": "baseline 稿",
+      "reason": "对照用"
+    }
+  ]
+}
