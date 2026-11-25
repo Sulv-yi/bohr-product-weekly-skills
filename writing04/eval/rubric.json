@@ -1,0 +1,235 @@
+{
+  "version": "1.0",
+  "task": "reference-citation-management",
+  "total": 100,
+  "note": "把题面五个评分维度落成可执行条目。每条指向运行时实际产出的文件或可运行的检查命令；这里给的是验收口径，不是自评分数。",
+  "dimensions": [
+    {
+      "id": "actual_effect",
+      "name": "实际效果",
+      "weight": 40,
+      "items": [
+        {
+          "id": "task_completion",
+          "name": "任务完成度",
+          "weight": 15,
+          "acceptance": "交付可编辑稿件本体与逐条引用记录：引用插入位置、编号重排、去重归并、格式转换、来源核验五类动作都落成结果，不是只交校验脚本或建议。",
+          "evidence": [
+            "/app/output/manuscript.md",
+            "/app/output/result.json#result.citations",
+            "/app/output/selfcheck.md"
+          ],
+          "auto_check": "python scripts/validate_result.py /app/output/result.json --case /input/case.json"
+        },
+        {
+          "id": "result_correctness",
+          "name": "结果正确性",
+          "weight": 15,
+          "acceptance": "每条引用有论断原文与精确到句的位置，match_basis 说明为何该文献支撑此句；位置不在段尾凑数；编号连续无悬空；去重判据可解释。",
+          "evidence": [
+            "/app/output/citation-map.csv",
+            "/app/output/result.json#result.deduplication"
+          ],
+          "auto_check": "python scripts/verify_citations.py /app/output/result.json --library entries.json --manuscript /app/output/manuscript.md --strict"
+        },
+        {
+          "id": "result_completeness",
+          "name": "结果完整性",
+          "weight": 5,
+          "acceptance": "五类动作都有产出：citations / numbering / deduplication / format_conversion / manuscript；格式转换含字段映射与保留字段。",
+          "evidence": [
+            "/app/output/selfcheck.md#1-四性质指标",
+            "/app/output/result.json#result"
+          ],
+          "auto_check": "python eval/score_output.py --result /app/output/result.json --case /input/case.json --out /app/output/scorecard.json"
+        },
+        {
+          "id": "result_verifiability",
+          "name": "结果可核验性",
+          "weight": 5,
+          "acceptance": "每条引用能回到文献条目与稿件位置；合并/分开/待定三类判断都带判据；核验结论可被独立复核。",
+          "evidence": [
+            "/app/output/citation-map.csv",
+            "/app/output/selfcheck.md#3-逐条引用定位"
+          ],
+          "auto_check": "python scripts/build_outputs.py --result /app/output/result.json --outdir /app/output"
+        }
+      ]
+    },
+    {
+      "id": "usage_gain",
+      "name": "使用增益",
+      "weight": 25,
+      "items": [
+        {
+          "id": "quality_gain",
+          "name": "质量增益",
+          "weight": 15,
+          "acceptance": "相同稿件与文献库下，加载 Skill 后引用定位准确率、match_basis 齐备率、编号连续率高。由平台按同一 rubric 对照；本 Skill 提供指标脚本使对照可量化。",
+          "evidence": [
+            "eval/rubric.json",
+            "eval/score_output.py",
+            "eval/ab-protocol.md"
+          ],
+          "auto_check": "python eval/compare_ab.py <baseline-scorecard> <skill-scorecard>"
+        },
+        {
+          "id": "efficiency_gain",
+          "name": "效率增益",
+          "weight": 5,
+          "acceptance": "减少逐条翻查文献与手改编号的返工：引用映射表与自检表自动生成，缺口清单化。",
+          "evidence": [
+            "scripts/build_outputs.py",
+            "/app/output/selfcheck.md#2-未清项"
+          ],
+          "auto_check": "python scripts/build_outputs.py --help"
+        },
+        {
+          "id": "gain_verifiability",
+          "name": "增益可验证性",
+          "weight": 5,
+          "acceptance": "对照条件一致（同一稿件、同一文献库、同一评分表、A/B 匿名、3 次重复取中位），第三方可复现；变差指标如实报告。",
+          "evidence": [
+            "eval/ab-protocol.md",
+            "eval/acceptance.md",
+            "eval/compare_ab.py"
+          ],
+          "auto_check": "python eval/compare_ab.py --help"
+        }
+      ]
+    },
+    {
+      "id": "innovation_gain",
+      "name": "创新增益",
+      "weight": 15,
+      "items": [
+        {
+          "id": "new_capability",
+          "name": "新增能力",
+          "weight": 5,
+          "acceptance": "具备基础 Agent 难以稳定做到的能力：论断-文献绑定可逐条判定、位置必须精确到句、去重三分判断必须有判据、四性质可计算。",
+          "evidence": [
+            "scripts/citation_gate.py",
+            "scripts/verify_citations.py",
+            "references/dedup-rules.md"
+          ],
+          "auto_check": "python scripts/verify_citations.py --help"
+        },
+        {
+          "id": "method_improvement",
+          "name": "方法改进",
+          "weight": 5,
+          "acceptance": "先落交付清单再填内容；解析/去重/编号/定位/核验分工固定，核验与生成分离（生成阶段不自我盖章）。",
+          "evidence": [
+            "SKILL.md#工作流",
+            "references/format-and-verification.md"
+          ],
+          "auto_check": "grep -n '工作流\\|核验' SKILL.md"
+        },
+        {
+          "id": "innovation_evidence",
+          "name": "创新证据",
+          "weight": 5,
+          "acceptance": "给出与已有方案（基础 Agent、文献管理软件、期刊模板工具）的边界与价值对比；不声称优于未实测对象。",
+          "evidence": [
+            "references/innovation-boundary.md"
+          ],
+          "auto_check": "grep -n '基础 Agent\\|文献管理\\|模板' references/innovation-boundary.md"
+        }
+      ]
+    },
+    {
+      "id": "reliability",
+      "name": "可靠体验",
+      "weight": 10,
+      "items": [
+        {
+          "id": "invocation",
+          "name": "调用与易用性",
+          "weight": 3,
+          "acceptance": "在「补引用」「重排编号」「去重」「转格式」「核对引用」这类指令下正确触发；按说明一次跑完。",
+          "evidence": [
+            "SKILL.md#何时使用",
+            "examples/minimal-example.md"
+          ],
+          "auto_check": "grep -n '适用\\|不适用' SKILL.md"
+        },
+        {
+          "id": "stability",
+          "name": "运行稳定性",
+          "weight": 4,
+          "acceptance": "不同格式（BibTeX/RIS/JSON）、不同篇幅稿件、重复运行时持续产出可用结果；脚本只读输入、写独立输出、无副作用。",
+          "evidence": [
+            "eval/ab-protocol.md#3-重复性与取数",
+            "scripts/parse_library.py"
+          ],
+          "auto_check": "python scripts/parse_library.py --help"
+        },
+        {
+          "id": "exception_handling",
+          "name": "异常处理",
+          "weight": 3,
+          "acceptance": "对文献库字段缺失、DOI 无法核验、条目歧义、编号冲突、稿件格式不支持五类情况有明确处置，写入 uncertainty，不臆造。",
+          "evidence": [
+            "SKILL.md#异常处理",
+            "references/edge-cases.md"
+          ],
+          "auto_check": "grep -c '字段缺失\\|DOI\\|歧义\\|冲突\\|不支持' SKILL.md"
+        }
+      ]
+    },
+    {
+      "id": "ecosystem",
+      "name": "生态贡献",
+      "weight": 10,
+      "items": [
+        {
+          "id": "docs",
+          "name": "文档完整性",
+          "weight": 3,
+          "acceptance": "使用说明、依赖、支持格式、示例、适用边界、限制与维护信息齐全。",
+          "evidence": [
+            "README.md",
+            "SKILL.md",
+            "examples/minimal-example.md"
+          ],
+          "auto_check": "cat README.md"
+        },
+        {
+          "id": "reusability",
+          "name": "资源可复用性",
+          "weight": 4,
+          "acceptance": "格式映射 asset、去重判据、编号规则、度量脚本与评分表可被他人直接用于自己的稿件与文献库。",
+          "evidence": [
+            "assets/format_mapping.json",
+            "scripts/citation_gate.py",
+            "eval/rubric.json",
+            "examples/"
+          ],
+          "auto_check": "python eval/score_output.py --result examples/selftest-result.json --case examples/selftest-case.json --out /tmp/card.json"
+        },
+        {
+          "id": "sharing",
+          "name": "分享推广价值",
+          "weight": 3,
+          "acceptance": "沉淀可分享的引用案例、去重判据与失败分析；有公开可访问的仓库地址。",
+          "evidence": [
+            "GITHUB_URL.txt",
+            "examples/"
+          ],
+          "auto_check": "cat GITHUB_URL.txt"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "min_citations": 1,
+    "claim_rate": 1.0,
+    "claim_location_rate": 1.0,
+    "match_basis_rate": 1.0,
+    "position_ok_rate": 1.0,
+    "ref_resolved_rate": 1.0,
+    "format_mapping_fields": 1,
+    "placeholder_count": 0
+  }
+}
