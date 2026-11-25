@@ -1,0 +1,157 @@
+{
+  "case_id": "selftest-demo-000",
+  "status": "success",
+  "note": "示例输出：配合 examples/selftest-case.json 的演示结果，材料与文献均为虚构占位，不是平台固定案例成绩。演示的是「可直接进论文」的篇幅、引用密度与来源映射粒度。",
+  "result": {
+    "introduction": "见 draft 第 1 节：多孔支架的强度与渗透在孔隙率上方向相反；增材制造把孔隙率从配料决定变为设计+工艺共同决定，但偏差随参数非单调漂移，且评价口径不统一，故需界定可迁移的稳定工艺带。",
+    "related_work": "见 draft 第 2 节：按三条路线分组（力学关系、工艺缺陷机理、渗透与结构选型），每组给出共同做法、取舍与遗留问题，组内至少两篇带引用并做同维度比较。",
+    "research_gap": "见 draft 第 3 节：由三组工作的接口不一致推出空白——缺少同时考虑结构类型与二维工艺参数的孔隙率偏差判据；并说明近期代理模型/迁移学习工作仍以偏差可稳定测量为前提。",
+    "contributions": "见 draft 第 4 节：四条贡献分别对应 Fig.2/Table 1、Fig.1、Table 1、§2.3，并注明不外推到其他合金与偏离 30 μm 层厚的情形。",
+    "references_used": [
+      "[1] 王某, 李某. 2019. 多孔金属支架的孔隙率与力学性能关系. 机械工程学报",
+      "[2] Zhang Y, et al. 2020. Lattice strut defects in LPBF: causes and mitigation. Additive Manufacturing",
+      "[3] 陈某, 赵某. 2021. 激光功率对 Ti-6Al-4V 成形致密化的影响. 中国激光",
+      "[4] Kumar S, et al. 2018. Permeability of additively manufactured lattice scaffolds. Acta Biomaterialia",
+      "[5] 刘某 等. 2022. 增材制造点阵结构的工艺窗口综述. 材料导报",
+      "[6] 孙某, 周某. 2020. 点阵结构工艺窗口的跨设备标定问题. 机械工程学报",
+      "[7] Park J, et al. 2021. Density versus porosity: inconsistent reporting in AM lattice studies. Additive Manufacturing Letters",
+      "[8] 吴某 等. 2023. 节点加粗对点阵刚度与渗透性的耦合影响. 中国有色金属学报",
+      "[9] Rossi M, et al. 2022. Scan-strategy dependent heat accumulation in LPBF lattice. Materials & Design",
+      "[10] 郑某, 何某. 2023. 孔道迂曲度统一不同拓扑渗透数据. 化工学报",
+      "[11] Lin H, et al. 2024. Surrogate modelling of relative density in LPBF. Computational Materials Science",
+      "[12] 黄某 等. 2024. 跨设备工艺窗口迁移学习. 中国激光"
+    ],
+    "draft_file": "examples/selftest-draft.md"
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "claim": "孔隙率与力学性能、渗透性能之间存在方向相反的取舍",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r1]",
+      "quote": "多孔金属支架的孔隙率与力学性能关系",
+      "cite_key": "1"
+    },
+    {
+      "id": "S2",
+      "claim": "支柱几何对缺陷的敏感性随倾角变化，窗口边界与结构相关",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r2]",
+      "quote": "Lattice strut defects in LPBF: causes and mitigation",
+      "cite_key": "2"
+    },
+    {
+      "id": "S3",
+      "claim": "激光功率影响 Ti-6Al-4V 的成形致密化，是偏差的物理来源之一",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r3]",
+      "quote": "激光功率对 Ti-6Al-4V 成形致密化的影响",
+      "cite_key": "3"
+    },
+    {
+      "id": "S4",
+      "claim": "相同孔隙率下不同拓扑的渗透率可相差数十个百分点",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r4]",
+      "quote": "Permeability of additively manufactured lattice scaffolds",
+      "cite_key": "4"
+    },
+    {
+      "id": "S5",
+      "claim": "既有综述对工艺窗口以定性描述为主",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r5]",
+      "quote": "增材制造点阵结构的工艺窗口综述",
+      "cite_key": "5"
+    },
+    {
+      "id": "S6",
+      "claim": "产业经验窗口多按设备与粉末批次分别标定，缺少可迁移判据",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r6]",
+      "quote": "点阵结构工艺窗口的跨设备标定问题",
+      "cite_key": "6"
+    },
+    {
+      "id": "S7",
+      "claim": "致密度/孔隙率/相对偏差三种口径并存，导致数据难以横向比较",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r7]",
+      "quote": "Density versus porosity: inconsistent reporting in AM lattice studies",
+      "cite_key": "7"
+    },
+    {
+      "id": "S8",
+      "claim": "节点加粗可在同孔隙率下提升刚度约一成，同时降低渗透性",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r8]",
+      "quote": "节点加粗对点阵刚度与渗透性的耦合影响",
+      "cite_key": "8"
+    },
+    {
+      "id": "S9",
+      "claim": "扫描策略改变热积累分布，同功率速度组合下致密度可差 1.5 个百分点",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r9]",
+      "quote": "Scan-strategy dependent heat accumulation in LPBF lattice",
+      "cite_key": "9"
+    },
+    {
+      "id": "S10",
+      "claim": "迂曲度可统一不同拓扑的渗透数据，但样本仅覆盖致密区间",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r10]",
+      "quote": "孔道迂曲度统一不同拓扑渗透数据",
+      "cite_key": "10"
+    },
+    {
+      "id": "S11",
+      "claim": "代理模型预测致密度以偏差可稳定测量为前提",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r11]",
+      "quote": "Surrogate modelling of relative density in LPBF",
+      "cite_key": "11"
+    },
+    {
+      "id": "S12",
+      "claim": "跨设备工艺窗口迁移以偏差可稳定测量为前提，未回答偏差如何在二维面收敛",
+      "file": "selftest-case.json",
+      "page": "material.references",
+      "section": "references[r12]",
+      "quote": "跨设备工艺窗口迁移学习",
+      "cite_key": "12"
+    }
+  ],
+  "uncertainty": [
+    {
+      "type": "not_reported",
+      "note": "材料未给出 Diamond 结构在稳定带外的完整实测数据，相关结论仅覆盖已扫描参数点"
+    },
+    {
+      "type": "needs_human_confirmation",
+      "note": "『缺少二维工艺判据』属作者判断（基于综述的定性表述），需作者确认是否作为空白的主要依据"
+    },
+    {
+      "type": "not_reported",
+      "note": "文献[11][12]为近期工作，数据集未公开，本文仅引其结论方向，未复现数值"
+    }
+  ],
+  "changes": [
+    {
+      "from": "无（首版成稿）",
+      "to": "四要素成稿（2125 实义字 / 12 条引用 / 3 组比较 / 4 条贡献）+ 12 条来源映射",
+      "reason": "按 SKILL.md 篇幅与引用预算一次写足，再逐条回查原文"
+    }
+  ]
+}
