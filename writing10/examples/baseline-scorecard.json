@@ -1,0 +1,99 @@
+{
+  "case_id": "selftest-001",
+  "metrics": {
+    "total_chars": 103,
+    "min_chars_ok": false,
+    "results_chars": 42,
+    "discussion_chars": 55,
+    "limitation_chars": 0,
+    "fig_number_rate": 0.0,
+    "fig_numbers_untraced": [],
+    "figure_rows": 0,
+    "stats_claims": 0,
+    "stats_support": 1.0,
+    "stats_unsupported": [],
+    "leakage": 0,
+    "leakage_samples": [],
+    "trend_boundary": false,
+    "binding_rate": 0.571,
+    "sentences": 7,
+    "limitation_markers": 0,
+    "limitation_vague": [
+      "样本较少",
+      "有待进一步研究"
+    ],
+    "placeholder_count": 0
+  },
+  "items": {
+    "task_completion": {
+      "verdict": "fail",
+      "note": "总 103 字；结果 42；讨论 55"
+    },
+    "result_correctness": {
+      "verdict": "fail",
+      "note": "图表一致 0%；统计支撑 100%；占位符 0"
+    },
+    "result_completeness": {
+      "verdict": "fail",
+      "note": "图表行 0；趋势边界表述 无"
+    },
+    "verifiability": {
+      "verdict": "fail",
+      "note": "论断挂引用/图表 57%；数值可回溯 0%"
+    },
+    "quality_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定（不是通过）"
+    },
+    "efficiency_gain": {
+      "verdict": "n/a",
+      "note": "未提供 baseline 评分卡，无法判定"
+    },
+    "gain_verifiability": {
+      "verdict": "pass",
+      "note": "rubric + 对照协议 + 对照脚本齐备，可同口径重跑"
+    },
+    "new_capability": {
+      "verdict": "fail",
+      "note": "0 张图表进数据池，正文数值逐值回溯；显著性表述逐句核统计量"
+    },
+    "method_improvement": {
+      "verdict": "fail",
+      "note": "结果段解释句 0（≤2）；局限具体线索 0 条"
+    },
+    "innovation_evidence": {
+      "verdict": "fail",
+      "note": "方案边界 + 对照报告齐备"
+    },
+    "usability": {
+      "verdict": "pass",
+      "note": "SKILL.md 与最小示例齐备"
+    },
+    "stability": {
+      "verdict": "pass",
+      "note": "脚本仅用标准库；换数据量不崩"
+    },
+    "exception_handling": {
+      "verdict": "pass",
+      "note": "异常矩阵齐备"
+    },
+    "documentation": {
+      "verdict": "pass",
+      "note": "README 与统计语言规范齐备"
+    },
+    "reusability": {
+      "verdict": "pass",
+      "note": "figure_data 结构 + 图表读取规范 + 度量口径可复用"
+    },
+    "sharing_value": {
+      "verdict": "pass",
+      "note": "公开作品链接已提供"
+    }
+  },
+  "summary": {
+    "pass": 7,
+    "fail": 7,
+    "na": 2
+  },
+  "note": "只报指标与判定，不输出总分；变差项必须写进 result.uncertainty。"
+}
