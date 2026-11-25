@@ -1,0 +1,26 @@
+{
+  "case_id": "selftest-demo-013",
+  "status": "partial",
+  "note": "示例输出：配合 examples/selftest-manuscript.tex 的演示结果，材料为虚构占位，非平台固定案例成绩。",
+  "result": {
+    "artifacts": [{"path": "examples/selftest-manuscript.tex", "type": "source"}, {"path": "examples/selftest-refs.bib", "type": "bib"}],
+    "manuscript": {"path": "examples/selftest-manuscript.tex", "sections": ["引言", "方法", "结果", "结论"]},
+    "build": {"compile_status": "unavailable", "note": "本机未安装 TeX 引擎，编译未执行；harbor 镜像内应可用 latex-compiler"},
+    "reproduction": {"engine": "xelatex", "engine_version": "not_reported", "packages": ["ctex", "booktabs", "amsmath"], "command": "latexmk -pdf manuscript.tex", "rounds": 0},
+    "source_map": [
+      {"claim": "偏差定义与稳定带判据", "file": "examples/selftest-manuscript.tex", "locator": "eq.1"},
+      {"claim": "代表性参数点的偏差与断裂率", "file": "examples/selftest-manuscript.tex", "locator": "Table 1"},
+      {"claim": "引言中对既有工作的三处引用", "file": "examples/selftest-refs.bib", "locator": "wang2019/zhang2020/liu2022"}
+    ],
+    "changed_files": ["examples/selftest-manuscript.tex"]
+  },
+  "sources": [
+    {"source_id": "s1", "path": "examples/selftest-manuscript.tex", "note": "成稿源码"},
+    {"source_id": "s2", "path": "examples/selftest-refs.bib", "note": "参考文献库（3 条）"}
+  ],
+  "uncertainty": [
+    {"type": "not_reported", "note": "本机无 TeX 引擎，编译未执行；引擎版本与轮次待运行环境补齐"},
+    {"type": "not_reported", "note": "示例数据为演示占位，不代表任何真实实验结果"}
+  ],
+  "changes": [{"from": "空骨架", "to": "四节成稿 + 公式 + 4 行数据表 + 3 条引用", "reason": "按 SKILL.md 流程写作并核验"}]
+}
