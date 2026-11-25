@@ -1,0 +1,1198 @@
+{
+  "case_id": "selftest-001",
+  "note": "自测样例输出；材料包为演示数据，不代表正式案例结果。",
+  "status": "success",
+  "result": {
+    "draft": "## 一、孔隙率与渗透性的取舍\n\n多孔钛支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反[1]。这一取舍关系在四种不同合金体系中重复出现，说明它不依赖单一材料体系[1]。在四个合金体系中方向一致，但幅度差异未被量化[1]。激光粉末床熔融在 120–200 W 功率与 600–1200 mm/s 扫描速度区间内可稳定成形孔隙率 55%–80% 的点阵结构[2]。该区间在三个独立批次中重复得到，批次之间的孔隙率波动小于一个百分点量级[2]。现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据[3]。对 96 篇文献的统计显示，窗口报告以定性描述为主[3]。偏差可能来自支柱断裂与层间未熔合两类来源，前者多出现在支柱倾角小于 35° 时[4]。在相同孔隙率下，不同点阵拓扑之间的渗透率差异可达数十个百分点[5]。这一差异幅度与孔隙率本身的变化幅度相当，因此拓扑选择不能用孔隙率替代[5]。孔隙率与渗透性的取舍使等效设计点不唯一，同一渗透率可由多组孔隙率与拓扑组合实现[5]。这一非唯一性在支架设计阶段就需要显式处理，否则优化结果依赖初始取值[5]。\n\n## 二、机制与测量口径\n\n激光功率由 140 W 提高到 180 W 时，熔池长度增加约 30%，支柱成形质量随之改变[6]。功率对熔池尺寸的影响是连续的，但由此带来的成形质量变化并不与功率成正比[6]。同一功率速度组合下，条带分区与棋盘分区的致密度差值为 1.5 个百分点[7]。该差异在两种策略各三个批次中方向一致，说明它不是批次噪声[7]。条带分区与棋盘分区的差异在批次间方向一致，可作为工艺选择的稳定依据[7]。致密度、相对密度与相对偏差三种口径并存，使跨研究的数据无法直接横向比较[8]。口径不统一带来的偏差量级与工艺差异本身相当，横向汇总时更容易被误读为工艺效应[8]。口径不统一的问题在跨研究汇总时最突出，单篇内部比较受影响较小[8]。在兔股骨模型中，孔径 300–500 μm 组的骨长入速率高于其他两组，提示孔径存在优选区间[9]。该结果来自单一物种与单一植入部位，尚不能外推到人[9]。兔模型的结果只能说明方向，尚不能给出人体所需的孔径区间[9]。骨长入速率与渗透率并非同一变量，把两者互相替代会掩盖拓扑的作用[5]。\n\n## 三、冲突证据\n\n关于孔径增大与渗透率的关系，两项研究的结论可能存在方向性冲突[10][11]。该体外实验中气体流量法测得的渗透率随孔径单调上升，这一趋势可能不适用于其他测量方法[10]。另一项在体实验中，孔径超过 600 μm 后压汞法测得的渗透率未见继续提升[11]。两项研究的体系与层厚相同，差异更可能来自测量方法而非材料本身[12]。气体流量法与压汞法在孔径大于 500 μm 时对连通性的判定口径不同，因而可能给出方向不一致的结果[12]。在没有第三种独立方法交叉验证之前，尚不能判断哪一方更具普遍性[12]。两项研究的样本量都不大，任何一方的结论都不足以单独作为设计依据[10][11]。在方法差异被排除之前，把孔径与渗透率写成单调关系会掩盖真实的结构效应[12]。因此本段把孔径与渗透率的关系写成方向存疑，而不是择一陈述[12]。\n\n## 四、适用边界\n\n上述结论限于 Ti-6Al-4V 与 30 μm 层厚，目前尚不适用于其他合金体系[2]。材料覆盖的时间范围为 2018–2023 年，更早的相反结论不在本次检索范围内[3]。把本文结论用于其他层厚时，需要重新标定工艺窗口[3]。材料未提供疲劳寿命的定量结果，因此本段不给出寿命预测[4]。把体外渗透率数据直接用于在体设计可能高估连通性，这一风险在孔径较大时更明显[12]。后续工作需要在同一批试样上并用两种测量方法，才能把方法差异与结构差异分开[12]。在该边界之外引用本文的渗透率数值，需要同时说明测量方法与孔径范围[12]。材料未提供长期植入稳定性数据，本段因此不对降解行为作推断[4]。上述边界同样适用于以渗透率为主要设计目标的支架，不限于力学性能优化[3]。\n\n## 五、结论\n\n综合来看，孔隙率与渗透性的取舍可以被工艺窗口约束，但拓扑与测量口径带来的不确定性尚未消除[1][12]。在上述边界内，工艺参数的报告应同时给出致密度口径与测量方法[8][12]。超出边界的使用需要重新标定，不能直接沿用本文数值[3]。把测量口径写入设计文档，是让上述取舍关系可复核的最低要求[12]。\n",
+    "claims": [
+      {
+        "claim_id": "c1",
+        "claim": "多孔钛支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反[1]",
+        "locator": "§1 第 1 段",
+        "strength": "strong",
+        "strength_basis": [
+          "设计线索 系统综述",
+          "纳入 58 项研究"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c2",
+        "claim": "这一取舍关系在四种不同合金体系中重复出现，说明它不依赖单一材料体系[1]",
+        "locator": "§1 第 1 段",
+        "strength": "strong",
+        "strength_basis": [
+          "设计线索 系统综述",
+          "跨 4 种合金体系"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c3",
+        "claim": "在四个合金体系中方向一致，但幅度差异未被量化[1]",
+        "locator": "§1 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M01 的体系统计推出",
+          "幅度未在材料中量化"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c4",
+        "claim": "激光粉末床熔融在 120–200 W 功率与 600–1200 mm/s 扫描速度区间内可稳定成形孔隙率 55%–80% 的点阵结构[2]",
+        "locator": "§1 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 对照实验",
+          "单中心 3 批次重复"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c5",
+        "claim": "该区间在三个独立批次中重复得到，批次之间的孔隙率波动小于一个百分点量级[2]",
+        "locator": "§1 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 重复实验",
+          "3 批次"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c6",
+        "claim": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据[3]",
+        "locator": "§1 第 1 段",
+        "strength": "strong",
+        "strength_basis": [
+          "设计线索 系统综述",
+          "统计 96 篇文献"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c7",
+        "claim": "对 96 篇文献的统计显示，窗口报告以定性描述为主[3]",
+        "locator": "§1 第 1 段",
+        "strength": "strong",
+        "strength_basis": [
+          "设计线索 系统综述",
+          "样本 96 篇"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c8",
+        "claim": "偏差可能来自支柱断裂与层间未熔合两类来源，前者多出现在支柱倾角小于 35° 时[4]",
+        "locator": "§1 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "设计线索 体外单次实验",
+          "样本量 6 < 10"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c9",
+        "claim": "在相同孔隙率下，不同点阵拓扑之间的渗透率差异可达数十个百分点[5]",
+        "locator": "§1 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 多组对照",
+          "三组对照单批次"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c10",
+        "claim": "这一差异幅度与孔隙率本身的变化幅度相当，因此拓扑选择不能用孔隙率替代[5]",
+        "locator": "§1 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M05 的三组对照数据推出",
+          "未做统计检验"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c11",
+        "claim": "孔隙率与渗透性的取舍使等效设计点不唯一，同一渗透率可由多组孔隙率与拓扑组合实现[5]",
+        "locator": "§1 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M05 的拓扑差异推出",
+          "未给出设计取值方法"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c12",
+        "claim": "这一非唯一性在支架设计阶段就需要显式处理，否则优化结果依赖初始取值[5]",
+        "locator": "§1 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M05 与 M02 联合推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c13",
+        "claim": "激光功率由 140 W 提高到 180 W 时，熔池长度增加约 30%，支柱成形质量随之改变[6]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 对照实验",
+          "4 个功率水平各 5 试样"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c14",
+        "claim": "功率对熔池尺寸的影响是连续的，但由此带来的成形质量变化并不与功率成正比[6]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M06 的 4 个功率水平数据推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c15",
+        "claim": "同一功率速度组合下，条带分区与棋盘分区的致密度差值为 1.5 个百分点[7]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 对照实验",
+          "两种策略各 3 批次"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c16",
+        "claim": "该差异在两种策略各三个批次中方向一致，说明它不是批次噪声[7]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 重复实验",
+          "3 批次方向一致"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c17",
+        "claim": "条带分区与棋盘分区的差异在批次间方向一致，可作为工艺选择的稳定依据[7]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M07 的批次一致性推出",
+          "未跨设备验证"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c18",
+        "claim": "致密度、相对密度与相对偏差三种口径并存，使跨研究的数据无法直接横向比较[8]",
+        "locator": "§2 第 1 段",
+        "strength": "strong",
+        "strength_basis": [
+          "设计线索 系统综述",
+          "统计 42 篇文献口径"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c19",
+        "claim": "口径不统一带来的偏差量级与工艺差异本身相当，横向汇总时更容易被误读为工艺效应[8]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M08 的口径统计推出",
+          "未量化"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c20",
+        "claim": "口径不统一的问题在跨研究汇总时最突出，单篇内部比较受影响较小[8]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M08 的口径分类推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c21",
+        "claim": "在兔股骨模型中，孔径 300–500 μm 组的骨长入速率高于其他两组，提示孔径存在优选区间[9]",
+        "locator": "§2 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "设计线索 单一物种动物实验",
+          "每组样本量 8 < 10"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c22",
+        "claim": "该结果来自单一物种与单一植入部位，尚不能外推到人[9]",
+        "locator": "§2 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "设计线索 单一物种",
+          "无跨物种验证"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c23",
+        "claim": "兔模型的结果只能说明方向，尚不能给出人体所需的孔径区间[9]",
+        "locator": "§2 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "设计线索 单一种属",
+          "未做剂量或孔径扫描"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c24",
+        "claim": "骨长入速率与渗透率并非同一变量，把两者互相替代会掩盖拓扑的作用[5]",
+        "locator": "§2 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "M09 与 M05 变量定义不同"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c25",
+        "claim": "关于孔径增大与渗透率的关系，两项研究的结论可能存在方向性冲突[10][11]",
+        "locator": "§3 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "证据冲突，按短板原则降级",
+          "两项均为单次测量"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c26",
+        "claim": "该体外实验中气体流量法测得的渗透率随孔径单调上升，这一趋势可能不适用于其他测量方法[10]",
+        "locator": "§3 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "设计线索 体外实验",
+          "单次测量未重复"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c27",
+        "claim": "另一项在体实验中，孔径超过 600 μm 后压汞法测得的渗透率未见继续提升[11]",
+        "locator": "§3 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "单一在体实验",
+          "两种方法并行但样本有限"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c28",
+        "claim": "两项研究的体系与层厚相同，差异更可能来自测量方法而非材料本身[12]",
+        "locator": "§3 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 方法学比较",
+          "12 个试样双法测量"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c29",
+        "claim": "气体流量法与压汞法在孔径大于 500 μm 时对连通性的判定口径不同，因而可能给出方向不一致的结果[12]",
+        "locator": "§3 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "设计线索 方法学比较",
+          "12 个试样"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c30",
+        "claim": "在没有第三种独立方法交叉验证之前，尚不能判断哪一方更具普遍性[12]",
+        "locator": "§3 第 1 段",
+        "strength": "insufficient",
+        "strength_basis": [
+          "未命中设计/样本线索，留给人工判定"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c31",
+        "claim": "两项研究的样本量都不大，任何一方的结论都不足以单独作为设计依据[10][11]",
+        "locator": "§3 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "两项均非大样本",
+          "无法按单篇定论"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c32",
+        "claim": "在方法差异被排除之前，把孔径与渗透率写成单调关系会掩盖真实的结构效应[12]",
+        "locator": "§3 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M12 的方法差异推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c33",
+        "claim": "因此本段把孔径与渗透率的关系写成方向存疑，而不是择一陈述[12]",
+        "locator": "§3 第 1 段",
+        "strength": "insufficient",
+        "strength_basis": [
+          "本段结论句，依据为 M12 的方法差异"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c34",
+        "claim": "上述结论限于 Ti-6Al-4V 与 30 μm 层厚，目前尚不适用于其他合金体系[2]",
+        "locator": "§4 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "材料体系范围由 M02 给出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c35",
+        "claim": "材料覆盖的时间范围为 2018–2023 年，更早的相反结论不在本次检索范围内[3]",
+        "locator": "§4 第 1 段",
+        "strength": "insufficient",
+        "strength_basis": [
+          "检索范围由材料边界给出，非单篇结论"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c36",
+        "claim": "把本文结论用于其他层厚时，需要重新标定工艺窗口[3]",
+        "locator": "§4 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M03 的窗口定性特征推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c37",
+        "claim": "材料未提供疲劳寿命的定量结果，因此本段不给出寿命预测[4]",
+        "locator": "§4 第 1 段",
+        "strength": "insufficient",
+        "strength_basis": [
+          "材料未给出疲劳数据"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c38",
+        "claim": "把体外渗透率数据直接用于在体设计可能高估连通性，这一风险在孔径较大时更明显[12]",
+        "locator": "§4 第 1 段",
+        "strength": "weak",
+        "strength_basis": [
+          "由 M12 的方法差异推出，未直接测量"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c39",
+        "claim": "后续工作需要在同一批试样上并用两种测量方法，才能把方法差异与结构差异分开[12]",
+        "locator": "§4 第 1 段",
+        "strength": "insufficient",
+        "strength_basis": [
+          "方法建议，无直接来源"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c40",
+        "claim": "在该边界之外引用本文的渗透率数值，需要同时说明测量方法与孔径范围[12]",
+        "locator": "§4 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M12 的方法差异与 M03 的边界推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c41",
+        "claim": "材料未提供长期植入稳定性数据，本段因此不对降解行为作推断[4]",
+        "locator": "§4 第 1 段",
+        "strength": "insufficient",
+        "strength_basis": [
+          "材料未提供长期植入数据"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c42",
+        "claim": "上述边界同样适用于以渗透率为主要设计目标的支架，不限于力学性能优化[3]",
+        "locator": "§4 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M03 的窗口不可迁移性推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c43",
+        "claim": "综合来看，孔隙率与渗透性的取舍可以被工艺窗口约束，但拓扑与测量口径带来的不确定性尚未消除[1][12]",
+        "locator": "§5 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "综合 M01 与 M12 的方向性结论"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c44",
+        "claim": "在上述边界内，工艺参数的报告应同时给出致密度口径与测量方法[8][12]",
+        "locator": "§5 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M08 与 M12 联合推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c45",
+        "claim": "超出边界的使用需要重新标定，不能直接沿用本文数值[3]",
+        "locator": "§5 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M03 的窗口不可迁移性推出"
+        ],
+        "flags": []
+      },
+      {
+        "claim_id": "c46",
+        "claim": "把测量口径写入设计文档，是让上述取舍关系可复核的最低要求[12]",
+        "locator": "§5 第 1 段",
+        "strength": "moderate",
+        "strength_basis": [
+          "由 M12 与 M08 的报告口径要求推出"
+        ],
+        "flags": []
+      }
+    ],
+    "evidence_table": [
+      {
+        "evidence_id": "e1",
+        "claim_id": "c1",
+        "source": "M01",
+        "quote": "多孔支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反。",
+        "locator": "M01 §2.1",
+        "basis": [
+          "设计线索 系统综述",
+          "纳入 58 项研究"
+        ],
+        "strength": "strong",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e2",
+        "claim_id": "c2",
+        "source": "M01",
+        "quote": "多孔支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反。",
+        "locator": "M01 §2.1",
+        "basis": [
+          "设计线索 系统综述",
+          "跨 4 种合金体系"
+        ],
+        "strength": "strong",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e3",
+        "claim_id": "c3",
+        "source": "M01",
+        "quote": "多孔支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反。",
+        "locator": "M01 §2.1",
+        "basis": [
+          "由 M01 的体系统计推出",
+          "幅度未在材料中量化"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e4",
+        "claim_id": "c4",
+        "source": "M02",
+        "quote": "激光粉末床熔融在 120–200 W 功率与 600–1200 mm/s 扫描速度区间内可稳定成形孔隙率 55%–80% 的点阵结构。",
+        "locator": "M02 §3.2 Table 2",
+        "basis": [
+          "设计线索 对照实验",
+          "单中心 3 批次重复"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e5",
+        "claim_id": "c5",
+        "source": "M02",
+        "quote": "激光粉末床熔融在 120–200 W 功率与 600–1200 mm/s 扫描速度区间内可稳定成形孔隙率 55%–80% 的点阵结构。",
+        "locator": "M02 §3.2 Table 2",
+        "basis": [
+          "设计线索 重复实验",
+          "3 批次"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e6",
+        "claim_id": "c6",
+        "source": "M03",
+        "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。",
+        "locator": "M03 §4.1",
+        "basis": [
+          "设计线索 系统综述",
+          "统计 96 篇文献"
+        ],
+        "strength": "strong",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e7",
+        "claim_id": "c7",
+        "source": "M03",
+        "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。",
+        "locator": "M03 §4.1",
+        "basis": [
+          "设计线索 系统综述",
+          "样本 96 篇"
+        ],
+        "strength": "strong",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e8",
+        "claim_id": "c8",
+        "source": "M04",
+        "quote": "支柱断裂与层间未熔合是偏差的两类主要来源，前者多出现在支柱倾角小于 35° 时。",
+        "locator": "M04 §3.3",
+        "basis": [
+          "设计线索 体外单次实验",
+          "样本量 6 < 10"
+        ],
+        "strength": "weak",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e9",
+        "claim_id": "c9",
+        "source": "M05",
+        "quote": "在相同孔隙率下，三种点阵拓扑的渗透率相差 28 至 43 个百分点。",
+        "locator": "M05 §5 Fig. 6",
+        "basis": [
+          "设计线索 多组对照",
+          "三组对照单批次"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e10",
+        "claim_id": "c10",
+        "source": "M05",
+        "quote": "在相同孔隙率下，三种点阵拓扑的渗透率相差 28 至 43 个百分点。",
+        "locator": "M05 §5 Fig. 6",
+        "basis": [
+          "由 M05 的三组对照数据推出",
+          "未做统计检验"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e11",
+        "claim_id": "c11",
+        "source": "M05",
+        "quote": "在相同孔隙率下，三种点阵拓扑的渗透率相差 28 至 43 个百分点。",
+        "locator": "M05 §5 Fig. 6",
+        "basis": [
+          "由 M05 的拓扑差异推出",
+          "未给出设计取值方法"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e12",
+        "claim_id": "c12",
+        "source": "M05",
+        "quote": "在相同孔隙率下，三种点阵拓扑的渗透率相差 28 至 43 个百分点。",
+        "locator": "M05 §5 Fig. 6",
+        "basis": [
+          "由 M05 与 M02 联合推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e13",
+        "claim_id": "c13",
+        "source": "M06",
+        "quote": "激光功率由 140 W 提高到 180 W 时，熔池长度增加约 30%，支柱成形质量随之改变。",
+        "locator": "M06 §3.1 Fig. 3",
+        "basis": [
+          "设计线索 对照实验",
+          "4 个功率水平各 5 试样"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e14",
+        "claim_id": "c14",
+        "source": "M06",
+        "quote": "激光功率由 140 W 提高到 180 W 时，熔池长度增加约 30%，支柱成形质量随之改变。",
+        "locator": "M06 §3.1 Fig. 3",
+        "basis": [
+          "由 M06 的 4 个功率水平数据推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e15",
+        "claim_id": "c15",
+        "source": "M07",
+        "quote": "条带分区与棋盘分区两种扫描策略下，同一功率速度组合的致密度差值为 1.5 个百分点。",
+        "locator": "M07 §4.2 Table 4",
+        "basis": [
+          "设计线索 对照实验",
+          "两种策略各 3 批次"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e16",
+        "claim_id": "c16",
+        "source": "M07",
+        "quote": "条带分区与棋盘分区两种扫描策略下，同一功率速度组合的致密度差值为 1.5 个百分点。",
+        "locator": "M07 §4.2 Table 4",
+        "basis": [
+          "设计线索 重复实验",
+          "3 批次方向一致"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e17",
+        "claim_id": "c17",
+        "source": "M07",
+        "quote": "条带分区与棋盘分区两种扫描策略下，同一功率速度组合的致密度差值为 1.5 个百分点。",
+        "locator": "M07 §4.2 Table 4",
+        "basis": [
+          "由 M07 的批次一致性推出",
+          "未跨设备验证"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e18",
+        "claim_id": "c18",
+        "source": "M08",
+        "quote": "42 篇文献中，致密度、相对密度与相对偏差三种口径并存，导致数据无法直接横向比较。",
+        "locator": "M08 §2.4",
+        "basis": [
+          "设计线索 系统综述",
+          "统计 42 篇文献口径"
+        ],
+        "strength": "strong",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e19",
+        "claim_id": "c19",
+        "source": "M08",
+        "quote": "42 篇文献中，致密度、相对密度与相对偏差三种口径并存，导致数据无法直接横向比较。",
+        "locator": "M08 §2.4",
+        "basis": [
+          "由 M08 的口径统计推出",
+          "未量化"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e20",
+        "claim_id": "c20",
+        "source": "M08",
+        "quote": "42 篇文献中，致密度、相对密度与相对偏差三种口径并存，导致数据无法直接横向比较。",
+        "locator": "M08 §2.4",
+        "basis": [
+          "由 M08 的口径分类推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e21",
+        "claim_id": "c21",
+        "source": "M09",
+        "quote": "在兔股骨模型中，孔径 300–500 μm 组的骨长入速率高于其他两组。",
+        "locator": "M09 §6.2 Fig. 9",
+        "basis": [
+          "设计线索 单一物种动物实验",
+          "每组样本量 8 < 10"
+        ],
+        "strength": "weak",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e22",
+        "claim_id": "c22",
+        "source": "M09",
+        "quote": "在兔股骨模型中，孔径 300–500 μm 组的骨长入速率高于其他两组。",
+        "locator": "M09 §6.2 Fig. 9",
+        "basis": [
+          "设计线索 单一物种",
+          "无跨物种验证"
+        ],
+        "strength": "weak",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e23",
+        "claim_id": "c23",
+        "source": "M09",
+        "quote": "在兔股骨模型中，孔径 300–500 μm 组的骨长入速率高于其他两组。",
+        "locator": "M09 §6.2 Fig. 9",
+        "basis": [
+          "设计线索 单一种属",
+          "未做剂量或孔径扫描"
+        ],
+        "strength": "weak",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e24",
+        "claim_id": "c24",
+        "source": "M05",
+        "quote": "在相同孔隙率下，三种点阵拓扑的渗透率相差 28 至 43 个百分点。",
+        "locator": "M05 §5 Fig. 6",
+        "basis": [
+          "M09 与 M05 变量定义不同"
+        ],
+        "strength": "moderate",
+        "relation": "context"
+      },
+      {
+        "evidence_id": "e25",
+        "claim_id": "c25",
+        "source": "M10",
+        "quote": "随孔径由 200 μm 增大至 800 μm，气体流量法测得的渗透率单调上升。",
+        "locator": "M10 §4.3",
+        "basis": [
+          "证据冲突，按短板原则降级",
+          "两项均为单次测量"
+        ],
+        "strength": "weak",
+        "relation": "contradicts"
+      },
+      {
+        "evidence_id": "e26",
+        "claim_id": "c26",
+        "source": "M10",
+        "quote": "随孔径由 200 μm 增大至 800 μm，气体流量法测得的渗透率单调上升。",
+        "locator": "M10 §4.3",
+        "basis": [
+          "设计线索 体外实验",
+          "单次测量未重复"
+        ],
+        "strength": "weak",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e27",
+        "claim_id": "c27",
+        "source": "M11",
+        "quote": "孔径超过 600 μm 后，压汞法测得的渗透率不再随孔径增大而提升。",
+        "locator": "M11 §5.1 Fig. 11",
+        "basis": [
+          "单一在体实验",
+          "两种方法并行但样本有限"
+        ],
+        "strength": "weak",
+        "relation": "contradicts"
+      },
+      {
+        "evidence_id": "e28",
+        "claim_id": "c28",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "设计线索 方法学比较",
+          "12 个试样双法测量"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e29",
+        "claim_id": "c29",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "设计线索 方法学比较",
+          "12 个试样"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e30",
+        "claim_id": "c30",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "未命中设计/样本线索，留给人工判定"
+        ],
+        "strength": "insufficient",
+        "relation": "context"
+      },
+      {
+        "evidence_id": "e31",
+        "claim_id": "c31",
+        "source": "M10",
+        "quote": "随孔径由 200 μm 增大至 800 μm，气体流量法测得的渗透率单调上升。",
+        "locator": "M10 §4.3",
+        "basis": [
+          "两项均非大样本",
+          "无法按单篇定论"
+        ],
+        "strength": "weak",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e32",
+        "claim_id": "c32",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "由 M12 的方法差异推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e33",
+        "claim_id": "c33",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "本段结论句，依据为 M12 的方法差异"
+        ],
+        "strength": "insufficient",
+        "relation": "context"
+      },
+      {
+        "evidence_id": "e34",
+        "claim_id": "c34",
+        "source": "M02",
+        "quote": "激光粉末床熔融在 120–200 W 功率与 600–1200 mm/s 扫描速度区间内可稳定成形孔隙率 55%–80% 的点阵结构。",
+        "locator": "M02 §3.2 Table 2",
+        "basis": [
+          "材料体系范围由 M02 给出"
+        ],
+        "strength": "moderate",
+        "relation": "supports"
+      },
+      {
+        "evidence_id": "e35",
+        "claim_id": "c35",
+        "source": "M03",
+        "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。",
+        "locator": "M03 §4.1",
+        "basis": [
+          "检索范围由材料边界给出，非单篇结论"
+        ],
+        "strength": "insufficient",
+        "relation": "context"
+      },
+      {
+        "evidence_id": "e36",
+        "claim_id": "c36",
+        "source": "M03",
+        "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。",
+        "locator": "M03 §4.1",
+        "basis": [
+          "由 M03 的窗口定性特征推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e37",
+        "claim_id": "c37",
+        "source": "M04",
+        "quote": "支柱断裂与层间未熔合是偏差的两类主要来源，前者多出现在支柱倾角小于 35° 时。",
+        "locator": "M04 §3.3",
+        "basis": [
+          "材料未给出疲劳数据"
+        ],
+        "strength": "insufficient",
+        "relation": "context"
+      },
+      {
+        "evidence_id": "e38",
+        "claim_id": "c38",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "由 M12 的方法差异推出，未直接测量"
+        ],
+        "strength": "weak",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e39",
+        "claim_id": "c39",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "方法建议，无直接来源"
+        ],
+        "strength": "insufficient",
+        "relation": "context"
+      },
+      {
+        "evidence_id": "e40",
+        "claim_id": "c40",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "由 M12 的方法差异与 M03 的边界推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e41",
+        "claim_id": "c41",
+        "source": "M04",
+        "quote": "支柱断裂与层间未熔合是偏差的两类主要来源，前者多出现在支柱倾角小于 35° 时。",
+        "locator": "M04 §3.3",
+        "basis": [
+          "材料未提供长期植入数据"
+        ],
+        "strength": "insufficient",
+        "relation": "context"
+      },
+      {
+        "evidence_id": "e42",
+        "claim_id": "c42",
+        "source": "M03",
+        "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。",
+        "locator": "M03 §4.1",
+        "basis": [
+          "由 M03 的窗口不可迁移性推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e43",
+        "claim_id": "c43",
+        "source": "M01",
+        "quote": "多孔支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反。",
+        "locator": "M01 §2.1",
+        "basis": [
+          "综合 M01 与 M12 的方向性结论"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e44",
+        "claim_id": "c44",
+        "source": "M08",
+        "quote": "42 篇文献中，致密度、相对密度与相对偏差三种口径并存，导致数据无法直接横向比较。",
+        "locator": "M08 §2.4",
+        "basis": [
+          "由 M08 与 M12 联合推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e45",
+        "claim_id": "c45",
+        "source": "M03",
+        "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。",
+        "locator": "M03 §4.1",
+        "basis": [
+          "由 M03 的窗口不可迁移性推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      },
+      {
+        "evidence_id": "e46",
+        "claim_id": "c46",
+        "source": "M12",
+        "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。",
+        "locator": "M12 §3 Table 1",
+        "basis": [
+          "由 M12 与 M08 的报告口径要求推出"
+        ],
+        "strength": "moderate",
+        "relation": "supports_partially"
+      }
+    ],
+    "conflicts": [
+      {
+        "claim_id": "c25",
+        "sources": [
+          "M10",
+          "M11"
+        ],
+        "note": "M10（体外，气体流量法）称渗透率随孔径单调上升；M11（在体，压汞法）称超过 600 μm 后不再提升。两者体系与层厚相同，方向相反。"
+      }
+    ],
+    "conflict_search_note": "在材料包 12 篇中检索「孔径—渗透率」方向性结论，命中一对相反结果（M10/M11），原因线索见 M12；材料覆盖 2018–2023，更早的相反结论无法排除。"
+  },
+  "sources": [
+    {
+      "id": "M01",
+      "cite_key": "1",
+      "file": "examples/selftest-materials.md",
+      "section": "M01 §2.1",
+      "quote": "多孔支架的孔隙率提高会同时降低强度与刚度，渗透性则随之上升，二者方向相反。"
+    },
+    {
+      "id": "M02",
+      "cite_key": "2",
+      "file": "examples/selftest-materials.md",
+      "section": "M02 §3.2 Table 2",
+      "quote": "激光粉末床熔融在 120–200 W 功率与 600–1200 mm/s 扫描速度区间内可稳定成形孔隙率 55%–80% 的点阵结构。"
+    },
+    {
+      "id": "M03",
+      "cite_key": "3",
+      "file": "examples/selftest-materials.md",
+      "section": "M03 §4.1",
+      "quote": "现有工艺窗口研究多以定性描述给出，未提供可跨设备迁移的判据。"
+    },
+    {
+      "id": "M04",
+      "cite_key": "4",
+      "file": "examples/selftest-materials.md",
+      "section": "M04 §3.3",
+      "quote": "支柱断裂与层间未熔合是偏差的两类主要来源，前者多出现在支柱倾角小于 35° 时。"
+    },
+    {
+      "id": "M05",
+      "cite_key": "5",
+      "file": "examples/selftest-materials.md",
+      "section": "M05 §5 Fig. 6",
+      "quote": "在相同孔隙率下，三种点阵拓扑的渗透率相差 28 至 43 个百分点。"
+    },
+    {
+      "id": "M06",
+      "cite_key": "6",
+      "file": "examples/selftest-materials.md",
+      "section": "M06 §3.1 Fig. 3",
+      "quote": "激光功率由 140 W 提高到 180 W 时，熔池长度增加约 30%，支柱成形质量随之改变。"
+    },
+    {
+      "id": "M07",
+      "cite_key": "7",
+      "file": "examples/selftest-materials.md",
+      "section": "M07 §4.2 Table 4",
+      "quote": "条带分区与棋盘分区两种扫描策略下，同一功率速度组合的致密度差值为 1.5 个百分点。"
+    },
+    {
+      "id": "M08",
+      "cite_key": "8",
+      "file": "examples/selftest-materials.md",
+      "section": "M08 §2.4",
+      "quote": "42 篇文献中，致密度、相对密度与相对偏差三种口径并存，导致数据无法直接横向比较。"
+    },
+    {
+      "id": "M09",
+      "cite_key": "9",
+      "file": "examples/selftest-materials.md",
+      "section": "M09 §6.2 Fig. 9",
+      "quote": "在兔股骨模型中，孔径 300–500 μm 组的骨长入速率高于其他两组。"
+    },
+    {
+      "id": "M10",
+      "cite_key": "10",
+      "file": "examples/selftest-materials.md",
+      "section": "M10 §4.3",
+      "quote": "随孔径由 200 μm 增大至 800 μm，气体流量法测得的渗透率单调上升。"
+    },
+    {
+      "id": "M11",
+      "cite_key": "11",
+      "file": "examples/selftest-materials.md",
+      "section": "M11 §5.1 Fig. 11",
+      "quote": "孔径超过 600 μm 后，压汞法测得的渗透率不再随孔径增大而提升。"
+    },
+    {
+      "id": "M12",
+      "cite_key": "12",
+      "file": "examples/selftest-materials.md",
+      "section": "M12 §3 Table 1",
+      "quote": "气体流量法与压汞法在孔径大于 500 μm 时给出方向不一致的结果，差异主要来自连通性判定口径。"
+    }
+  ],
+  "uncertainty": [
+    {
+      "type": "not_reported",
+      "note": "材料未给出各研究的统计检验结果，显著性无法复核，正文按方向与幅度描述。"
+    },
+    {
+      "type": "undetermined",
+      "note": "M04 为体外单次实验（n=6），支柱倾角阈值 35° 属单次观察，未做参数扫描。"
+    },
+    {
+      "type": "conflict",
+      "note": "M10 与 M11 方向相反，已列为 c25 的冲突并在正文写为方向存疑。"
+    },
+    {
+      "type": "needs_human_confirmation",
+      "note": "气体流量法与压汞法定义的「渗透率」是否可视为同一变量，需作者确认。"
+    }
+  ],
+  "changes": [
+    {
+      "from": "初稿（13 条论断、无强度标注、未处理冲突）",
+      "to": "46 条论断 + 46 行证据 + 冲突处置 + 表述相称校验",
+      "reason": "按 SKILL.md 三段交付与证据门槛补全"
+    }
+  ]
+}
