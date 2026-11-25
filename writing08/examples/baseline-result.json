@@ -1,0 +1,20 @@
+{
+  "case_id": "selftest-demo-000",
+  "status": "partial",
+  "note": "示例 baseline 输出：模拟不加载 Skill 时的典型结果，用于演示 A/B 对照脚本，非平台对照结果。",
+  "result": {
+    "introduction": "见 examples/baseline-draft.md：一段领域重要性叙述 + 逐篇罗列相关工作 + 一句研究空间 + 两条贡献。",
+    "related_work": "按文献顺序逐篇罗列，未分组比较。",
+    "research_gap": "表述为“未来仍有广阔研究空间”，未由已引文献的限制推出。",
+    "contributions": "两条，均未给证据定位。",
+    "references_used": ["[1] 王某, 李某. 2019", "[2] Zhang Y, et al. 2020", "[3] 陈某, 赵某. 2021", "[4] Kumar S, et al. 2018", "[5] 刘某 等. 2022"]
+  },
+  "sources": [
+    {"id": "B1", "cite_key": "1", "claim": "孔隙率与力学性能关系", "file": "selftest-case.json", "page": "material.references", "section": "references[r1]", "quote": "多孔金属支架的孔隙率与力学性能关系"},
+    {"id": "B2", "cite_key": "2", "claim": "点阵支柱缺陷", "file": "selftest-case.json", "section": "references[r2]", "quote": "Lattice strut defects in LPBF: causes and mitigation"}
+  ],
+  "uncertainty": [
+    {"type": "not_reported", "note": "材料中的参数扫描范围未在正文交代"}
+  ],
+  "changes": [{"from": "无", "to": "首版", "reason": "基线条件"}]
+}
