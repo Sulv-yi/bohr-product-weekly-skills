@@ -115,6 +115,29 @@ def main():
                 problems.append({'field': 'result.paragraphs',
                                  'issue': f'核验异常: {type(e).__name__}: {e}'})
 
+    # scorecard.json 必须由 eval/score_output.py 实际算出，且通过阈值。
+    # 没有它，增益就只剩文字自述，复核不了。
+    if d.get('status') == 'success':
+        sc_path = os.path.join(os.path.dirname(os.path.abspath(path)), 'scorecard.json')
+        if not os.path.isfile(sc_path):
+            problems.append({'field': 'scorecard.json',
+                             'issue': '缺少 scorecard.json：先运行 eval/score_output.py 算出守恒/一致性指标'})
+        else:
+            try:
+                sc = json.load(open(sc_path, encoding='utf-8'))
+                if sc.get('status') != 'passed':
+                    for e in (sc.get('errors') or [])[:6]:
+                        problems.append({'field': 'scorecard.json',
+                                         'issue': '指标未达标', 'detail': e})
+                m = sc.get('metrics') or {}
+                for k in ('invariant_conservation', 'term_uniqueness',
+                          'segment_coverage', 'edit_note_coverage'):
+                    if k not in m:
+                        problems.append({'field': f'scorecard.metrics.{k}', 'issue': 'missing'})
+            except Exception as e:
+                problems.append({'field': 'scorecard.json',
+                                 'issue': f'读取失败: {type(e).__name__}: {e}'})
+
     result = {'status': 'passed' if not problems else 'failed',
               'case_id': d.get('case_id'), 'problems': problems}
     print(json.dumps({'status': result['status'], 'problems': len(problems)}, ensure_ascii=False))
