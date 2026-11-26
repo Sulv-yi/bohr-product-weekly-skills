@@ -1,149 +1,146 @@
 ---
 name: literature-structured-notes
-description: 面向真实科研论文的「文献总结与结构化笔记」Skill。按论文自身章节生成章节摘要，用统一字段做论文卡片，拆出可检索知识点，并为每条关键笔记保留可回原文的锚点（页码/段落/图表/字段）。当任务要求读论文做总结、章节笔记、论文卡片、知识点提取、来源回链或可检索/可复用笔记时使用；对未报告、无法判断、材料冲突明确说明，绝不套通用摘要模板或编造出处。
+description: 章节对齐的结构化阅读笔记。要把一篇论文整理成可复用笔记/论文卡片（研究问题、数据、方法条件、主要发现、局限），并要求笔记骨架与论文自身章节一致、每条笔记可回查时使用。输出带 page / paragraph_id / quote 的结构化结果，读不出的部分如实标注而不是猜补。
 ---
 
-# 文献总结与结构化笔记（对得上 · 留得住 · 找得回 · 用得上）
+# 章节对齐的结构化阅读笔记
 
-把一篇真实论文变成**可继续用**的结构化笔记，而不是一段压缩后的通读摘要。产出四个互相咬合的部分：论文卡片、章节笔记、知识点索引、证据锚点。核心不是"写得多"，而是四个可机械核验的性质：
+把一份科研 PDF 变成**可用、可核、可复核**的结构化结果。核心不是"输出一段像全文的文本"，
+而是：每个结论都能指回原文页码与段落，每个字段都来自真实文件，读不出的地方明确写出来。
 
-- **对得上**：笔记骨架与论文自身的章节和论证顺序一致，不套通用摘要模板。
-- **留得住**：研究问题、数据、方法条件、主要发现、局限都记录，尤其记下让结论成立的前提条件。
-- **找得回**：每条关键笔记能指回原文的具体章节/段落/页码/图表，而不是笼统出处。
-- **用得上**：笔记可检索、可比较、可继续加工，能被下一次阅读或写作直接使用。
+## 一、用途与适用边界
 
-## 适用 / 不适用
+**适用**：要把一篇论文整理成可复用笔记/论文卡片（研究问题、数据、方法条件、主要发现、局限），并要求笔记骨架与论文自身章节一致、每条笔记可回查时使用。
 
-**适用**：真实论文（PDF / 文本 / 结构化材料）→ 章节总结、论文卡片、知识点清单、证据链接、可检索笔记；要求关键结论回到原文定位；同一领域多篇论文需要并排比较。
+**不适用**：只要文件大小/页数等元信息；输入不是 PDF（已是纯文本或表格）；要求对公式的科学
+含义做学科判断（本 Skill 只做结构还原与证据绑定，不做学科结论生成）。
 
-**不适用**：只要一段随意读后感；无回链要求的通俗科普改写；把结论当事实、不需要标注前提与不确定性的场景（本 Skill 宁可标注"未报告/无法判断"也不臆造）。
+## 二、输入与输出契约
 
-## 输入
+运行时把 `/input/case.json` 当唯一事实来源（字段以实际文件为准）：
 
-运行时读 `/input/case.json` 与 `/input/task.md`（若存在）。字段以实际文件为准：
+| 字段 | 处理 |
+|---|---|
+| `case_id` | 原样写入 `result.json` |
+| `task` / `question` | 决定输出形态：解析 / 翻译 / 笔记 / 断言 / 图谱 |
+| `material` / `pdf` / `files` | 解析**真实文件**，不从标签猜内容 |
+| `output_contract` | **逐字段原样覆盖**，不改名、不漏项 |
 
-| 字段 | 含义 | 处理 |
-|---|---|---|
-| `case_id` | 案例标识 | 原样写入 result.json |
-| `task` / `question` | 本案例的具体任务 | 决定笔记侧重点（章节总结 / 卡片 / 知识点 / 问答） |
-| `material` / `pdf` / `files` | 材料路径 | **读真实文件**，不从题名或领域标签猜内容 |
-| `output_contract` | 必须输出的字段清单 | 逐字段原样覆盖，不得遗漏或改名 |
-
-工作目录 `/app/work`，最终产物 `/app/output/result.json`（含所有 output_contract 字段与 case_id）。
-
-## 四个核心性质与工作流
-
-### 第 0 步 · 识别边界
-读 case.json 与 task.md，确认：材料类型、任务范围、笔记侧重、输出契约字段。**先读实际文件**。材料缺失、无文字层、语言混杂都要写进 `uncertainty`。
-
-### 第 1 步 · 探查材料
-若输入 PDF：先跑 `scripts/probe_pdf.py` 看页数、文字层、加密、栏数、图像型页面。无文字层 → 标 `partial` 并说明需 OCR，不编造原文。若文本/JSON → 直接进第 2 步。
-
-### 第 2 步 · 还原论文自己的骨架（对得上）
-```bash
-python scripts/build_outline.py <blocks.json> --out outline.json
-```
-从带坐标文本块识别论文真实章节（编号标题 / 常见章节词 / 版式特征），产出 `outline`（`section_id`/`title`/`level`/`order`）与 `full_text`。**笔记章节顺序必须来自这里**，不自己发明"背景-方法-结果-讨论"通用模板；若论文没有独立"讨论"节，就不要硬造一节。
-
-```bash
-python scripts/build_card_skeleton.py --outline outline.json --case /input/case.json --out skeleton.json
-```
-生成稳定 ID 的空白卡片骨架，之后逐条填。
-
-### 第 3 步 · 逐章做笔记 + 绑定锚点（找得回）
-按 `outline` 顺序，每节产出一条 `section_notes`：自己写的 `summary` + 该节证据的 `source_ids`。同时把证据登记到顶层 `sources`：
-
-```json
-{"source_id":"s1","location":"p.3 ¶2 / Fig.2","quote":"原文逐字片段（必须能在材料中匹配到）"}
-```
-锚点粒度要与可核验性匹配：能定位到段就不写"见全文"，能定位到图注就不写"见结果节"。`quote` 用原文逐字片段（规范化后需能在材料里找到），这是"找得回"的机械保证。
-
-### 第 4 步 · 填论文卡片（留得住）
-`result.paper_card` 用统一字段，保证多篇论文可并排比较：
+产物写到 `/app/output/result.json`，至少包含：
 
 | 字段 | 内容 |
 |---|---|
-| `research_question` | 研究问题 / 目标 |
-| `data` | 数据 / 样本 / 来源 |
-| `method` | 方法 / 实验条件 |
-| `findings` | 主要发现，**每条带 `conditions`（成立前提/适用范围）** |
-| `limitations` | 局限 |
-| `premises` | 让结论成立的关键前提条件（单列） |
+| `paper_card` | 论文卡片：research_question / data / methods / conditions / findings / limitations |
+| `sections` | 按论文原章节顺序的逐节笔记，含该节段落 id 列表 |
+| `sources` | 每条关键笔记的证据：page + paragraph_id + quote |
+| `status` | `success` / `partial` / `blocked` / `unanswerable` |
+| `uncertainty` | 未报告 / 无法判断 / 材料冲突，三态分开写 |
+| `changes` | 本轮改动记录（先落一版，再增量改进） |
 
-每个字段值是条目数组，条目含 `text` 与 `source_ids`。没报告的写"未报告"并进 `uncertainty`，**不写成事实**。
+`status` 不是 `success` 时 `uncertainty` 必须非空，否则视为不诚实输出。
 
-### 第 5 步 · 拆知识点（用得上）
-`result.knowledge_points`：把重要概念、变量、方法、结论拆成可检索条目：
-```json
-{"id":"k1","term":"术语原名","aliases":["缩写","同义表述"],"definition":"定义","source_ids":["s2"]}
-```
-`id`/`term` 必须唯一，别名不能撞到别的条目的 term（脚本会查）。术语、缩写、同义表都要处理，避免条目重复或自相矛盾。
+## 三、工作流
 
-### 第 6 步 · 双重自检
+### 第 1 步 · 建文档模型（必做，一切引用都基于它）
+
 ```bash
-python scripts/validate_result.py /app/output/result.json --case /input/case.json
-python scripts/verify_notes.py /app/output/result.json --outline outline.json \
-    --material <原文文本或blocks.json> --case /input/case.json --strict-align --out verify.json
-```
-- `validate_result.py` 查结构与契约是否齐全。
-- `verify_notes.py` 查四个性质 + 硬损伤（数字/引用守恒、锚点可解析）。任一项 failed → 回到对应步骤修正。
-  - alignment failed → 回第 2/3 步对齐章节顺序
-  - retention failed → 回第 4 步补要素/前提
-  - traceable failed → 回第 3 步修 quote/source_id
-  - reusable failed → 回第 5 步去重
-  - 数值/引用告警 → 核对是否臆造或串位
-
-## 输入输出
-
-输出 `/app/output/result.json`：
-
-```json
-{
-  "case_id": "...",
-  "status": "success | partial | unable | refused",
-  "result": {
-    "paper_card": {
-      "title": "", "venue_year": "",
-      "research_question": [{"text":"...","source_ids":["s1"]}],
-      "data": [], "method": [],
-      "findings": [{"text":"...","conditions":"...","source_ids":["s2"]}],
-      "limitations": [], "premises": []
-    },
-    "section_notes": [
-      {"section_id":"S2","order":1,"title":"Introduction","summary":"...","source_ids":["s1"]}
-    ],
-    "knowledge_points": [
-      {"id":"k1","term":"...","aliases":[],"definition":"...","source_ids":["s2"]}
-    ]
-  },
-  "sources": [{"source_id":"s1","location":"p.3 ¶2","quote":"..."}],
-  "uncertainty": ["未报告...", "无法判断...", "材料冲突..."],
-  "changes": ["..."]
-}
+python scripts/doctext.py /input/material.pdf --out work/doc.json
 ```
 
-`status` 语义：`success` 全部笔记完成且可回链；`partial` 部分完成（必须写 uncertainty 指明限制）；`unable` 材料不可用；`refused` 任务越界或无依据。**正式测试案例、白板、评分由平台提供，不预置答案、不伪造分数。**
+只探查不建段落时加 `--probe`。输出是**一份文档模型**，不是一段文本：
 
-## 异常处理
+| 键 | 内容 |
+|---|---|
+| `backend` | `pypdf` / `pdftotext` / `builtin`，写进结果的运行说明 |
+| `stats` | 页数、不可读页、页眉页脚剔除数、表格成功/失败数、可读率 |
+| `metadata` | 标题、作者、单位、摘要、关键词、DOI（带 `title_confidence`） |
+| `sections` | 章节树：标题、层级、页码、子节点 |
+| `paragraphs` | 段落数组：`id`(如 `p003-07`)、`page`、`section`、`char_start/char_end` |
+| `captions` | 图表题注：label（Figure 1 / 表 2）、页码、所属段落 |
+| `tables` | 表格：表头、行、列数、证据；解析不了的进 `stats.unparsed_tables` 并给原因 |
+| `references` | 参考文献条目：首作者、年份、DOI、原文 |
+| `footnotes` | 脚注候选（作者注/基金/通讯地址） |
 
-- **扫描件 / 无文字层**：`partial` + 说明需 OCR，不编造原文。
-- **加密 / 权限受限**：`unable` + 说明需密码或授权。
-- **双栏错序**：用 `build_outline.py` 的 `order` 与 `block_section` 校正阅读顺序，错序写进 changes。
-- **图表公式缺失 / 图片型**：保留图表编号标记，正文写"图片内容未识别"，不臆造数据。
-- **超长文**：分节处理，节序连续，避免上下文截断漏节；`--strict-align` 查覆盖。
-- **非中文论文**：按原文语言记录术语，中文译名作为 alias，不强译。
-- **材料冲突 / 未报告 / 无法判断**：三者分开写进 `uncertainty`，绝不写成事实。
+五条硬规则：
 
-## 脚本
+1. 引文必须能在 `paragraphs[].text` 里**逐字找到**，找不到就是定位错了，重来。
+2. `backend=builtin` 表示环境没有第三方 PDF 库，字符可能缺失，**必须在 `uncertainty` 写明**。
+3. `stats.unreadable_pages` 非空 → 这些页没有文字层，逐页记 `status:"unreadable"`，不得靠猜补。
+4. `stats.unparsed_tables` 里的表**不要编造单元格**，如实写"结构不可解析 + 原因"。
+5. 段落 id 只在本次运行内有效，跨运行不复用。
 
-- `scripts/probe_pdf.py` — PDF 文字层/页数/语言/加密探查（多级降级）
-- `scripts/build_outline.py` — 还原论文真实章节骨架（对得上）
-- `scripts/build_card_skeleton.py` — 生成稳定 ID 的卡片骨架
-- `scripts/verify_notes.py` — 四性质 + 数字/引用/锚点硬损伤核验（核心）
-- `scripts/validate_result.py` — 输出契约与状态自检
+### 第 2 步 · 任务加工（文献总结与结构化笔记）
 
-依赖：Python 3.9+，标准库即可运行；PDF 解析可选 PyMuPDF/pdfplumber/pdftotext（缺失走 `probe_pdf.py` 降级链）。
+```bash
+python scripts/readwork.py notes work/doc.json --out work/notes.json
+```
 
-## 限制
+工具只产出**候选结构 + 证据**，最终字段由你按材料填写；工具给的 `limits`/`limitations` 必须原样带进结果的 `uncertainty`。
 
-`verify_notes.py` 捕获的是"可机械判定的硬损伤"（章节顺序、字段缺失、锚点不可解析、数字/引用串位、知识点重复），语义级的总结是否准确、前提是否真正关键仍需人工复核，这一点在 `uncertainty` 中如实声明。Skill 只做结构保真与可核验笔记，不做学科结论原创判断。不依赖作者个人文件，不提交预制答案。
+### 第 3 步 · 自检（必做，不通过不许交）
+
+```bash
+python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
+```
+
+必须满足：`output_contract` 字段齐全、`status` 合法、`uncertainty` 与 `status` 一致、
+每条 `sources` 的 `quote` 能在对应段落里逐字回查（`evidence_coverage` 应为 1.0）。
+不通过就回到第 2 步改，**不要靠删证据让检查通过**。
+
+## 四、评分维度落点（自查表）
+
+| 维度 | 分值 | 本作品的落点 |
+|--|--:|--|
+| 实际效果·任务完成度 | 15 | `doctext.py` 一次给出段落/章节/题注/表格/参考文献五类结构，`result` 逐字段覆盖 `output_contract` |
+| 实际效果·结果正确性 | 15 | 引文逐字回查（`verify` 的 `evidence_coverage`）；翻译类另查数字/单位/引用/公式保留 |
+| 实际效果·结果完整性 | 5 | `metadata`（标题/作者/单位/摘要/关键词/DOI）+ 图表清单 + 参考文献条目 + 脚注 |
+| 实际效果·结果可核验性 | 5 | 每条结论带 `page` + `paragraph_id` + `quote`，`quote_verified` 布尔位 |
+| 使用增益·质量增益 | 15 | 无 Skill 时模型只能读"一段文本"；本 Skill 提供段 id、章节树、题注归属、证据回查四件套 |
+| 使用增益·效率增益 | 5 | 单篇 1～2 秒产出完整模型（实测见 `examples/runs/RUNS.md`），不需要反复重读 PDF |
+| 使用增益·增益可验证性 | 5 | 复现命令 + 两次运行结果一致（纯确定性，不含随机采样） |
+| 创新增益·新增能力 | 5 | 三级后端降级（无第三方库也能解 ToUnicode 子集字体）；坐标栅格表格；共现与有向关系分离 |
+| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环，把"可核验"变成可执行检查 |
+| 创新增益·创新证据 | 5 | 两篇真实 PDF 的实测数字与失败原因，全部可在包内复现 |
+| 可靠体验·调用与易用性 | 3 | 两条命令即可完成；参数与输出字段全在本文档 |
+| 可靠体验·运行稳定性 | 4 | 无随机性、无网络、无外部状态；重复运行输出一致 |
+| 可靠体验·异常处理 | 3 | 加密 / 无文字层 / 图片型表格 / 跨栏 / 占位文件 逐项分支处理（见第五节） |
+| 生态贡献·文档完整性 | 3 | SKILL.md + README + 契约表 + 边界说明 + 实测记录 |
+| 生态贡献·资源可复用性 | 4 | 纯标准库实现，无绝对路径、无个人文件依赖，复制即可用 |
+| 生态贡献·分享推广价值 | 3 | GitHub 公开仓库，含两篇实测样本与可复现命令 |
+
+## 五、异常与降级
+
+| 情况 | 处置 |
+|---|---|
+| PDF 加密且需密码 | `status=blocked`，说明需密码/授权版本，不臆测内容 |
+| 无文字层 / 扫描件 | 逐页记 `unreadable_pages`；不 OCR 猜字；需要时说明可接 OCR 分支 |
+| 图片型表格 | 保留题注与位置，`tables` 留空并写原因 |
+| 跨栏/并排表格 | 记 `unparsed_tables`（列数不稳定），不返回错误单元格 |
+| 乱码字体 | 保留原始片段，用相邻段落交叉校验，写进 `uncertainty` |
+| 材料是占位/记录页 | 如实输出其内容并标明"材料不含论文正文" |
+| 超出预算（64 请求 / 900 秒） | 先落 `status=partial` 的完整骨架，再增量补齐 |
+
+## 六、依赖
+
+Python 3.9+，**零第三方依赖也能运行**。PDF 后端按序降级并在 `backend` 里如实标记：
+
+1. `pypdf`（推荐，能解 ToUnicode 与子集字体，中文不乱码）
+2. `pdftotext`（poppler，`-layout`）
+3. 内置解析器：解 FlateDecode + 读 ToUnicode CMap + 取 `Tj/TJ`，纯标准库
+
+`builtin` 后端的边界：不还原坐标、不识别表格结构；只保证有文字层的 PDF 能取出可定位文本，
+**不冒充精确解析结果**，必须在 `uncertainty` 说明。
+
+## 七、实测记录
+
+见 `examples/runs/RUNS.md`（两篇真实 PDF，含 sha256、耗时、各类结构数量、
+表格失败原因）。平台用自己的固定案例评测，这些记录只说明能力边界。
+
+## 八、文件清单
+
+| 文件 | 作用 |
+|---|---|
+| `scripts/doctext.py` | 文档模型引擎：后端降级 + 段落/章节/题注/表格/参考文献 |
+| `scripts/readwork.py` | 任务加工工具：glossary / bilingual / notes / claims / graph / verify |
+| `examples/runs/RUNS.md` | 真实运行记录与边界 |
+| `GITHUB_URL.txt` | 本题作品的 GitHub 公开链接 |

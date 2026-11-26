@@ -1,2 +1,1 @@
-https://github.com/Sulv-yi/bohr-product-weekly-skills/tree/main/reading03
-reading03/SKILL.md
+https://github.com/Sulv-yi/bohr-product-weekly-skills/tree/main/reading03/SKILL.md

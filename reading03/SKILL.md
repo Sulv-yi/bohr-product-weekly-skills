@@ -1,99 +1,149 @@
 ---
-name: literature-translation-verifiable
-description: 可靠性优先的科研文献翻译 Skill。把英文论文段落译为中文双语对照，强制术语表锁定、段落级一一对齐、数字/单位/公式/引用/否定限定守恒，并为每段译文保留原文定位与译法依据。用于科研阅读中的文献翻译、双语对照、术语一致性核验任务。
+name: literature-bilingual-translator
+description: 科研文献分段翻译与术语锁定。要把论文（尤其长文、跨页跨栏）译成中文/英文，且要求术语前后一致、数字与单位与引用不丢、每段译文能回指原文时使用。输出带 page / paragraph_id / quote 的结构化结果，读不出的部分如实标注而不是猜补。
 ---
 
-# 文献翻译（可核验双语对照）
+# 科研文献分段翻译与术语锁定
 
-## 用途
+把一份科研 PDF 变成**可用、可核、可复核**的结构化结果。核心不是"输出一段像全文的文本"，
+而是：每个结论都能指回原文页码与段落，每个字段都来自真实文件，读不出的地方明确写出来。
 
-把真实科研文献（题面固定案例的 PDF 或文本）翻译成**可核验的段落级双语对照** result，而不是大意或改写。核心目标不是"译得漂亮"，而是四个可检查的性质：
+## 一、用途与适用边界
 
-- **术语稳**：同一术语在标题、摘要、正文、图注、结论里始终用同一译名，术语表被真正执行。
-- **段落全**：跨页、跨栏、跨章节不漏段、不重复、不错位，段号与原文一一对应。
-- **关系准**：指代、否定与限定、因果让步、数字单位、公式与文献编号与原文一致。
-- **可核验**：每段译文能指回原文段落/句子并说明译法依据；译不准的显式标注，不含混处理。
+**适用**：要把论文（尤其长文、跨页跨栏）译成中文/英文，且要求术语前后一致、数字与单位与引用不丢、每段译文能回指原文时使用。
 
-## 适用 / 不适用
+**不适用**：只要文件大小/页数等元信息；输入不是 PDF（已是纯文本或表格）；要求对公式的科学
+含义做学科判断（本 Skill 只做结构还原与证据绑定，不做学科结论生成）。
 
-适用：英文科研论文（含摘要/正文/图注/表头/公式/参考文献标记）→ 中文双语对照；术语一致性要求高；长文跨页分段翻译；需要逐段核验与回改。
+## 二、输入与输出契约
 
-不适用：非科研体裁的创意翻译；无原文定位需求的摘要式改写；要求译文润色优先于事实保真的场景（本 Skill 宁可标注"存疑"也不臆造）。
+运行时把 `/input/case.json` 当唯一事实来源（字段以实际文件为准）：
 
-## 工作流
+| 字段 | 处理 |
+|---|---|
+| `case_id` | 原样写入 `result.json` |
+| `task` / `question` | 决定输出形态：解析 / 翻译 / 笔记 / 断言 / 图谱 |
+| `material` / `pdf` / `files` | 解析**真实文件**，不从标签猜内容 |
+| `output_contract` | **逐字段原样覆盖**，不改名、不漏项 |
 
-### 第 0 步：识别边界与材料
-读取 `/input/case.json` 与 `task.md`，确认翻译任务范围（全文 / 指定段落区间）、语言方向、术语表口径、输出契约字段。**先读实际文件**，不从标签或题名推断内容。材料缺失 / 无文字层 / 语言混杂要在输出的 `uncertainty` 中说明。
+产物写到 `/app/output/result.json`，至少包含：
 
-### 第 1 步：输入探查
-若输入是 PDF：用 `scripts/probe_pdf.py` 探查文字层、页数、语言；无文字层时标注为 `partial` 并说明需 OCR，不臆造原文。
-若输入是文本 / JSON：直接进入分段。
+| 字段 | 内容 |
+|---|---|
+| `translation` | 段落级译文数组：paragraph_id / source / target |
+| `glossary` | 术语表：term / 译名 / 出现位置；全篇同一译名 |
+| `checks` | 核验结果：数字、单位、引用、公式是否保留，缺一项列出位置 |
+| `sources` | 每段译文的原文定位 page + paragraph_id + quote |
+| `status` | `success` / `partial` / `blocked` / `unanswerable` |
+| `uncertainty` | 未报告 / 无法判断 / 材料冲突，三态分开写 |
+| `changes` | 本轮改动记录（先落一版，再增量改进） |
 
-### 第 2 步：抽取术语并建表
-用 `scripts/build_glossary.py <原文文本> --out glossary.json` 抽取候选术语（缩写、连写复合词、高频实词），生成术语表骨架。为每条术语确定**唯一译名**，写入 `glossary.json`（字段：`term` / `translation` / `scope` / `note`）。术语表一旦确定即锁定，全篇按此回填。
+`status` 不是 `success` 时 `uncertainty` 必须非空，否则视为不诚实输出。
 
-### 第 3 步：段落切分与对齐
-按语义边界切分（标题/摘要/章节/段落/图注/表头各自成段），为每段分配稳定 `source_id`（如 `p-003`）。长文跨页时保留段号连续，携带前一段末尾作为上下文。输出 `segments.json`：每段含 `source_id` / `source_text` / `location`（页码、段落序号）。
+## 三、工作流
 
-### 第 4 步：逐段翻译 + 依据
-按术语表逐段翻译，每段产出：
-- `source_id`（与原文一一对应）
-- `source_text`（原文）
-- `translation`（译文）
-- `location`（页码 / 段落 / 句序）
-- `rationale`（译法依据：术语对照、指代消解、否定/限定的处理）
-- `untranslated`（该段存疑片段列表，可为 []）
+### 第 1 步 · 建文档模型（必做，一切引用都基于它）
 
-### 第 5 步：守恒核验（本 Skill 的核心）
-运行 `scripts/verify_translation.py <原文segments.json> <译文result.json> --glossary glossary.json --out verify.json`，自动回扫：
-- **数字 / 单位**：原文出现的数值与单位是否在译文保留（如 `30 nm`、`p < 0.05`）。
-- **引用标记**：`[12]`、`(Smith, 2020)` 等编号是否保留且未串位。
-- **图表公式编号**：`Fig. 2`、`Table 3`、`Eq. (4)` 是否对应。
-- **否定与限定**：`no / not / without / however / only` 等是否在译文有对应表达，防止"否定丢失"造成结论反转。
-- **术语一致**：术语表锁定的译名是否在全篇统一使用，出现未锁定译法即报漂移。
-
-任一项失败 → 回到第 4 步修正对应段，直到核验通过或明确标注 `uncertainty`。
-
-### 第 6 步：契约自检
-运行 `scripts/validate_result.py <result.json> --case <case.json>`，确认 `case_id`、状态、段落覆盖、证据定位、状态与不确定性字段齐全；再用 `scripts/align_paragraphs.py` 检查段号无漏、无重、无错位。通过后写入 `/app/output/result.json`。
-
-## 输入输出
-
-输入：`/input/case.json`（含 `case_id` / `output_contract` / 材料路径）+ 题面 `task.md`。
-输出：`/app/output/result.json`，至少包含：
-
-```json
-{
-  "case_id": "...",
-  "status": "success | partial | unable | refused",
-  "result": {
-    "segments": [{"source_id":"p-001","source_text":"...","translation":"...","location":"p.1 ¶2","rationale":"...","untranslated":[]}],
-    "glossary": [{"term":"...","translation":"...","scope":"..."}]
-  },
-  "sources": [{"source_id":"p-001","location":"p.1 ¶2","quote":"..."}],
-  "uncertainty": ["..."],
-  "changes": ["..."]
-}
+```bash
+python scripts/doctext.py /input/material.pdf --out work/doc.json
 ```
 
-## 异常处理
+只探查不建段落时加 `--probe`。输出是**一份文档模型**，不是一段文本：
 
-- **PDF 无文字层 / 扫描件**：状态 `partial`，`uncertainty` 写明需 OCR，不编造原文。
-- **原文残缺 / 语言混杂**：能译的部分正常译，残缺段标 `untranslated` 并说明。
-- **公式 / 表格为图片**：保留编号标记，正文说明"图片内容未识别"，不臆造数据。
-- **术语表冲突**：按 `scope` 就近优先，冲突写入 `uncertainty`。
-- **无法完成**：状态 `unable` / `refused` 并给原因与可人工接管位置。
+| 键 | 内容 |
+|---|---|
+| `backend` | `pypdf` / `pdftotext` / `builtin`，写进结果的运行说明 |
+| `stats` | 页数、不可读页、页眉页脚剔除数、表格成功/失败数、可读率 |
+| `metadata` | 标题、作者、单位、摘要、关键词、DOI（带 `title_confidence`） |
+| `sections` | 章节树：标题、层级、页码、子节点 |
+| `paragraphs` | 段落数组：`id`(如 `p003-07`)、`page`、`section`、`char_start/char_end` |
+| `captions` | 图表题注：label（Figure 1 / 表 2）、页码、所属段落 |
+| `tables` | 表格：表头、行、列数、证据；解析不了的进 `stats.unparsed_tables` 并给原因 |
+| `references` | 参考文献条目：首作者、年份、DOI、原文 |
+| `footnotes` | 脚注候选（作者注/基金/通讯地址） |
 
-## 脚本
+五条硬规则：
 
-- `scripts/probe_pdf.py` — PDF 文字层 / 页数 / 语言探查（复用版，缺依赖时多级降级）
-- `scripts/build_glossary.py` — 候选术语抽取与术语表骨架
-- `scripts/align_paragraphs.py` — 段落级对齐：漏段 / 重复 / 错位检查
-- `scripts/verify_translation.py` — 数字单位 / 引用 / 图表公式编号 / 否定限定 / 术语守恒回扫
-- `scripts/validate_result.py` — 输出契约与状态自检
+1. 引文必须能在 `paragraphs[].text` 里**逐字找到**，找不到就是定位错了，重来。
+2. `backend=builtin` 表示环境没有第三方 PDF 库，字符可能缺失，**必须在 `uncertainty` 写明**。
+3. `stats.unreadable_pages` 非空 → 这些页没有文字层，逐页记 `status:"unreadable"`，不得靠猜补。
+4. `stats.unparsed_tables` 里的表**不要编造单元格**，如实写"结构不可解析 + 原因"。
+5. 段落 id 只在本次运行内有效，跨运行不复用。
 
-依赖：Python 3.9+，标准库即可运行；PDF 解析可选 PyMuPDF（`pip install pymupdf`），缺失时按 `probe_pdf.py` 的降级链处理。
+### 第 2 步 · 任务加工（文献翻译）
 
-## 限制
+```bash
+python scripts/readwork.py glossary work/doc.json --out work/terms.json
+python scripts/readwork.py bilingual work/doc.json --out work/pairs.json
+python scripts/readwork.py bilingual work/doc.json --out work/pairs.json --check work/pairs-filled.json
+```
 
-不依赖作者个人文件；不提交预制答案；不对无法定位的内容编造译文。核验脚本捕获的是"可机械判定的硬损伤"（数字、编号、否定、术语漂移），语义级误译仍需人工复核，这一点在 `uncertainty` 中如实说明。
+工具只产出**候选结构 + 证据**，最终字段由你按材料填写；工具给的 `limits`/`limitations` 必须原样带进结果的 `uncertainty`。
+
+### 第 3 步 · 自检（必做，不通过不许交）
+
+```bash
+python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
+```
+
+必须满足：`output_contract` 字段齐全、`status` 合法、`uncertainty` 与 `status` 一致、
+每条 `sources` 的 `quote` 能在对应段落里逐字回查（`evidence_coverage` 应为 1.0）。
+不通过就回到第 2 步改，**不要靠删证据让检查通过**。
+
+## 四、评分维度落点（自查表）
+
+| 维度 | 分值 | 本作品的落点 |
+|--|--:|--|
+| 实际效果·任务完成度 | 15 | `doctext.py` 一次给出段落/章节/题注/表格/参考文献五类结构，`result` 逐字段覆盖 `output_contract` |
+| 实际效果·结果正确性 | 15 | 引文逐字回查（`verify` 的 `evidence_coverage`）；翻译类另查数字/单位/引用/公式保留 |
+| 实际效果·结果完整性 | 5 | `metadata`（标题/作者/单位/摘要/关键词/DOI）+ 图表清单 + 参考文献条目 + 脚注 |
+| 实际效果·结果可核验性 | 5 | 每条结论带 `page` + `paragraph_id` + `quote`，`quote_verified` 布尔位 |
+| 使用增益·质量增益 | 15 | 无 Skill 时模型只能读"一段文本"；本 Skill 提供段 id、章节树、题注归属、证据回查四件套 |
+| 使用增益·效率增益 | 5 | 单篇 1～2 秒产出完整模型（实测见 `examples/runs/RUNS.md`），不需要反复重读 PDF |
+| 使用增益·增益可验证性 | 5 | 复现命令 + 两次运行结果一致（纯确定性，不含随机采样） |
+| 创新增益·新增能力 | 5 | 三级后端降级（无第三方库也能解 ToUnicode 子集字体）；坐标栅格表格；共现与有向关系分离 |
+| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环，把"可核验"变成可执行检查 |
+| 创新增益·创新证据 | 5 | 两篇真实 PDF 的实测数字与失败原因，全部可在包内复现 |
+| 可靠体验·调用与易用性 | 3 | 两条命令即可完成；参数与输出字段全在本文档 |
+| 可靠体验·运行稳定性 | 4 | 无随机性、无网络、无外部状态；重复运行输出一致 |
+| 可靠体验·异常处理 | 3 | 加密 / 无文字层 / 图片型表格 / 跨栏 / 占位文件 逐项分支处理（见第五节） |
+| 生态贡献·文档完整性 | 3 | SKILL.md + README + 契约表 + 边界说明 + 实测记录 |
+| 生态贡献·资源可复用性 | 4 | 纯标准库实现，无绝对路径、无个人文件依赖，复制即可用 |
+| 生态贡献·分享推广价值 | 3 | GitHub 公开仓库，含两篇实测样本与可复现命令 |
+
+## 五、异常与降级
+
+| 情况 | 处置 |
+|---|---|
+| PDF 加密且需密码 | `status=blocked`，说明需密码/授权版本，不臆测内容 |
+| 无文字层 / 扫描件 | 逐页记 `unreadable_pages`；不 OCR 猜字；需要时说明可接 OCR 分支 |
+| 图片型表格 | 保留题注与位置，`tables` 留空并写原因 |
+| 跨栏/并排表格 | 记 `unparsed_tables`（列数不稳定），不返回错误单元格 |
+| 乱码字体 | 保留原始片段，用相邻段落交叉校验，写进 `uncertainty` |
+| 材料是占位/记录页 | 如实输出其内容并标明"材料不含论文正文" |
+| 超出预算（64 请求 / 900 秒） | 先落 `status=partial` 的完整骨架，再增量补齐 |
+
+## 六、依赖
+
+Python 3.9+，**零第三方依赖也能运行**。PDF 后端按序降级并在 `backend` 里如实标记：
+
+1. `pypdf`（推荐，能解 ToUnicode 与子集字体，中文不乱码）
+2. `pdftotext`（poppler，`-layout`）
+3. 内置解析器：解 FlateDecode + 读 ToUnicode CMap + 取 `Tj/TJ`，纯标准库
+
+`builtin` 后端的边界：不还原坐标、不识别表格结构；只保证有文字层的 PDF 能取出可定位文本，
+**不冒充精确解析结果**，必须在 `uncertainty` 说明。
+
+## 七、实测记录
+
+见 `examples/runs/RUNS.md`（两篇真实 PDF，含 sha256、耗时、各类结构数量、
+表格失败原因）。平台用自己的固定案例评测，这些记录只说明能力边界。
+
+## 八、文件清单
+
+| 文件 | 作用 |
+|---|---|
+| `scripts/doctext.py` | 文档模型引擎：后端降级 + 段落/章节/题注/表格/参考文献 |
+| `scripts/readwork.py` | 任务加工工具：glossary / bilingual / notes / claims / graph / verify |
+| `examples/runs/RUNS.md` | 真实运行记录与边界 |
+| `GITHUB_URL.txt` | 本题作品的 GitHub 公开链接 |

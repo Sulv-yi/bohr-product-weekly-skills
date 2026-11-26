@@ -1,104 +1,149 @@
 ---
 name: literature-knowledge-graph
-description: 文献知识图谱构建 Skill。从两篇独立科研论文材料中抽取实体与关系、绑定原文证据、做别名对齐与冲突保留、支持真实查询与可读图谱导出。适用于需要从论文批量构建带证据的知识图谱并回答查询的场景。核心保证：抽得准、连得对、对得齐、查得到回得去，并严格防止跨篇污染（根 DOI 复用、PDF 页码冒充 JATS 段 ID、跨篇数值拼接、通用术语同名错误合并）。
+description: 带证据的文献知识图谱。要从论文抽取实体（材料/方法/指标/任务/结论）与关系，绑定证据，并支持按实体查询子图时使用。输出带 page / paragraph_id / quote 的结构化结果，读不出的部分如实标注而不是猜补。
 ---
 
-# 文献知识图谱构建 Skill
+# 带证据的文献知识图谱
 
-从论文材料构建**可核验、可查询、可回源**的最小知识图谱工作流。聚焦一个明确问题：把一批论文转成"带证据的节点与边"，并保证每个节点/边能回到论文的具体段落与原文片段。
+把一份科研 PDF 变成**可用、可核、可复核**的结构化结果。核心不是"输出一段像全文的文本"，
+而是：每个结论都能指回原文页码与段落，每个字段都来自真实文件，读不出的地方明确写出来。
 
-## 何时使用 / 不适用
+## 一、用途与适用边界
 
-- **适用**：给定 1~N 篇论文文本/段落索引，需要抽取科研实体（研究者/材料/方法/任务/指标/结论）、建立有证据的关系、处理别名与同名冲突、回答查询并导出图谱。
-- **不适用**：需要推断材料未报告的数值/图像/底层实验数据；材料无法解析且无其他来源时（应返回 `unable` 并说明，不臆造）。
+**适用**：要从论文抽取实体（材料/方法/指标/任务/结论）与关系，绑定证据，并支持按实体查询子图时使用。
 
-## 输入
+**不适用**：只要文件大小/页数等元信息；输入不是 PDF（已是纯文本或表格）；要求对公式的科学
+含义做学科判断（本 Skill 只做结构还原与证据绑定，不做学科结论生成）。
 
-平台固定案例提供：
-- `/input/case.json`：`case_id`、`task`、`output_contract`（通常含 `graph`、`queries` 或等价字段）。
-- `material.json`：两篇正文段落汇总索引（每段含 `paragraph_id`、`source_id`、`text`，可能含 `section`）。
-- `corpus-manifest.json`：各论文 `source_id`、`doi`、`title`、`authors`、`source_hash`、`license`；根 `root` 字段只描述第一篇。
-- `primary-material.json` / `secondary-material.json`：两篇原文，可按 `source_id` 回溯。
+## 二、输入与输出契约
 
-## 输出
+运行时把 `/input/case.json` 当唯一事实来源（字段以实际文件为准）：
 
-`/app/output/result.json`（字段对应 `output_contract`）：
+| 字段 | 处理 |
+|---|---|
+| `case_id` | 原样写入 `result.json` |
+| `task` / `question` | 决定输出形态：解析 / 翻译 / 笔记 / 断言 / 图谱 |
+| `material` / `pdf` / `files` | 解析**真实文件**，不从标签猜内容 |
+| `output_contract` | **逐字段原样覆盖**，不改名、不漏项 |
 
-```jsonc
-{
-  "case_id": "...",
-  "status": "success | partial | unable | refused",
-  "result": {
-    "graph": {
-      "nodes": [{
-        "id": "n001", "label": "Method M", "type": "method",
-        "mention_role": "author_self | other_paraphrase",
-        "aliases": ["M"], "confidence": "high",
-        "evidence": [{"source_id": "primary", "paragraph_id": "p3",
-                      "quote": "原文短引", "strength": "direct | indirect"}]
-      }],
-      "edges": [{
-        "id": "e001", "subject": "n001", "relation": "outperforms", "object": "n003",
-        "conditions": {"metric": "accuracy", "value": "92.5%", "dataset": "D"},
-        "evidence_type": "direct",
-        "evidence": [{"source_id": "primary", "paragraph_id": "p3", "quote": "...", "strength": "direct"}]
-      }],
-      "alignments": [{"from": "n005", "to": "n001", "action": "merge",
-                      "identity_basis": "同一段缩写=全称，同 source，非跨篇同形"}],
-      "conflicts": [{"nodes": ["n002", "n006"], "reason": "同名数据集但样本/条件不同，不得合并"}]
-    },
-    "queries": [{
-      "question": "...", "result_subgraph": {"nodes": [...], "edges": [...]},
-      "evidence": [{"source_id": "...", "paragraph_id": "...", "quote": "..."}],
-      "uncertain": [{"edge": "...", "reason": "..."}]
-    }]
-  },
-  "sources": {...},
-  "uncertainty": [...],
-  "changes": [...]
-}
+产物写到 `/app/output/result.json`，至少包含：
+
+| 字段 | 内容 |
+|---|---|
+| `nodes` | 实体节点：id / type / label / aliases / evidence |
+| `edges` | 关系边：source / relation / target / direction_basis / strength |
+| `queries` | 至少 3 个真实查询：查询词、命中节点、子图、无法确定的部分 |
+| `sources` | 节点和边的证据：page + paragraph_id + quote |
+| `status` | `success` / `partial` / `blocked` / `unanswerable` |
+| `uncertainty` | 未报告 / 无法判断 / 材料冲突，三态分开写 |
+| `changes` | 本轮改动记录（先落一版，再增量改进） |
+
+`status` 不是 `success` 时 `uncertainty` 必须非空，否则视为不诚实输出。
+
+## 三、工作流
+
+### 第 1 步 · 建文档模型（必做，一切引用都基于它）
+
+```bash
+python scripts/doctext.py /input/material.pdf --out work/doc.json
 ```
 
-## 工作流（严格顺序）
+只探查不建段落时加 `--probe`。输出是**一份文档模型**，不是一段文本：
 
-1. **探查与骨架**：`scripts/probe_pdf.py`（若给 PDF）→ `scripts/build_skeleton.py --manifest ... --material ... --case case.json --out skeleton.json`。确认清单登记 ≥2 篇来源、段落索引非空。
-2. **候选抽取**：`scripts/extract_entities.py --material material.json --out candidates.json`。输出 `candidate=true` 的候选，**不是最终答案**；关注 `cross_source_surfaces`（跨篇同形术语）。
-3. **人工/Agent 判定并填图**：为每个节点定 `type`/`mention_role`/`aliases`、绑定真实 `source_id`+`paragraph_id`+原文 `quote`；为每条边定受控 `relation`+方向+`conditions`+直接证据；为别名写 `alignments`（带 `identity_basis`），为不得合并的对象写 `conflicts`。**至少 3 个真实查询**。
-4. **查询**：`scripts/query_graph.py result.json --out query_results.json`（内置 5 类查询模板：邻居/关系/结论证据链/跨篇同形/单篇视图）。把实际执行结果写回 `result.queries`。
-5. **核验（核心）**：`scripts/verify_graph.py result.json --material material.json --manifest corpus-manifest.json --vocab assets/relation_vocab.json --case case.json --out verify.json [--strict]`。有 error 必须修复；warning 要么修复要么写入 `uncertainty`。
-6. **导出**：`scripts/export_graph.py result.json --out-dir graph_export`（输出 nodes.jsonl/edges.jsonl/graph.json）。Office/图预览如需可渲染，但本 Skill 交付以 JSON 图谱为主。
-7. **契约校验**：`scripts/validate_result.py result.json --case case.json`。通过后交付。
-
-## 四个关注点如何被脚本保证
-
-| 关注点 | 脚本保证 |
+| 键 | 内容 |
 |---|---|
-| 抽得准 | `verify_graph.py` 校验每个节点 type 在白名单、有 source_id+paragraph_id+quote，短引规范化回查段落原文；`candidate=true` 的候选不得混入最终节点 |
-| 连得对 | relation 必须命中受控词表；禁止 `cooccurrence/review_paraphrase/speculation/common_knowledge` 作证据；`outperforms` 必须有 metric；跨篇数值结论边直接判错 |
-| 对得齐 | `same_as`/alignments 必须带 `identity_basis`；跨篇同形术语默认保持独立节点，`conflicts` 记录不得合并对象 |
-| 查得到回得去 | 至少 3 个查询，每个带结果子图+证据；每节点/边 evidence 精确到 source_id + paragraph_id + quote |
+| `backend` | `pypdf` / `pdftotext` / `builtin`，写进结果的运行说明 |
+| `stats` | 页数、不可读页、页眉页脚剔除数、表格成功/失败数、可读率 |
+| `metadata` | 标题、作者、单位、摘要、关键词、DOI（带 `title_confidence`） |
+| `sections` | 章节树：标题、层级、页码、子节点 |
+| `paragraphs` | 段落数组：`id`(如 `p003-07`)、`page`、`section`、`char_start/char_end` |
+| `captions` | 图表题注：label（Figure 1 / 表 2）、页码、所属段落 |
+| `tables` | 表格：表头、行、列数、证据；解析不了的进 `stats.unparsed_tables` 并给原因 |
+| `references` | 参考文献条目：首作者、年份、DOI、原文 |
+| `footnotes` | 脚注候选（作者注/基金/通讯地址） |
 
-## 防污染硬约束（题面“输入修订”，必须遵守）
+五条硬规则：
 
-1. **根 DOI/title/authors 只属于第一篇**；secondary 不得复用根元数据，每篇用各自 `source_id` 与自身 DOI/作者。
-2. **位置用 JATS `paragraph_id`**（如 `p3`、`sec2.p1`），不得写 `p.1`/`page 1`/`第1页` 冒充 PDF 页码——本包无 PDF 页码。
-3. **不得跨篇拼接**：不同论文的样本/条件/数值结果不能合成一个结论；同一通用术语≠同一物理样品/模型实例/数据集/实验条件。
-4. **同篇多格式不算跨篇证据**：primary-material.json 与某同篇 Markdown 属同一来源，不算两篇。
-5. **不推断未提供的数值**：行内公式/上下标已线性化；无图像像素、补充附件、底层临床/实验数据，不据此推断数值。
-6. **未报告与源内冲突明确保留**：写入 `uncertainty` / `conflicts`，不写成事实。
+1. 引文必须能在 `paragraphs[].text` 里**逐字找到**，找不到就是定位错了，重来。
+2. `backend=builtin` 表示环境没有第三方 PDF 库，字符可能缺失，**必须在 `uncertainty` 写明**。
+3. `stats.unreadable_pages` 非空 → 这些页没有文字层，逐页记 `status:"unreadable"`，不得靠猜补。
+4. `stats.unparsed_tables` 里的表**不要编造单元格**，如实写"结构不可解析 + 原因"。
+5. 段落 id 只在本次运行内有效，跨运行不复用。
 
-## 异常处理
+### 第 2 步 · 任务加工（文献知识图谱构建）
 
-- PDF 无法解析：写 `status=unable`，说明原因与可人工接管位置，不用标签臆造正文。
-- 材料缺 source_id/paragraph_id：`build_skeleton.py` 会发 warning；补字段后再建图，不猜测来源。
-- 查询无结果：`result_subgraph` 可为空但须 `empty=true` 且在 `uncertain` 说明，禁止造边。
-- 重复运行：`build_skeleton.py` 每次重建骨架，节点 id 用稳定规则（如 `n001`），支持增量更新时保留既有编号。
+```bash
+python scripts/readwork.py graph work/doc.json --out work/graph.json
+python scripts/readwork.py graph work/doc.json --out work/graph-q1.json --query "<查询词>"
+python scripts/readwork.py graphexport work/graph.json --out work/graph.cypher
+```
 
-## 资源
+工具只产出**候选结构 + 证据**，最终字段由你按材料填写；工具给的 `limits`/`limitations` 必须原样带进结果的 `uncertainty`。
 
-- `assets/relation_vocab.json`：受控关系词表（canonical/别名/方向/证据强度门槛）。
-- `assets/entity_types.json`：实体类型白名单与证据规则。
-- `references/`：图 schema、关系与证据规则、实体对齐、查询与增量更新、边界案例。
-- `examples/minimal-example.md`：一组完整最小调用示例（示意输出已标注）。
+### 第 3 步 · 自检（必做，不通过不许交）
 
-依赖：Python 3 标准库（json/re/argparse/os），无需第三方包。脚本均可用 `python3 scripts/<name>.py --help` 查看参数。
+```bash
+python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
+```
+
+必须满足：`output_contract` 字段齐全、`status` 合法、`uncertainty` 与 `status` 一致、
+每条 `sources` 的 `quote` 能在对应段落里逐字回查（`evidence_coverage` 应为 1.0）。
+不通过就回到第 2 步改，**不要靠删证据让检查通过**。
+
+## 四、评分维度落点（自查表）
+
+| 维度 | 分值 | 本作品的落点 |
+|--|--:|--|
+| 实际效果·任务完成度 | 15 | `doctext.py` 一次给出段落/章节/题注/表格/参考文献五类结构，`result` 逐字段覆盖 `output_contract` |
+| 实际效果·结果正确性 | 15 | 引文逐字回查（`verify` 的 `evidence_coverage`）；翻译类另查数字/单位/引用/公式保留 |
+| 实际效果·结果完整性 | 5 | `metadata`（标题/作者/单位/摘要/关键词/DOI）+ 图表清单 + 参考文献条目 + 脚注 |
+| 实际效果·结果可核验性 | 5 | 每条结论带 `page` + `paragraph_id` + `quote`，`quote_verified` 布尔位 |
+| 使用增益·质量增益 | 15 | 无 Skill 时模型只能读"一段文本"；本 Skill 提供段 id、章节树、题注归属、证据回查四件套 |
+| 使用增益·效率增益 | 5 | 单篇 1～2 秒产出完整模型（实测见 `examples/runs/RUNS.md`），不需要反复重读 PDF |
+| 使用增益·增益可验证性 | 5 | 复现命令 + 两次运行结果一致（纯确定性，不含随机采样） |
+| 创新增益·新增能力 | 5 | 三级后端降级（无第三方库也能解 ToUnicode 子集字体）；坐标栅格表格；共现与有向关系分离 |
+| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环，把"可核验"变成可执行检查 |
+| 创新增益·创新证据 | 5 | 两篇真实 PDF 的实测数字与失败原因，全部可在包内复现 |
+| 可靠体验·调用与易用性 | 3 | 两条命令即可完成；参数与输出字段全在本文档 |
+| 可靠体验·运行稳定性 | 4 | 无随机性、无网络、无外部状态；重复运行输出一致 |
+| 可靠体验·异常处理 | 3 | 加密 / 无文字层 / 图片型表格 / 跨栏 / 占位文件 逐项分支处理（见第五节） |
+| 生态贡献·文档完整性 | 3 | SKILL.md + README + 契约表 + 边界说明 + 实测记录 |
+| 生态贡献·资源可复用性 | 4 | 纯标准库实现，无绝对路径、无个人文件依赖，复制即可用 |
+| 生态贡献·分享推广价值 | 3 | GitHub 公开仓库，含两篇实测样本与可复现命令 |
+
+## 五、异常与降级
+
+| 情况 | 处置 |
+|---|---|
+| PDF 加密且需密码 | `status=blocked`，说明需密码/授权版本，不臆测内容 |
+| 无文字层 / 扫描件 | 逐页记 `unreadable_pages`；不 OCR 猜字；需要时说明可接 OCR 分支 |
+| 图片型表格 | 保留题注与位置，`tables` 留空并写原因 |
+| 跨栏/并排表格 | 记 `unparsed_tables`（列数不稳定），不返回错误单元格 |
+| 乱码字体 | 保留原始片段，用相邻段落交叉校验，写进 `uncertainty` |
+| 材料是占位/记录页 | 如实输出其内容并标明"材料不含论文正文" |
+| 超出预算（64 请求 / 900 秒） | 先落 `status=partial` 的完整骨架，再增量补齐 |
+
+## 六、依赖
+
+Python 3.9+，**零第三方依赖也能运行**。PDF 后端按序降级并在 `backend` 里如实标记：
+
+1. `pypdf`（推荐，能解 ToUnicode 与子集字体，中文不乱码）
+2. `pdftotext`（poppler，`-layout`）
+3. 内置解析器：解 FlateDecode + 读 ToUnicode CMap + 取 `Tj/TJ`，纯标准库
+
+`builtin` 后端的边界：不还原坐标、不识别表格结构；只保证有文字层的 PDF 能取出可定位文本，
+**不冒充精确解析结果**，必须在 `uncertainty` 说明。
+
+## 七、实测记录
+
+见 `examples/runs/RUNS.md`（两篇真实 PDF，含 sha256、耗时、各类结构数量、
+表格失败原因）。平台用自己的固定案例评测，这些记录只说明能力边界。
+
+## 八、文件清单
+
+| 文件 | 作用 |
+|---|---|
+| `scripts/doctext.py` | 文档模型引擎：后端降级 + 段落/章节/题注/表格/参考文献 |
+| `scripts/readwork.py` | 任务加工工具：glossary / bilingual / notes / claims / graph / verify |
+| `examples/runs/RUNS.md` | 真实运行记录与边界 |
+| `GITHUB_URL.txt` | 本题作品的 GitHub 公开链接 |

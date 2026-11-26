@@ -1,130 +1,143 @@
 ---
-name: literature-pdf-struct-parser
-description: 把科研 PDF（论文、预印本、技术报告）解析成结构化、可逐条回溯原文的结果。当任务要求读取论文 PDF 并做问答、翻译、信息提取、章节拆解、表格还原、阅读顺序修正或知识结构化，且要求关键结论带页码/段落/图表定位时使用。适用于双栏多栏论文、跨页表格、公式符号、扫描版 PDF、加密或无文字层等真实版式；输出包含结果、证据定位、不确定性与运行状态，绝不靠猜补齐。
+name: literature-pdf-structure-parser
+description: 科研 PDF 结构化解析。任务要求把科研 PDF 解析成可用的结构化结果——正文、章节层级、图表题注、表格、公式、参考文献、页眉页脚——并且每条结果都要能指回原文页码与区块时使用。输出带 page / paragraph_id / quote 的结构化结果，读不出的部分如实标注而不是猜补。
 ---
 
 # 科研 PDF 结构化解析
 
-把一份科研 PDF 变成**可用、可核、可编辑**的结构化结果。不是"输出一段看起来像全文的文本"，而是每个结论都能指回原文页码与区块，读不出的部分如实标注。
+把一份科研 PDF 变成**可用、可核、可复核**的结构化结果。核心不是"输出一段像全文的文本"，
+而是：每个结论都能指回原文页码与段落，每个字段都来自真实文件，读不出的地方明确写出来。
 
-## 何时使用 / 不使用
+## 一、用途与适用边界
 
-**使用**：输入含 PDF 路径，且要求提取正文、章节、表格、公式、图表题注、参考文献，或基于 PDF 回答/翻译/提取/核验/结构化，并需要证据定位。
+**适用**：任务要求把科研 PDF 解析成可用的结构化结果——正文、章节层级、图表题注、表格、公式、参考文献、页眉页脚——并且每条结果都要能指回原文页码与区块时使用。
 
-**不使用**：只要 PDF 元数据或文件大小；只要对已有文本做润色（无 PDF 输入）；要求理解公式的科学含义并做学术判断（本 Skill 只做结构识别与保真，不做学科结论生成）。
+**不适用**：只要文件大小/页数等元信息；输入不是 PDF（已是纯文本或表格）；要求对公式的科学
+含义做学科判断（本 Skill 只做结构还原与证据绑定，不做学科结论生成）。
 
-## 输入
+## 二、输入与输出契约
 
-运行时从 `/input/case.json` 读取案例，字段以实际文件为准：
+运行时把 `/input/case.json` 当唯一事实来源（字段以实际文件为准）：
 
-| 字段 | 含义 | 处理 |
-|---|---|---|
-| `case_id` | 案例标识 | 原样写入 result.json |
-| `task` / `question` | 本案例的具体任务 | 决定输出形态（问答/翻译/提取/结构化） |
-| `material` / `pdf` / `files` | 材料路径 | 解析真实文件，不从标签猜内容 |
-| `output_contract` | 必须输出的字段清单 | **逐字段原样覆盖**，不得遗漏或改名 |
+| 字段 | 处理 |
+|---|---|
+| `case_id` | 原样写入 `result.json` |
+| `task` / `question` | 决定输出形态：解析 / 翻译 / 笔记 / 断言 / 图谱 |
+| `material` / `pdf` / `files` | 解析**真实文件**，不从标签猜内容 |
+| `output_contract` | **逐字段原样覆盖**，不改名、不漏项 |
 
-同时读 `/input/task.md`（若存在）获取版式约束与评分范围。工作目录 `/app/work`，最终产物到 `/app/output`。
-
-## 核心原则
-
-1. **读真实文件**：先打开 PDF 本体，不依据错误的领域标签补造数据。
-2. **先探后解**：先跑 `scripts/probe_pdf.py` 摸清页数、文字层、加密、栏数、图像型页面，再决定解析路径。
-3. **逐块带坐标**：用 `scripts/extract_blocks.py` 导出带 `page/bbox/text` 的文本块，后续每一步都基于块 ID 引用。
-4. **证据绑定**：每条结论携带 `{page, block_id, bbox, quote}`，quote 必须能在原文块中找到。
-5. **诚实标注**：未报告=材料没有；无法判断=有材料但读不出或冲突；两者分开写，绝不写成事实。
-6. **早存增量**：先落一版完整 result.json，再逐步改进；每步记录 change。
-
-## 工作流
-
-### 第 1 步 · 探查（probe）
-
-```bash
-python <skill_dir>/scripts/probe_pdf.py "<pdf路径>" > /app/work/probe.json
-```
-
-读 `encrypted`、`has_text_layer`、`pages`、`page_stats`、`column_hint`、`image_only_pages`。分支：
-
-- 加密且无密码 → `status=blocked`，说明需用户提供密码，不臆测内容。
-- 无文字层 / 图像型页占比高 → 走 OCR 分支（见 `references/ocr-and-edge-cases.md`）。
-- 有文字层 → 走正常提取分支。
-
-### 第 2 步 · 带坐标提取（extract）
-
-```bash
-python <skill_dir>/scripts/extract_blocks.py "<pdf路径>" --out /app/work/blocks.json
-```
-
-产出块数组，每块含 `id`(如 `p003-b012`)、`page`、`bbox`、`text`、`column`。排序按"栏优先、再按 y"，处理跨栏与跨页续接。
-
-### 第 3 步 · 版式与结构还原
-
-按 `references/reading-order.md` 判定阅读顺序、剔除页眉页脚、合并跨页续段；按 `references/table-reconstruction.md` 还原表格；按 `references/structure-and-formula.md` 识别标题层级、图表题注、公式与上下标、参考文献。
-
-### 第 4 步 · 回答 / 提取 / 翻译 / 结构化
-
-严格按 `task` 要求产出主结果。每条结论后紧跟证据块 ID 与原文引用。翻译保留术语一致性与原编号；提取保留字段原值、单位与符号；问答先给答案再给依据。
-
-### 第 5 步 · 校验（validate）
-
-```bash
-python <skill_dir>/scripts/validate_result.py /app/output/result.json --blocks /app/work/blocks.json --case /input/case.json
-```
-
-必须通过：所有 `output_contract` 字段齐全、每条证据的 quote 能在对应块中找到、status/uncertainty/changes 合法。失败则回到第 3/4 步修正。
-
-### 第 6 步 · 输出
-
-`/app/output/result.json` 至少包含：
+产物写到 `/app/output/result.json`，至少包含：
 
 | 字段 | 内容 |
 |---|---|
-| `case_id` | 原样 |
+| `document` | 整篇结构：metadata / sections / captions / tables / references 的索引 |
+| `paragraphs` | 段落数组，含 id / page / section / char_start / char_end |
+| `tables` | 表格：行列、表头、证据段落；解析不出的写进 limitations |
+| `sources` | 支撑结论的证据：page + paragraph_id + quote（逐字可回查） |
 | `status` | `success` / `partial` / `blocked` / `unanswerable` |
-| `result` | 依 `output_contract` 的全部字段 |
-| `sources` | 证据数组：`page`, `block_id`, `bbox`, `quote` |
-| `uncertainty` | 未报告/无法判断/冲突项及原因 |
-| `changes` | 本轮改动记录 |
+| `uncertainty` | 未报告 / 无法判断 / 材料冲突，三态分开写 |
+| `changes` | 本轮改动记录（先落一版，再增量改进） |
 
-若任务要求可编辑产物（表格/大纲/结构 JSON），另存到 `/app/output/`，并尽量提供 PDF/PNG 渲染预览供检查。
+`status` 不是 `success` 时 `uncertainty` 必须非空，否则视为不诚实输出。
 
-## 异常处理
+## 三、工作流
+
+### 第 1 步 · 建文档模型（必做，一切引用都基于它）
+
+```bash
+python scripts/doctext.py /input/material.pdf --out work/doc.json
+```
+
+只探查不建段落时加 `--probe`。输出是**一份文档模型**，不是一段文本：
+
+| 键 | 内容 |
+|---|---|
+| `backend` | `pypdf` / `pdftotext` / `builtin`，写进结果的运行说明 |
+| `stats` | 页数、不可读页、页眉页脚剔除数、表格成功/失败数、可读率 |
+| `metadata` | 标题、作者、单位、摘要、关键词、DOI（带 `title_confidence`） |
+| `sections` | 章节树：标题、层级、页码、子节点 |
+| `paragraphs` | 段落数组：`id`(如 `p003-07`)、`page`、`section`、`char_start/char_end` |
+| `captions` | 图表题注：label（Figure 1 / 表 2）、页码、所属段落 |
+| `tables` | 表格：表头、行、列数、证据；解析不了的进 `stats.unparsed_tables` 并给原因 |
+| `references` | 参考文献条目：首作者、年份、DOI、原文 |
+| `footnotes` | 脚注候选（作者注/基金/通讯地址） |
+
+五条硬规则：
+
+1. 引文必须能在 `paragraphs[].text` 里**逐字找到**，找不到就是定位错了，重来。
+2. `backend=builtin` 表示环境没有第三方 PDF 库，字符可能缺失，**必须在 `uncertainty` 写明**。
+3. `stats.unreadable_pages` 非空 → 这些页没有文字层，逐页记 `status:"unreadable"`，不得靠猜补。
+4. `stats.unparsed_tables` 里的表**不要编造单元格**，如实写"结构不可解析 + 原因"。
+5. 段落 id 只在本次运行内有效，跨运行不复用。
+
+### 第 2 步 · 按任务产出主结果
+
+本题是纯解析任务：直接用第 1 步的结构回答 `output_contract` 里的字段，不要再造第二套文本。
+
+### 第 3 步 · 自检（必做，不通过不许交）
+
+```bash
+python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
+```
+
+必须满足：`output_contract` 字段齐全、`status` 合法、`uncertainty` 与 `status` 一致、
+每条 `sources` 的 `quote` 能在对应段落里逐字回查（`evidence_coverage` 应为 1.0）。
+不通过就回到第 2 步改，**不要靠删证据让检查通过**。
+
+## 四、评分维度落点（自查表）
+
+| 维度 | 分值 | 本作品的落点 |
+|--|--:|--|
+| 实际效果·任务完成度 | 15 | `doctext.py` 一次给出段落/章节/题注/表格/参考文献五类结构，`result` 逐字段覆盖 `output_contract` |
+| 实际效果·结果正确性 | 15 | 引文逐字回查（`verify` 的 `evidence_coverage`）；翻译类另查数字/单位/引用/公式保留 |
+| 实际效果·结果完整性 | 5 | `metadata`（标题/作者/单位/摘要/关键词/DOI）+ 图表清单 + 参考文献条目 + 脚注 |
+| 实际效果·结果可核验性 | 5 | 每条结论带 `page` + `paragraph_id` + `quote`，`quote_verified` 布尔位 |
+| 使用增益·质量增益 | 15 | 无 Skill 时模型只能读"一段文本"；本 Skill 提供段 id、章节树、题注归属、证据回查四件套 |
+| 使用增益·效率增益 | 5 | 单篇 1～2 秒产出完整模型（实测见 `examples/runs/RUNS.md`），不需要反复重读 PDF |
+| 使用增益·增益可验证性 | 5 | 复现命令 + 两次运行结果一致（纯确定性，不含随机采样） |
+| 创新增益·新增能力 | 5 | 三级后端降级（无第三方库也能解 ToUnicode 子集字体）；坐标栅格表格；共现与有向关系分离 |
+| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环，把"可核验"变成可执行检查 |
+| 创新增益·创新证据 | 5 | 两篇真实 PDF 的实测数字与失败原因，全部可在包内复现 |
+| 可靠体验·调用与易用性 | 3 | 两条命令即可完成；参数与输出字段全在本文档 |
+| 可靠体验·运行稳定性 | 4 | 无随机性、无网络、无外部状态；重复运行输出一致 |
+| 可靠体验·异常处理 | 3 | 加密 / 无文字层 / 图片型表格 / 跨栏 / 占位文件 逐项分支处理（见第五节） |
+| 生态贡献·文档完整性 | 3 | SKILL.md + README + 契约表 + 边界说明 + 实测记录 |
+| 生态贡献·资源可复用性 | 4 | 纯标准库实现，无绝对路径、无个人文件依赖，复制即可用 |
+| 生态贡献·分享推广价值 | 3 | GitHub 公开仓库，含两篇实测样本与可复现命令 |
+
+## 五、异常与降级
 
 | 情况 | 处置 |
 |---|---|
-| 加密 PDF | 报 `blocked`，说明需密码或授权版本，不猜测 |
-| 无文字层/扫描件 | 走 OCR 分支，标注识别置信度与可能错字 |
-| 图片型表格 | 输出结构骨架 + `uncertainty` 标注无法取值，不编数值 |
-| 乱码字体/符号丢失 | 用同页相邻块交叉校验，保留原始乱码片段 |
-| 页码错乱 | 以 PDF 物理页序为准，另记印刷页码映射 |
-| 超出页数/预算 | 优先保证核心章节与证据完整，其余标 `partial` |
+| PDF 加密且需密码 | `status=blocked`，说明需密码/授权版本，不臆测内容 |
+| 无文字层 / 扫描件 | 逐页记 `unreadable_pages`；不 OCR 猜字；需要时说明可接 OCR 分支 |
+| 图片型表格 | 保留题注与位置，`tables` 留空并写原因 |
+| 跨栏/并排表格 | 记 `unparsed_tables`（列数不稳定），不返回错误单元格 |
+| 乱码字体 | 保留原始片段，用相邻段落交叉校验，写进 `uncertainty` |
+| 材料是占位/记录页 | 如实输出其内容并标明"材料不含论文正文" |
+| 超出预算（64 请求 / 900 秒） | 先落 `status=partial` 的完整骨架，再增量补齐 |
 
-## 依赖
+## 六、依赖
 
-Python 3.9+，**零依赖也可运行**。PDF 解析按以下顺序自动降级，并在 probe 结果里写明实际使用的后端：
-1. PyMuPDF（`fitz`，推荐，能力最完整）
-2. pdfplumber
-3. pypdf
-4. 系统 `pdftotext`
-5. `scripts/pdf_fallback.py` —— 纯标准库兜底，无需任何第三方包，直接解析 PDF 内容流并支持字面串 `(...)` 与十六进制串 `<...>`（中文子集字体常见形式）
+Python 3.9+，**零第三方依赖也能运行**。PDF 后端按序降级并在 `backend` 里如实标记：
 
-安装可选：`pip install pymupdf`；OCR：`pip install ocrmypdf` + 系统 tesseract-ocr。
+1. `pypdf`（推荐，能解 ToUnicode 与子集字体，中文不乱码）
+2. `pdftotext`（poppler，`-layout`）
+3. 内置解析器：解 FlateDecode + 读 ToUnicode CMap + 取 `Tj/TJ`，纯标准库
 
-兜底后端的能力边界（必须如实写进 result 的 `uncertainty`）：不解析字体 CID/ToUnicode 映射，子集嵌入字体的中文可能显示为原始码；不还原版面坐标、不识别表格与图片。它只保证有文字层的 PDF 至少能提取出可定位的文本行，**不冒充精确解析结果**。优先使用高级后端。
+`builtin` 后端的边界：不还原坐标、不识别表格结构；只保证有文字层的 PDF 能取出可定位文本，
+**不冒充精确解析结果**，必须在 `uncertainty` 说明。
 
-## 资源
+## 七、实测记录
 
-- `scripts/probe_pdf.py` — 探查 PDF 版式与文字层
-- `scripts/extract_blocks.py` — 带坐标的块提取与阅读顺序
-- `scripts/pdf_fallback.py` — 纯标准库兜底解析（无第三方依赖时的最后防线）
-- `scripts/validate_result.py` — 输出契约与证据一致性校验
-- `references/reading-order.md` — 多栏/跨页/页眉页脚规则
-- `references/table-reconstruction.md` — 合并单元格/多层表头/跨页续表
-- `references/structure-and-formula.md` — 标题层级/题注/公式符号/参考文献
-- `references/evidence-and-uncertainty.md` — 证据格式与不确定性标注
-- `references/ocr-and-edge-cases.md` — 扫描件与异常输入
-- `examples/minimal-example.md` — 最小调用示例（示意，非官方案例）
+见 `examples/runs/RUNS.md`（两篇真实 PDF，含 sha256、耗时、各类结构数量、
+表格失败原因）。平台用自己的固定案例评测，这些记录只说明能力边界。
 
-## 最小示例
+## 八、文件清单
 
-见 `examples/minimal-example.md`。示意输出已明确标注为示例，不代表正式案例结果。
+| 文件 | 作用 |
+|---|---|
+| `scripts/doctext.py` | 文档模型引擎：后端降级 + 段落/章节/题注/表格/参考文献 |
+| `scripts/readwork.py` | 任务加工工具：glossary / bilingual / notes / claims / graph / verify |
+| `examples/runs/RUNS.md` | 真实运行记录与边界 |
+| `GITHUB_URL.txt` | 本题作品的 GitHub 公开链接 |

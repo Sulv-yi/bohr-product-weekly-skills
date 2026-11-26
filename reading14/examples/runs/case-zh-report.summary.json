@@ -1,0 +1,65 @@
+{
+ "case": "case-zh-report",
+ "pdf_basename": "case2-zh.pdf",
+ "pdf_sha256": "1ec8d773dbd4fbbc",
+ "backend": "pypdf",
+ "elapsed_ms": 1560,
+ "stats": {
+  "pages": 13,
+  "paragraphs": 97,
+  "headings": 10,
+  "captions": 0,
+  "tables_parsed": 0,
+  "tables_unparsed": 0,
+  "reference_entries": 0,
+  "unreadable_pages": [],
+  "removed_header_footer": 0,
+  "readable_ratio": 1.0
+ },
+ "metadata": {
+  "title": "交线有解机械制图相贯线 3D 交互与三视图实验平台微信小程序应用开发赛 参赛作品介绍文档参赛作品类别:教育辅助、工具类。",
+  "title_confidence": "low",
+  "doi": null,
+  "keywords": null
+ },
+ "sections": [
+  "一、团队介绍",
+  "二、小程序介绍",
+  "2.10 五项核心特色序号特色 说明 可验证指标",
+  "2.13 功能总览能力 实现程度教材题库",
+  "2.14 功能模块与使用场景模块 功能 对应课程知识点 使用场景题库章节",
+  "三、开发文档",
+  "4.1 所用 AI 工具名称与版本",
+  "3 平面立体扩展支持四棱锥、棱柱、圆台与挖空穿孔题型几何描述、面片求交、题库扩展代码",
+  "35 个预设全部构建求解成功",
+  "8 参赛材料整理介绍文档、视频脚本、答辩大纲本套参赛文档草稿 团队核对全部事实、数据与署名后定稿"
+ ],
+ "captions_sample": [],
+ "unparsed_tables": [],
+ "paragraphs_sample": [
+  {
+   "id": "p001-01",
+   "page": 1,
+   "text": "交线有解机械制图相贯线 3D 交互与三视图实验平台微信小程序应用开发赛 参赛作品介绍文档参赛作品类别:教育辅助、工具类。"
+  },
+  {
+   "id": "p001-02",
+   "page": 1,
+   "text": "上图为 mp 后台生成的「体验版小程序码」有效期至 2026-11-27,请用微信扫码体验"
+  },
+  {
+   "id": "p002-01",
+   "page": 2,
+   "text": "第 2 ⻚"
+  },
+  {
+   "id": "p002-02",
+   "page": 2,
+   "text": "一、团队介绍"
+  }
+ ],
+ "track_output": {
+  "claim_count": 0,
+  "claims_sample": []
+ }
+}

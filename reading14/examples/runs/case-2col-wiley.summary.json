@@ -1,0 +1,123 @@
+{
+ "case": "case-2col-wiley",
+ "pdf_basename": "paper.pdf",
+ "pdf_sha256": "8e61d273a2b04e9c",
+ "backend": "pypdf",
+ "elapsed_ms": 1935,
+ "stats": {
+  "pages": 9,
+  "paragraphs": 146,
+  "headings": 6,
+  "captions": 19,
+  "tables_parsed": 0,
+  "tables_unparsed": 6,
+  "reference_entries": 39,
+  "unreadable_pages": [],
+  "removed_header_footer": 0,
+  "readable_ratio": 1.0
+ },
+ "metadata": {
+  "title": "One-component photoinitiator based on benzophenone and sesamol",
+  "title_confidence": "medium",
+  "doi": "10.1002/pat.4337",
+  "keywords": null
+ },
+ "sections": [
+  "1 | INTRODUCTION",
+  "2 | EXPERIMENTAL",
+  "3 | RESULTS AND DISCUSSION",
+  "4 | CONCLUSIONS",
+  "ACKNOWLEDGEMENTS",
+  "REFERENCES"
+ ],
+ "captions_sample": [
+  {
+   "label": "SCHEME 1",
+   "page": 2
+  },
+  {
+   "label": "SCHEME 2",
+   "page": 3
+  },
+  {
+   "label": "FIGURE 1",
+   "page": 3
+  },
+  {
+   "label": "FIGURE 2",
+   "page": 4
+  },
+  {
+   "label": "TABLE 1",
+   "page": 4
+  },
+  {
+   "label": "Figure 4",
+   "page": 5
+  }
+ ],
+ "unparsed_tables": [
+  {
+   "label": "TABLE 1",
+   "page": 4,
+   "reason": "位于图片或版面无稳定列边界"
+  },
+  {
+   "label": "TABLE 2",
+   "page": 6,
+   "reason": "列数不一致（疑似正文串栏），按不可解析处理"
+  },
+  {
+   "label": "TABLE 3",
+   "page": 6,
+   "reason": "位于图片或版面无稳定列边界"
+  },
+  {
+   "label": "Table 5",
+   "page": 7,
+   "reason": "位于图片或版面无稳定列边界"
+  }
+ ],
+ "paragraphs_sample": [
+  {
+   "id": "p001-01",
+   "page": 1,
+   "text": "RESEARCH ARTICLE One-component photoinitiator based on benzophenone and sesamol Jing Wang1,2 | Jinliang Yang3 | Muhammad Atif4 | Roberta Bongiovanni5 | Gang Li1"
+  },
+  {
+   "id": "p001-02",
+   "page": 1,
+   "text": "1 State Key Laboratory of Organic-Inorganic Composites, Beijing University of Chemical Technology, Beijing 100029, China"
+  },
+  {
+   "id": "p001-03",
+   "page": 1,
+   "text": "2 Beijing Advanced Innovation Center for Soft Matter Science and Engineering, Beijing University of Chemical Technology, Beijing 100029, China"
+  },
+  {
+   "id": "p001-04",
+   "page": 1,
+   "text": "3 State Key Laboratory of Chemical Resource Engineering, Beijing University of Chemical Technology, Beijing 100029, China 4 University of Education Lahore, Coll"
+  }
+ ],
+ "track_output": {
+  "claim_count": 21,
+  "claims_sample": [
+   {
+    "claim_id": "c001",
+    "text": "All the results suggest that BPBDO is a 1-component photoinitiator that is an efficient photoinitiator for free radical polymerization.",
+    "page": 1
+   },
+   {
+    "claim_id": "c002",
+    "text": "Photopolymerization has received increased attention over the last few decades due to its several benefits, such as having high efficiency and low energy consumption and being environmentally friendly.1-5 It is a well-accepted technology that has attracted more interest from researchers for applications in various areas, eg, coatings, fast-drying varnishes, paints, printing inks, adhesives, optical waveguides, dental material, and microelectronics.6-8 Because of the wide use of monomers and photoinitiators (PIs), greater effort has been dedicated to free radical photoinitiated systems than the",
+    "page": 1
+   },
+   {
+    "claim_id": "c003",
+    "text": "abstraction or electron transfer reactions.1,2 Alcohols, amines, thiols, and ethers are used as coinitiators because of their hydrogen donating capability.1-3 Benzophenone is 1 of the most widely commercialized PIs1,3,4 because of its lower price, good surface curing property, oxygen inhibition effect,6,7 suitable solubility properties, and high quantum efficiency of the hydrogen abstraction.15 Also, the polymerization of (meth) acrylates is typically initiated by the radicals produced from the hydrogen donor in a BP photoinitiating system.",
+    "page": 2
+   }
+  ]
+ }
+}

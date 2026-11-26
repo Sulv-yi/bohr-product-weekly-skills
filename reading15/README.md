@@ -1,38 +1,35 @@
-# 文献知识图谱构建 Skill
+# 带证据的文献知识图谱
 
-从两篇独立科研论文中构建带证据的可查询知识图谱。四关注点：抽得准 / 连得对 / 对得齐 / 查得到回得去；严格防跨篇污染。
+赛题：`product-arena-10-760d1a0b`（北化分站赛 · 文献知识图谱构建）
+
+## 是什么
+
+一个可被 Agent 调用的 Skill：把科研 PDF 解析成带页码与段落 id 的结构化文档模型，
+再按本题要求加工成翻译 / 笔记 / 断言 / 图谱，所有结论都能回到原文位置。
+
+## 怎么用
+
+```bash
+python scripts/doctext.py /input/material.pdf --out work/doc.json
+python scripts/readwork.py graph work/doc.json --out work/graph.json
+python scripts/readwork.py graph work/doc.json --out work/graph-q1.json --query "<查询词>"
+python scripts/readwork.py graphexport work/graph.json --out work/graph.cypher
+python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
+```
 
 ## 目录
 
-- `SKILL.md`：主说明（用途、输入输出、工作流、防污染约束、异常处理）。
-- `scripts/`
-  - `probe_pdf.py`：PDF 文本块探查（复用，可选）。
-  - `build_skeleton.py`：从 manifest + material 建图谱骨架，登记每篇真实元数据。
-  - `extract_entities.py`：候选实体抽取（candidate=true，绑定 source_id/paragraph_id/quote）。
-  - `verify_graph.py`：**核心核验**（四性质 + 防污染 P1-P7）。
-  - `query_graph.py`：5 类真实查询模板。
-  - `export_graph.py`：导出 nodes.jsonl/edges.jsonl/graph.json。
-  - `validate_result.py`：结果结构契约校验。
-- `assets/relation_vocab.json`：受控关系词表；`assets/entity_types.json`：实体类型白名单。
-- `references/`：图 schema、关系证据规则、对齐冲突、查询增量、边界案例。
-- `examples/minimal-example.md`：完整最小调用示例（示意）。
+- `SKILL.md` — 完整说明（适用边界、契约、工作流、评分维度落点、异常处理）
+- `scripts/doctext.py` — 文档模型引擎（纯标准库可跑）
+- `scripts/readwork.py` — 任务加工与自检工具
+- `references/` — 方法细则（阅读顺序、表格重建、结构识别）
+- `examples/runs/RUNS.md` — 真实 PDF 上的实测记录
 
 ## 依赖
 
-Python 3 标准库，无需第三方包。
+Python 3.9+；可选 `pypdf`（推荐）或 `pdftotext`，两者都没有时走内置解析器。
 
-## 使用顺序
+## 限制
 
-1. build_skeleton → 2. extract_entities → 3. Agent 判定填图 → 4. query_graph → 5. verify_graph → 6. export_graph → 7. validate_result。
-
-## 关键规则
-
-- 位置用 JATS `paragraph_id`，不是 PDF 页码。
-- 根 DOI/title/authors 只属第一篇，secondary 用自身元数据。
-- 跨篇同形通用术语不得仅凭同名合并；数值/样本/条件不得跨篇拼接。
-- 每条边直接证据 + 受控 relation；共现/转述/推测/常识不得当关系。
-- 至少 3 个真实查询，每个可回源；无结果如实说明。
-
-## GitHub
-
-`https://github.com/Sulv-yi/bohr-product-weekly-skills/tree/main/reading15`
+双栏并排表格、扫描件文字层缺失、跨页续表需要人工确认；这些情况在结果里如实标注，
+不编造数据。详见 `SKILL.md` 第五节。
