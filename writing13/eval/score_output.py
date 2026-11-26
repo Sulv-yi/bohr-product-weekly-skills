@@ -125,7 +125,7 @@ def evaluate(result, m, rubric):
         f"公式 {m['equations']}；表格 {m['tables']}；占位符问题 {m['placeholder_errors']}"
         "（公式与数值是否正确需对着原文核）")
     items['result_completeness'] = verdict(
-        m['cite_keys'] >= 1 and m['cite_resolved_rate'] >= 1.0,
+        m['cite_keys'] >= th.get('cite_keys', 8) and m['cite_resolved_rate'] >= 1.0,
         f"引用键 {m['cite_keys']}，可回溯 {m['cite_resolved_rate']:.0%}")
     items['result_verifiability'] = verdict(
         m['source_map_count'] >= th.get('source_map', 3) and m['repro_coverage'] >= 0.6,

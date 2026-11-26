@@ -227,8 +227,8 @@ def main():
     ap.add_argument('--result', default='/app/output/result.json')
     ap.add_argument('--bib')
     ap.add_argument('--outdir', default='/app/output')
-    ap.add_argument('--min-sec', type=int, default=120)
-    ap.add_argument('--min-total', type=int, default=400)
+    ap.add_argument('--min-sec', type=int, default=250)
+    ap.add_argument('--min-total', type=int, default=1400)
     ap.add_argument('--no-compile', action='store_true')
     args = ap.parse_args()
     if not os.path.isfile(args.tex):

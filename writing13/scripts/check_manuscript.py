@@ -222,8 +222,8 @@ def main():
     ap.add_argument('tex')
     ap.add_argument('--case')
     ap.add_argument('--bib')
-    ap.add_argument('--min-section-chars', type=int, default=120)
-    ap.add_argument('--min-total-chars', type=int, default=400)
+    ap.add_argument('--min-section-chars', type=int, default=250)
+    ap.add_argument('--min-total-chars', type=int, default=1400)
     ap.add_argument('--json')
     args = ap.parse_args()
 

@@ -222,9 +222,10 @@
     }
   ],
   "thresholds": {
-    "min_total": 400,
-    "min_sec": 120,
-    "source_map": 3,
-    "cite_resolved_rate": 1.0
+    "min_total": 1400,
+    "min_sec": 250,
+    "source_map": 10,
+    "cite_resolved_rate": 1.0,
+    "cite_keys": 8
   }
 }

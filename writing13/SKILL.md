@@ -183,6 +183,21 @@ python scripts/verify_result.py /app/output/result.json --case /input/case.json 
 
 `status`：`success` 成稿过硬门槛 + 编译通过 + 五性质全满足；`partial` 部分完成（必须写 uncertainty 指明限制）；`unable` 材料/环境不可用；`refused` 任务越界或无依据。**不预置答案、不伪造编译状态、不虚构分数。**
 
+## 评分维度落点（自查表）
+
+| 维度 | 分值 | 本作品的落点 |
+|--|--:|--|
+| 实际效果·完成度 | 15 | `build_manuscript.py` 生成结构完整、可直接编译的 .tex 成稿 |
+| 实际效果·正确性 | 15 | `compile_and_parse.py` 多轮编译 + 全量日志解析，定位到文件/行号/根因 |
+| 实际效果·完整性 | 5 | `check_manuscript.py` 确认是写实稿件而非空骨架或占位符 |
+| 实际效果·可核验性 | 5 | `build_outputs.py` 输出 selfcheck.md + cite-map.csv + compile-report，编译可复现 |
+| 使用增益·质量增益 | 15 | `static_check.py` 不依赖 TeX 引擎也能抓结构性硬损伤 |
+| 使用增益·效率增益 | 5 | 日志解析一次列出全部错误，不需要逐轮试错 |
+| 使用增益·可验证性 | 5 | `probe_project.py` 记录引擎与包清单，构建环境可复现 |
+| 创新增益 | 15 | 编译前静态预检 + 编译后全量日志归因，两段式定位 |
+| 可靠体验 | 10 | 无 TeX 引擎时降级为静态检查并如实标 `partial`；异常处理见下一节 |
+| 生态贡献 | 10 | 支持多引擎探测；检查器可脱离本项目复用 |
+
 ## 异常处理
 
 | 情形 | 处理 | status |
