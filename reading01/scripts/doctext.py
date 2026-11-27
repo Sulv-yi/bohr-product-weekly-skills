@@ -342,6 +342,21 @@ def _stream_text(stream: bytes, cmap: dict) -> list[str]:
 
 
 def backend_builtin(path: str) -> dict | None:
+    """纯标准库后端：先用 pdfmini（页树+坐标+分栏），失败再退到旧路径。"""
+    try:
+        import pdfmini
+        got = pdfmini.extract(path)
+        if got and got.get("pages_text"):
+            return {"backend": "builtin", "pages_text": got["pages_text"],
+                    "pages_chunks": got.get("pages_chunks") or [],
+                    "encrypted": False, "needs_pass": False}
+    except Exception as exc:  # 解析器自身异常不能吞掉整个流程
+        sys.stderr.write("[doctext] pdfmini failed: %s\n" % exc)
+    return _builtin_legacy(path)
+
+
+def _builtin_legacy(path: str) -> dict | None:
+    """旧路径：按对象顺序拼流文本，无坐标、无页序纠正（保留作对照基线）。"""
     with open(path, "rb") as fh:
         data = fh.read()
     objs = _pdf_objects(data)
@@ -527,9 +542,12 @@ def _row_cells(row: list[dict], gap: float = 10.0) -> list[str]:
 
 def build_tables_coord(chunks_pages: list[list[dict]], captions: list[dict],
                        stats: dict) -> list[dict]:
-    """坐标法：按 y 聚行、按 x 间隙切单元格，要求连续多行列数一致。"""
+    """坐标法：按 y 聚行、按 x 间隙切单元格，要求连续多行列数一致。
+
+    单元格切分阈值不写死：同一张表在不同字号/栏宽下格间距差别很大，
+    这里对每组候选阈值各切一遍，取"行数多、列数稳定"的那一组。
+    """
     tables = []
-    handled = set()
     for c in captions:
         if c["kind"] != "table":
             continue
@@ -537,7 +555,6 @@ def build_tables_coord(chunks_pages: list[list[dict]], captions: list[dict],
         if not (0 <= pno < len(chunks_pages)):
             continue
         rows_all = _rows_from_chunks(chunks_pages[pno])
-        # 定位题注行
         start = None
         for i, r in enumerate(rows_all):
             txt = " ".join(x["text"] for x in r)
@@ -546,49 +563,58 @@ def build_tables_coord(chunks_pages: list[list[dict]], captions: list[dict],
                 break
         if start is None:
             continue
-        grid, raw = [], []
-        for r in rows_all[start + 1: start + 80]:
-            cells = _row_cells(r)
-            txt = " ".join(x["text"] for x in r)
-            if len(cells) >= 2:
-                grid.append(cells)
-                raw.append(txt[:300])
-            elif grid and len(cells) <= 1:
-                if len(txt.strip()) < 200 and grid:
-                    # 可能是表下注释
-                    if re.match(r"^([a-z]\.?|\*|†|Note|注)[\s)]", txt.strip(), re.I):
+
+        best = None
+        for gap in (2.2, 3.0, 4.0, 5.5, 7.5, 10.0, 14.0, 20.0):
+            grid, raw = [], []
+            for r in rows_all[start + 1: start + 80]:
+                cells = _row_cells(r, gap=gap)
+                txt = " ".join(x["text"] for x in r)
+                if len(cells) >= 2:
+                    grid.append(cells)
+                    raw.append(txt[:300])
+                elif grid and len(cells) <= 1:
+                    note = txt.strip()
+                    if len(note) < 200 and re.match(r"^([a-z]\.?|\*|†|Note|注)[\s)]", note, re.I):
                         continue
                     break
-        if len(grid) < 3:
+            if len(grid) < 3:
+                continue
+            cnt = {}
+            for r in grid:
+                cnt[len(r)] = cnt.get(len(r), 0) + 1
+            mode_cols, mode_n = max(cnt.items(), key=lambda kv: kv[1])
+            ratio = mode_n / len(grid)
+            rows_ok = [r for r in grid if len(r) == mode_cols]
+            if not (2 <= mode_cols <= 12 and ratio >= 0.6 and len(rows_ok) >= 3):
+                continue
+            score = (ratio, len(rows_ok), mode_cols)
+            if best is None or score > best[0]:
+                best = (score, mode_cols, rows_ok, raw, gap)
+        if best is None:
             continue
-        cnt = {}
-        for r in grid:
-            cnt[len(r)] = cnt.get(len(r), 0) + 1
-        mode_cols, mode_n = max(cnt.items(), key=lambda kv: kv[1])
-        if not (2 <= mode_cols <= 12 and mode_n / len(grid) >= 0.6):
-            continue
-        rows = [r for r in grid if len(r) == mode_cols]
-        if len(rows) < 3:
-            continue
+        score, mode_cols, rows, raw, gap = best
         tables.append({
             "id": "tbl-" + c["id"], "page": c["page"], "label": c["label"],
             "caption_id": c["id"], "n_rows": len(rows), "n_cols": mode_cols,
             "header": rows[0], "rows": rows[1:],
-            "cell_confidence": "high",
+            "cell_confidence": "high" if score[0] >= 0.8 else "medium",
             "extraction": "coordinate-grid",
+            "cell_gap_threshold_pt": gap,
+            "row_consistency": round(score[0], 2),
             "evidence": {"page": c["page"], "caption_id": c["id"]},
             "raw_lines": raw[:6],
             "limitation": "按坐标栅格切分；跨行合并单元格会表现为空串，需人工确认",
         })
-        handled.add(c["id"])
     stats["coordinate_tables"] = len(tables)
     return tables
 
 
-def build_tables(path: str, captions: list[dict], stats: dict) -> list[dict]:
+def build_tables(path: str, captions: list[dict], stats: dict,
+                 chunks_pages: list[list[dict]] | None = None) -> list[dict]:
     """优先坐标栅格；退到版面空白切分；都失败则如实记录不可解析原因。"""
     tables: list[dict] = []
-    chunks = page_chunks(path)
+    chunks = chunks_pages if chunks_pages else page_chunks(path)
     if chunks and any(chunks):
         tables += build_tables_coord(chunks, captions, stats)
     done = {t["caption_id"] for t in tables}
@@ -907,7 +933,7 @@ def build(path: str, keep_hf: bool = False, probe_only: bool = False) -> dict:
             if p["id"] == c["paragraph_id"]:
                 p["kind"] = c["kind"] + "_caption"
                 break
-    tables = build_tables(path, captions, stats)
+    tables = build_tables(path, captions, stats, got.get("pages_chunks"))
     references = build_references(paragraphs, stats)
     footnotes = build_footnotes(paragraphs)
     metadata = build_metadata(paragraphs, captions)
