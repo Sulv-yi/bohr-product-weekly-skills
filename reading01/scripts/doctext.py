@@ -460,6 +460,12 @@ def build_captions(paragraphs: list[dict]) -> list[dict]:
                     r"displays?|summari[sz]es?|lists?|report|gives?|reveals?)\b",
                     body, re.I):
             continue
+        # "Table 5: The table shows that ..." 是正文引述句，不是题注：
+        # 真题注以名词短语开头（"Viscosity and DCf of ..."），
+        # 引述句则以 "The/This/As ..." 开头并再次提到表格或图。
+        if re.match(r"^(the|this|these|those|as|it|in|from|for)\b", body, re.I) and \
+                re.search(r"\b(table|figure|scheme|fig\.)\b", body[:48], re.I):
+            continue
         if len(body) > 400:
             body = body[:400]
         kind = "table" if re.match(r"(table|表|附表)", label, re.I) else "figure"
@@ -468,7 +474,19 @@ def build_captions(paragraphs: list[dict]) -> list[dict]:
                      "text": (label + (": " + body if body else "")).strip(),
                      "paragraph_id": p["id"],
                      "caption_truncated": len(body) >= 400})
-    return caps
+    # 同一编号的题注只保留正文更长的一条：PDF 里同一张表常同时出现
+    # 目录式短标签和正式题注，重复条目会把下游表格重建指向同一页两次。
+    seen, out = {}, []
+    for c in caps:
+        key = (c["kind"], c["number"])
+        if key not in seen:
+            seen[key] = len(out)
+            out.append(c)
+            continue
+        j = seen[key]
+        if len(c["text"]) > len(out[j]["text"]):
+            out[j] = c
+    return out
 
 
 def _cells(line: str) -> list[str]:
@@ -521,6 +539,153 @@ def _rows_from_chunks(chunks: list[dict], y_tol: float = 3.0) -> list[list[dict]
     for r in rows:
         r.sort(key=lambda c: c["x"])
     return rows
+
+
+def _table_region(rows: list[list[dict]], start: int, max_rows: int = 90) -> list[list[dict]]:
+    """从题注下一行起取表格块。
+
+    结束条件取三种信号，任一触发即停：纵向间距突变（>4 倍常规行距）、
+    出现下一个题注、或整行文字过长（正文段落，不是表格行）。
+    """
+    block, gaps = [], []
+    for r in rows[start + 1: start + max_rows]:
+        txt = " ".join(x["text"] for x in r).strip()
+        if not txt:
+            continue
+        if re.match(r"^\s*(Table|Tab\.|FIGURE|Figure|Scheme|图|表)\s*\d", txt, re.I):
+            break
+        # 表格行是碎片；单块且偏长的行已经是正文段落（尤其双栏版面里
+        # 每栏一行就是一段的一部分），继续往下取只会把正文算进表格。
+        if len(r) == 1 and len(r[0]["text"]) > 55:
+            break
+        if len(txt) > 260:
+            break
+        if block:
+            dy = block[-1][0]["y"] - r[0]["y"]
+            if dy <= 0:
+                continue
+            gaps.append(dy)
+            med = sorted(gaps)[len(gaps) // 2] if gaps else dy
+            if med > 0 and dy > med * 2.2:
+                break
+            if dy > 40:
+                break
+        block.append(r)
+    return block
+
+
+def _columns_by_anchor(rows: list[list[dict]], tol: float = 10.0,
+                       min_support: int = 2) -> list[float]:
+    """按块左边缘聚类出列锚点。
+
+    表格每一列在版面上有固定的左边界，纵向合并单元格只会让某些行缺值，
+    不会移动其余行的边界。因此聚类比「逐行切缝」稳；稀疏列（只有表头或
+    少数行有值）也能保留下来。
+    """
+    xs = sorted(c["x"] for r in rows for c in r)
+    clusters: list[list[float]] = []
+    for x in xs:
+        if clusters and x - clusters[-1][-1] <= tol:
+            clusters[-1].append(x)
+        else:
+            clusters.append([x])
+    anchors = [sum(c) / len(c) for c in clusters if len(c) >= min_support]
+    # 表头里的列即使全表只出现一次，也必须留作锚点
+    if rows:
+        for c in rows[0]:
+            if all(abs(c["x"] - a) > tol for a in anchors):
+                anchors.append(c["x"])
+    return sorted(anchors)
+
+
+def _assign_to_anchors(row: list[dict], anchors: list[float]) -> list[str]:
+    cells = ["" for _ in anchors]
+    for c in row:
+        i = min(range(len(anchors)), key=lambda j: abs(c["x"] - anchors[j]))
+        t = c["text"].strip()
+        if not t:
+            continue
+        if cells[i]:
+            sep = "" if (_CJK.search(cells[i][-1:]) or _CJK.search(t[:1])) else " "
+            cells[i] = cells[i] + sep + t
+        else:
+            cells[i] = t
+    return cells
+
+
+def build_tables_proj(chunks_pages: list[list[dict]], captions: list[dict],
+                      stats: dict) -> list[dict]:
+    """投影法重建表格：跨行找列缝，再按列归位。纵向合并单元格不再导致整表丢弃。"""
+    tables = []
+    for c in captions:
+        if c["kind"] != "table":
+            continue
+        pno = c["page"] - 1
+        if not (0 <= pno < len(chunks_pages)):
+            continue
+        # 双栏版面上题注在右栏，整行文本会以左栏正文开头，
+        # 因此按「块」而不是按「行」找题注，并锁定题注所在的横坐标带。
+        page = chunks_pages[pno]
+        hit = None
+        for ch in page:
+            if re.match(rf"^\s*{re.escape(c['label'])}\b", ch["text"], re.I):
+                hit = ch
+                break
+        if hit is None:
+            continue
+        cx = hit["x"]
+        band = [ch for ch in page if ch["x"] >= cx - 4.0]
+        rows_all = _rows_from_chunks(band, y_tol=4.0)
+        start = None
+        for i, r in enumerate(rows_all):
+            if any(ch is hit for ch in r):
+                start = i
+                break
+        if start is None:
+            continue
+        block = _table_region(rows_all, start)
+        # 表格行是短句片段：从第一处出现长句的行截断，后面必是正文
+        for i, r in enumerate(block):
+            if len(r) == 1 and len(r[0]["text"]) > 55:
+                block = block[:i]
+                break
+        if len(block) < 2:
+            continue
+        anchors = _columns_by_anchor(block)
+        if len(anchors) < 2 or len(anchors) > 14:
+            continue
+        grid = [_assign_to_anchors(r, anchors) for r in block]
+        # 全空列剔除（表头才有值的装饰列），但把被剔的列数记进产出
+        used = [i for i in range(len(anchors)) if any(g[i] for g in grid)]
+        if len(used) < 2:
+            continue
+        dropped = len(anchors) - len(used)
+        grid = [[g[i] for i in used] for g in grid]
+        ncol = len(used)
+        filled = [sum(1 for t in g if t) for g in grid]
+        # 纵向合并单元格表现为「该行只有部分列有字」；这是表格特征而非错误，
+        # 只统计有多少行带跨列文字，作为置信度信号。
+        ragged = sum(1 for f in filled if f < ncol)
+        ratio = round(1 - ragged / max(1, len(grid)), 2)
+        tables.append({
+            "id": "tbl-" + c["id"], "page": c["page"], "label": c["label"],
+            "caption_id": c["id"], "n_rows": len(grid), "n_cols": ncol,
+            "n_cols_total": len(anchors),
+            "columns_without_body_values": dropped,
+            "header": grid[0], "rows": grid[1:],
+            "raw_rows": [" ".join(c["text"].strip() for c in r) for r in block][:40],
+            "cell_confidence": "high" if ratio >= 0.95 else ("medium" if ratio >= 0.7 else "low"),
+            "extraction": "column-projection",
+            "row_full_ratio": ratio,
+            "merged_cell_rows": ragged,
+            "column_anchors_pt": [round(anchors[i], 1) for i in used],
+            "evidence": {"page": c["page"], "caption_id": c["id"]},
+            "limitation": ("纵向合并单元格的行会出现空格位，内容未跨行复制；"
+                           "多层表头合并为一行，需人工确认层级" if ragged else
+                           "按跨行列投影切分，未检出合并单元格"),
+        })
+    stats["projection_tables"] = len(tables)
+    return tables
 
 
 def _row_cells(row: list[dict], gap: float = 10.0) -> list[str]:
@@ -610,13 +775,34 @@ def build_tables_coord(chunks_pages: list[list[dict]], captions: list[dict],
     return tables
 
 
+def _stub_table(c: dict, reason: str) -> dict:
+    """不可解析的表格也留条目：宁可在产出里写明失败原因，也不要静默丢表。"""
+    return {
+        "id": "tbl-" + c["id"], "page": c["page"], "label": c["label"],
+        "caption_id": c["id"], "n_rows": 0, "n_cols": 0,
+        "header": [], "rows": [],
+        "cell_confidence": "unparsed",
+        "extraction": "caption-only",
+        "evidence": {"page": c["page"], "caption_id": c["id"]},
+        "limitation": reason,
+    }
+
+
 def build_tables(path: str, captions: list[dict], stats: dict,
                  chunks_pages: list[list[dict]] | None = None) -> list[dict]:
-    """优先坐标栅格；退到版面空白切分；都失败则如实记录不可解析原因。"""
+    """三级重建：跨行列投影 → 单行间隙栅格 → 版面空白。
+
+    三级都失败的表格不再静默消失，而是留一条 `caption-only` 占位，
+    把失败原因写进 `limitation`，上层据此在 uncertainty 里如实说明。
+    """
     tables: list[dict] = []
     chunks = chunks_pages if chunks_pages else page_chunks(path)
     if chunks and any(chunks):
-        tables += build_tables_coord(chunks, captions, stats)
+        tables += build_tables_proj(chunks, captions, stats)
+        done0 = {t["caption_id"] for t in tables}
+        rest = [c for c in captions if c["kind"] == "table" and c["id"] not in done0]
+        if rest:
+            tables += build_tables_coord(chunks, rest, stats)
     done = {t["caption_id"] for t in tables}
 
     pages = layout_pages(path)
@@ -627,6 +813,7 @@ def build_tables(path: str, captions: list[dict], stats: dict,
                 stats["unparsed_tables"].append(
                     {"label": c["label"], "page": c["page"],
                      "reason": "no layout text backend"})
+                tables.append(_stub_table(c, "无可用的版面文本后端，仅保留题注"))
         return tables
     stats["table_region_source"] = "coordinate+layout"
     for c in captions:
@@ -662,11 +849,11 @@ def build_tables(path: str, captions: list[dict], stats: dict,
         mode_cols, mode_n = max(cnt.items(), key=lambda kv: kv[1]) if cnt else (0, 0)
         stable = bool(rows) and mode_n / len(rows) >= 0.7 and 2 <= mode_cols <= 10
         if len(rows) < 3 or not stable:
+            reason = ("位于图片或版面无稳定列边界" if len(rows) < 3
+                      else "列数不一致（疑似正文串栏）")
             stats["unparsed_tables"].append(
-                {"label": c["label"], "page": c["page"],
-                 "reason": ("位于图片或版面无稳定列边界"
-                            if len(rows) < 3 else
-                            "列数不一致（疑似正文串栏），按不可解析处理")})
+                {"label": c["label"], "page": c["page"], "reason": reason})
+            tables.append(_stub_table(c, reason + "；坐标与版面两条路径均未得到稳定栅格"))
             continue
         rows = [r for r in rows if len(r) == mode_cols]
         tables.append({
