@@ -35,14 +35,18 @@ eval/
 examples/
   minimal-example.md            最小调用示例（示意，非真实结果）
   selftest-case.json            自测用例输入（虚构材料）
-  selftest-manuscript.tex       写实成稿示例（4 节 / 754 实义字 / 1 公式 / 1 表 / 3 引用）
+  selftest-manuscript.tex       写实成稿示例（5 节 / 754 实义字 / 1 公式 / 1 表 / 10 引用）
   selftest-refs.bib             与上面成稿配套的文献库
   selftest-result.json          自测 result.json（含 source_map 与 reproduction）
   baseline-manuscript.tex       A/B 对照的 baseline 输出（2 节 / 无公式表 / 空泛）
   baseline-result.json          baseline 的 result.json
-  scorecard.json                Skill 侧评分卡（14 pass / 2 na / 0 fail）
-  baseline-scorecard.json       baseline 侧评分卡（3 条 fail）
-  ab-report.md                  A/B 对照结果（8 项变好、0 项变差）
+  scorecard.json                Skill 侧评分卡
+  baseline-scorecard.json       baseline 侧评分卡
+  ab-report.md                  A/B 对照结果（含真实编译数据）
+  runs/
+    REAL-BUILD.md               真实编译记录：环境、A/B 数据、复跑命令、已知边界
+    preview.pdf                 Skill 侧真实编译产物（5 页，可直接打开）
+    selftest-build.log          该次编译的原始引擎日志
 ```
 
 ## 设计动机（对应题面四问）
@@ -59,20 +63,36 @@ Python 3.9+ 标准库即可。编译能力取决于环境是否提供 TeX 引擎
 
 ## 怎么确认它真能做到（不是文字自述）
 
+包内带**一次真实编译**的完整证据链：
+
+- `examples/runs/preview.pdf` — 5 页成品，可直接打开
+- `examples/runs/selftest-build.log` — 该次编译的原始 `.log`
+- `examples/runs/REAL-BUILD.md` — 引擎版本、命令、A/B 数据、复跑命令
+
+实测对照（tectonic 0.15.0，两边都实际编译）：
+
+| 指标 | 基线 | 本 Skill |
+|---|---:|---:|
+| 编译 | success | success |
+| 页数 | 1 | 5 |
+| undefined 引用 | 2 | **0** |
+| LaTeX Warning | 3 | **0** |
+
+复跑：
 ```bash
-python eval/score_output.py --list                       # 看 21 条验收条目各自绑定的检查命令
+python eval/score_output.py --list          # 21 条验收条目各自绑定的检查命令
 bash -c "$(sed -n '/提交前 60 秒自查/,/五条命令全过/p' SCORING-MAP.md | sed -n '/```bash/,/```/p')"
 ```
 
-当前自测结果：Skill 侧 14 pass / 2 n/a / 0 fail；baseline 侧 3 条 fail（任务完成度、结果正确性、结果可核验性）。
-A/B 对照 8 项变好、0 项变差（见 `examples/ab-report.md`）。两个 n/a 是编译类条目：
-本机无 TeX 引擎，编译证据只能在带 `latex-compiler` 的镜像里产生，脚本拒绝把这种情况判成 pass。
-
 ## 环境缺失时会发生什么
 
-本机无 TeX 引擎时：`probe_project.py` 如实标记；`static_check.py` 照常跑；`compile_and_parse.py` 返回 `status=unavailable` 并支持 `--log` 解析已有日志；`result.status` 只能到 partial，不伪造编译成功。评测镜像提供 `latex-compiler`，按真实引擎执行。
+有引擎时按真实引擎执行并留 `preview.pdf` 与 `.log`（本包已附一次真实执行）。
+无引擎时：`probe_project.py` 如实标记；`static_check.py` 照常跑；`compile_and_parse.py`
+返回 `status=unavailable` 并支持 `--log` 解析已有日志；`result.status` 只能到 `partial`，
+不伪造编译成功。
 
 ## 资源限制合规
 
-30 个文本文件（≤50），均 UTF-8，总量约 220KB，单文件远小于 500KB，无符号链接，无凭证残留，无预置答案。
+33 个文件（32 文本 + 1 个 5 页 PDF），均 UTF-8，总量约 450KB，单文件远小于 500KB，
+无符号链接，无凭证残留，无预置答案。
 
