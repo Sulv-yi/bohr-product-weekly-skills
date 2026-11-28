@@ -12,17 +12,16 @@
     "tables": 0,
     "cite_keys": 1,
     "cite_resolved_rate": 1.0,
-    "compile_status": "unavailable",
+    "compile_status": "needs_more_rounds",
     "compile_errors": 0,
     "compile_errors_located_rate": 1.0,
     "repro_coverage": 0.4,
     "source_map_count": 1,
     "placeholder_errors": 0,
     "cm_errors": [
-      "以下章节实质篇幅不足 120 字: 引言(48字); 方法(38字)",
-      "全文实义字数 102 < 400，不成稿",
-      "没有含真实内容的 equation/align 公式",
-      "引用键无法回溯: \\cite{wang2019} 在参考文献中不存在"
+      "以下章节实质篇幅不足 250 字: 引言(48字); 方法(38字)",
+      "全文实义字数 102 < 1400，不成稿",
+      "没有含真实内容的 equation/align 公式"
     ]
   },
   "items": {
@@ -35,7 +34,7 @@
       "note": "公式 0；表格 0；占位符问题 0（公式与数值是否正确需对着原文核）"
     },
     "result_completeness": {
-      "verdict": "pass",
+      "verdict": "fail",
       "note": "引用键 1，可回溯 100%"
     },
     "result_verifiability": {
@@ -43,16 +42,16 @@
       "note": "来源映射 1 条；复现要素覆盖 40%"
     },
     "quality_gain": {
-      "verdict": "pass",
-      "note": "编译状态 unavailable；增益方向须用 eval/compare_ab.py 与 baseline 对比得出"
+      "verdict": "fail",
+      "note": "编译状态 needs_more_rounds；增益方向须用 eval/compare_ab.py 与 baseline 对比得出"
     },
     "efficiency_gain": {
       "verdict": "n/a",
       "note": "编译轮次与耗时由平台记录，本脚本不代填；见 compile-report.json"
     },
     "gain_verifiability": {
-      "verdict": "n/a",
-      "note": "本机无 TeX 引擎，编译类证据无法产生；需在有 latex-compiler 的镜像内复核，本脚本不代为判定"
+      "verdict": "fail",
+      "note": "编译状态 needs_more_rounds；编译类增益须有日志支撑"
     },
     "new_capability": {
       "verdict": "pass",
@@ -71,8 +70,8 @@
       "note": "case_id='selftest-demo-013'"
     },
     "stability": {
-      "verdict": "pass",
-      "note": "编译状态 unavailable；重复性由 eval/ab-protocol.md 第 3 节定义"
+      "verdict": "fail",
+      "note": "编译状态 needs_more_rounds；重复性由 eval/ab-protocol.md 第 3 节定义"
     },
     "exception_handling": {
       "verdict": "pass",
@@ -92,8 +91,8 @@
     }
   },
   "counts": {
-    "pass": 11,
-    "fail": 3,
-    "na": 2
+    "pass": 8,
+    "fail": 7,
+    "na": 1
   }
 }
