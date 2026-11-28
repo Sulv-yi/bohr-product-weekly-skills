@@ -39,3 +39,22 @@ python scripts/readwork.py graph work/doc.json --out work/graph.json
 2. **扫描件/无文字层**：不做 OCR 猜测，逐页记 `unreadable_pages`；需要文字时由上层决定是否接 OCR。
 3. **占位型 PDF**（记录页写着原文文件缺失）：如实输出所述内容并标注「材料本身不含论文正文」，不虚构论文内容。
 4. **参考文献切条目**：编号缺失时会退化为按作者字母起首切分，条目数与原文可能有偏差，已在 `reference_unparsed` 计数。
+
+## 跨篇图谱构建（graph_build.py，2026-11-28 实测）
+
+输入：`local-tests/paper.pdf`（英文 9 页，光聚合）+ `local-tests/case2-zh.pdf`（中文 13 页）。
+
+```bash
+python scripts/doctext.py paper.pdf --out d1.json
+python scripts/doctext.py case2-zh.pdf --out d2.json
+python scripts/graph_build.py build --docs d1.json d2.json \
+    --out graph.json --audit audit.json
+```
+
+结果：节点 61、边 86、测量 43、仅提及 53；`audit.ok = true`，
+节点证据回查率 1.0、边证据回查率 1.0、弱边比 0.651、关系分布
+`{co_occurs_with: 56, uses: 20, increases: 4, decreases: 3, compares_with: 2, composed_of: 1}`。
+
+样例见 `graph-sample.json`（截断到 12 节点 / 16 边）与 `graph-audit-sample.json`。
+中文篇只抽出 27 个实体（英文篇 87 个）：中文缺大小写与化学式线索，靠指标词与括号内英文命中；
+这是已知边界，换中文材料时应在 `uncertainty` 写明。
