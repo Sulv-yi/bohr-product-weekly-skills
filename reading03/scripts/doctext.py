@@ -342,6 +342,21 @@ def _stream_text(stream: bytes, cmap: dict) -> list[str]:
 
 
 def backend_builtin(path: str) -> dict | None:
+    """纯标准库后端：先用 pdfmini（页树还原页序 + 坐标 + 分栏），失败再退旧路径。"""
+    try:
+        import pdfmini
+        got = pdfmini.extract(path)
+        if got and got.get("pages_text"):
+            return {"backend": "builtin", "pages_text": got["pages_text"],
+                    "pages_chunks": got.get("pages_chunks") or [],
+                    "encrypted": False, "needs_pass": False}
+    except Exception as exc:  # 解析器自身异常不能吞掉整个流程
+        sys.stderr.write("[doctext] pdfmini failed: %s\n" % exc)
+    return _builtin_legacy(path)
+
+
+def _builtin_legacy(path: str) -> dict | None:
+    """旧路径：按对象顺序拼流文本，无坐标、不纠正页序（保留作对照基线）。"""
     with open(path, "rb") as fh:
         data = fh.read()
     objs = _pdf_objects(data)
