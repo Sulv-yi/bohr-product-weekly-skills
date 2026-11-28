@@ -43,7 +43,8 @@ A 与 B 使用**同一份原文、同一术语表、同一轮次预算**。
 | `term_uniqueness` | 术语统一译法落实率 | 越高越好 |
 | `edit_note_coverage` | 有原文/改文/理由的改动占比 | 越高越好 |
 | `sentence_change_rate` | 改动句比例 | 越接近 0.2~0.4 越好，>0.6 视为过度改写 |
-| `manual_review_items` | 需人工确认条目数 | 越低越好，但不能为 0 而隐藏真实缺口 |
+| `manual_review_items` | 需人工确认条目数 | **只展示，不判优劣**：这一项少只说明标注得少，不能说明结果更好；把它当"越少越好"等于惩罚诚实标注 |
+| `errors_before_accept` | 交付前必须消除的错误条数 | 越低越好；取自同一评分脚本的 `errors` 列表长度，可确定性复现 |
 
 **增益判定**（只报差值，不报绝对分）：
 
@@ -53,8 +54,11 @@ A 与 B 使用**同一份原文、同一术语表、同一轮次预算**。
 
 - 质量增益成立：`Δ invariant_conservation ≥ 0` 且 `Δ term_uniqueness ≥ 0`
   且至少两项严格变好，且 `sentence_change_rate` 没有升到 0.6 以上。
-- 效率增益成立：`Δ manual_review_items ≤ 0`，且 B 的改动句都有对应说明（`edit_note_coverage ≥ 0.9`）。
-- 若某项变差，如实写进 `result.uncertainty`，不挑选性报告。
+- 效率增益成立：B 的 `errors_before_accept = 0` 且 `errors_before_accept(B) ≤ errors_before_accept(A)`，
+  且 B 的改动句都有对应说明（`edit_note_coverage ≥ 0.9`）。
+  效率用"要修几轮才干净"来衡量，不用"人工确认项几条"来衡量——后者随标注详细程度反向变化，不适合当效率代理。
+- 若某项变差，如实写进 `result.uncertainty`，不挑选性报告。`manual_review_items` 属如实标注，
+  不参与增益判定，但要在报告里列出两侧数值并说明差异来源。
 
 ## 5. 盲评（质量增益的主观部分）
 
