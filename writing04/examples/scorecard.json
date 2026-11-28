@@ -5,7 +5,7 @@
   "status": "success",
   "note": "本文件只记录指标与逐项判定，不含自评分；增益结论须由 compare_ab.py 与 baseline 对比得出。",
   "metrics": {
-    "cite_count": 4,
+    "cite_count": 16,
     "claim_rate": 1.0,
     "claim_location_rate": 1.0,
     "position_ok_rate": 1.0,
@@ -23,14 +23,14 @@
     "format_mapping_fields": 8,
     "preserved_fields": 4,
     "manuscript_delivered": true,
-    "manuscript_chars": 98,
+    "manuscript_chars": 432,
     "placeholder_count": 0,
     "open_items": 2
   },
   "items": {
     "task_completion": {
       "verdict": "pass",
-      "note": "引用 4 条；稿件 已交付"
+      "note": "引用 16 条；稿件 已交付"
     },
     "result_correctness": {
       "verdict": "pass",
@@ -65,7 +65,7 @@
       "note": "先落交付清单 → 解析 → 去重 → 编号 → 定位 → 四性质核验 → 结构门槛"
     },
     "innovation_evidence": {
-      "verdict": "fail",
+      "verdict": "pass",
       "note": "边界与取舍见 references/innovation-boundary.md"
     },
     "invocation": {
@@ -94,8 +94,8 @@
     }
   },
   "counts": {
-    "pass": 14,
-    "fail": 1,
+    "pass": 15,
+    "fail": 0,
     "na": 1
   }
 }
