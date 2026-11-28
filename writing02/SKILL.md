@@ -27,7 +27,7 @@ description: 润色学术文本但严格保持原意与证据——先建逐段�
 
 | 文件 | 内容 | 由谁产生 |
 |---|---|---|
-| `/app/output/result.json` | `case_id` + 全部 `output_contract` 字段 + `result.paragraphs`（逐段 pid/original/polished）+ `result.change_log`（逐句四元组）+ `result.term_decisions` + `sources` + `uncertainty` + `changes` | Agent 写 |
+| `/app/output/result.json` | `case_id` + 全部 `output_contract` 字段 + `result.paragraphs`（逐段 pid/original/polished + `sentences_changed` + `kept_why`）+ `result.change_log`（逐句四元组）+ **`result.no_change_log`（判定不改的句子及理由）** + `result.term_decisions` + `sources` + `uncertainty` + `changes` | Agent 写 |
 | `/app/output/scorecard.json` | 守恒率、术语一致性、覆盖率、改动率等**实测指标** | `eval/score_output.py` 生成，**不许手写** |
 | `/app/output/ab_plan.json` | 对照条件声明：同一原文/术语表/rubric、3 次重复、盲评安排 | Agent 按 `eval/ab-protocol.md` 写 |
 
@@ -70,10 +70,18 @@ python scripts/build_polish_draft.py --case /input/case.json --out /app/work
 python scripts/term_consistency.py --map /app/work/term_map.tsv --text /app/work/polished_draft.md
 ```
 
-### 3. 逐段润色，最小编辑
+### 3. 逐段润色，最小编辑（逐句判定，不是逐段落笔）
 
 按 `references/minimal-edit.md`：只动该动的地方，能改分句就不重写整句，能改词就不改结构。
-按 `references/register-by-genre.md` 调整语域。逐段写入 `result.paragraphs`。
+按 `references/register-by-genre.md` 调整语域。逐段写入 `result.paragraphs`，每段带：
+`sentences_changed`（本段改了几句）与 `kept_why`（本段没改的句子为什么不用改）。
+
+**不做的判断也要留证据。** 未改动的句子写进 `result.no_change_log`：
+每条给 `pid` / `sentence` / `why_kept`。理由必须说清是「改了就错」（如把无统计检验的
+「明显」改成「显著」等于替作者加强论断；给「不适用」加「尚」等于擅自放宽适用范围），
+而不是「读着也行」。这份清单是「最小编辑」的正面证据，缺了它，改动率再低也可能只是没干活。
+
+目标改动率 20%–40%。低于 20% 检查是否漏改硬错误，高于 60% 一律按整段重写处理。
 
 ### 4. 逐句写修改说明（四元组）
 
@@ -107,6 +115,16 @@ python scripts/validate_result.py /app/output/result.json \
 
 按 `eval/ab-protocol.md` 写 `ab_plan.json`：同一份原文、同一术语表、同一 `eval/rubric.json`、
 3 次重复取中位数、盲评顺序随机。只声明你实际做到的，没做的写 `not_done` 并说明原因。
+
+本包已在 `examples/` 附上一份完整可复现的对照（`baseline-result.json` / `scorecard.json` /
+`baseline-scorecard.json` / `ab-report.md`），可直接重跑：
+
+```bash
+python eval/compare_ab.py examples/baseline-scorecard.json examples/scorecard.json
+```
+
+效率增益的口径是「交付前必须消除的错误条数」，不是「人工确认项几条」——后者随标注详细程度
+反向变化，把「标注得多」当「效率差」会惩罚诚实标注。
 
 ## 指标口径（可被他人复现）
 
