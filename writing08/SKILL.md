@@ -33,7 +33,7 @@ description: 依据科研材料起草或改写论文引言与相关工作，交�
 
 | 项 | 门槛 | 谁检查 |
 |---|---|---|
-| 正文篇幅 | ≥1600 字（英文按词计 0.6 折算） | `validate_result.py` |
+| 正文篇幅 | 中文 ≥1600 字；英文 ≥1000 词（脚本按语言自动判档，不做 0.6 折算） | `validate_result.py` |
 | 四要素 | 背景/相关工作/空白/贡献**各自成段**，顺序不颠倒 | `validate_result.py` |
 | 相关工作量 | 背景 ≥350 字、相关工作 ≥550 字、空白 ≥150 字、贡献 ≥150 字 | `selfcheck.md` |
 | 分组比较 | 相关工作 ≥3 组，每组写"共同做法 → 各自取舍 → 遗留问题" | `validate_result.py` |
@@ -47,8 +47,23 @@ description: 依据科研材料起草或改写论文引言与相关工作，交�
 
 ## 执行顺序（按此推进，禁止跳到校验）
 
+**预算节奏（900 秒 / 64 次请求，先按这个分配再动手）**：读输入与材料 8 次 → 骨架+事实底稿 6 次 → 分块写作 4 块 × 6 次 = 24 次 → 附件生成 2 次 → 校验与修补 8 次 → 余量 16 次。写作分 4 块（背景 / 相关工作 / 空白 / 贡献）分别落笔，不要试图一次生成 1600 字全文：单次响应 16384 tokens 装不下，硬写只会截断。每块写完先落到 `draft.md`，任何时刻中断都有一份可交的稿。
+
+
 ### 第 0 步 · 读真实输入
 读 `/input/case.json` 与 `/input/task.md`（若存在）。字段以实际文件为准：`case_id` / `task`|`instruction` / `material`|`paper`|`files` / `audience`|`venue`|`style` / `output_contract`。**先读材料本体**（PDF/文本），不从标签或题名猜内容。工作目录 `/app/work`，产物到 `/app/output`。
+
+**`output_contract` 的字段名原样照抄，不要翻译。** 同一要素在不同案例里叫法不同，`result.result` 必须用契约里的那个键：
+
+| 要素 | 契约里可能出现的键 | 我方能接受的内部名 |
+|---|---|---|
+| 背景 | `introduction` / `background` / `motivation` | `background` |
+| 相关工作 | `related_work` / `literature_review` / `prior_work` | `related_work` |
+| 空白 | `research_gap` / `gap` / `open_problem` | `gap` |
+| 贡献 | `contributions` / `contribution` | `contributions` |
+
+`draft_skeleton.py` 会自动读契约并在骨架标题后标注「契约字段名 X，result.result 必须用此名」；照标注填即可。契约里的其它字段（如 `references_used`）也要逐个覆盖，缺一个就算交付不完整。
+
 
 ### 第 1 步 · 先落骨架（保证四要素齐全）
 ```bash
