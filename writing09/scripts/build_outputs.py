@@ -104,8 +104,9 @@ def render_preview(draft, outdir):
 
 def write_selfcheck(m, result, rows, preview, outdir, min_chars):
     errs = []
-    if m['total_chars'] < min_chars:
-        errs.append(f'正文 {m["total_chars"]} 字，低于门槛 {min_chars}')
+    if not m['min_chars_ok']:
+        errs.append(f'篇幅不足：中文 {m["cjk_chars"]} 字 / 英文 {m["en_words"]} 词'
+                    f'（门槛：中文 1800 字或英文 1100 词）')
     if m['missing_elements']:
         errs.append('六要素缺件: ' + ', '.join(m['missing_elements']))
     if m['param_rows'] < 5:
@@ -132,7 +133,8 @@ def write_selfcheck(m, result, rows, preview, outdir, min_chars):
     def row(name, val, gate, ok):
         lines.append(f'| {name} | {val} | {gate} | {"通过" if ok else "未达"} |')
 
-    row('正文总字数', m['total_chars'], f'≥{min_chars}', m['total_chars'] >= min_chars)
+    row('正文篇幅（中文计字 / 英文计词）', f'中 {m["cjk_chars"]} 字 / 英 {m["en_words"]} 词',
+        '中文≥1800 字 或 英文≥1100 词', m['min_chars_ok'])
     row('六要素覆盖', f"{m['element_coverage']:.0%}", '100%', m['element_coverage'] >= 1.0)
     for k, v in m['section_chars'].items():
         row(f'　{ELEM_ZH.get(k, k)} 字数', v, '见 README 门槛表', bool(m['section_min_ok'].get(k)))
@@ -177,7 +179,8 @@ def main():
     ap.add_argument('--draft', default='/app/output/section.md')
     ap.add_argument('--result', default='/app/output/result.json')
     ap.add_argument('--outdir', default='/app/output')
-    ap.add_argument('--min-chars', type=int, default=1800)
+    ap.add_argument('--min-chars', type=int, default=0,
+                    help='0=按语言自适应（中文 1800 字 / 英文 1100 词）')
     ap.add_argument('--no-preview', action='store_true')
     args = ap.parse_args()
     if not os.path.isfile(args.draft):
@@ -194,7 +197,7 @@ def main():
     preview = None if args.no_preview else render_preview(args.draft, args.outdir)
     m = measure(draft, result.get('uncertainty') or [],
                 (result.get('result') or {}).get('questions_for_author') or [],
-                min_chars=args.min_chars)
+                min_chars=args.min_chars or None)
     md_path, errs = write_selfcheck(m, result, rows, preview, args.outdir, args.min_chars)
     print(json.dumps({'ok': not errs, 'source_map': csv_path, 'selfcheck': md_path,
                       'preview': preview, 'unresolved': errs, 'metrics': m},
