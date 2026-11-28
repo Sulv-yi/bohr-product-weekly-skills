@@ -28,10 +28,28 @@ ELEMENTS = {
 NUM = re.compile(r'(?<![A-Za-z])[-+]?\d+(?:\.\d+)?\s*(?:%|W|mm/s|μm|um|nm|ms|s|GB|MB|K|°C|eV|MPa|Hz|epochs?|steps?)?')
 
 
-def _nchars(text):
+def _counts(text):
     if not text:
-        return 0
-    return int(len(CJK.findall(text)) + len(re.findall(r'[A-Za-z][A-Za-z\-]+', text)) * 0.6)
+        return 0, 0
+    return len(CJK.findall(text)), len(re.findall(r'[A-Za-z][A-Za-z\-]+', text))
+
+
+def _nchars(text):
+    cjk, latin = _counts(text)
+    return int(cjk + latin * 0.6)
+
+
+# 篇幅门槛分语言两套。原实现只有中文口径一套数字，
+# 英文按「词×0.6」折算后同一门槛等于要求 2.6 倍词数，英文案例会被误判为不达标。
+GATE_ZH = {'total': 1800, 'steps': 450, 'setup': 250, 'parameters': 300,
+           'dataset': 250, 'baselines': 250, 'reproducibility': 250}
+GATE_EN = {'total': 1100, 'steps': 290, 'setup': 160, 'parameters': 190,
+           'dataset': 160, 'baselines': 160, 'reproducibility': 160}
+
+
+def _lang_of(text):
+    cjk, latin = _counts(text)
+    return 'en' if latin > cjk * 2 and latin >= 60 else 'zh'
 
 
 HEADING = re.compile(r'^\s{0,3}(#{1,6})\s*(.+?)\s*$', re.M)
@@ -164,7 +182,7 @@ REPRO_MARKS = {
 LIMIT_SPECIFIC = r'(?:当|若|在)[^。；\n]{0,40}(?:时|情况下|小于|大于|<|>|≤|≥)|(?:小于|大于|<|>|≤|≥)\s*\d'
 
 
-def measure(elem_text, body_text=None, uncertainty=None, questions=None, min_chars=800):
+def measure(elem_text, body_text=None, uncertainty=None, questions=None, min_chars=None):
     """elem_text: 成稿正文；body_text: 同一份（可为 None）。返回指标字典。"""
     text = elem_text or ''
     uncertainty = uncertainty or []
@@ -176,21 +194,26 @@ def measure(elem_text, body_text=None, uncertainty=None, questions=None, min_cha
     baseline_hits = [k for k, pat in BASELINE_MARKS.items() if re.search(pat, setup_body, re.I)]
     repro_hits = [k for k, pat in REPRO_MARKS.items() if re.search(pat, text, re.I)]
     limit_body = parts.get('reproducibility', ('', ''))[1]
+    lang = _lang_of(text)
+    gate = GATE_EN if lang == 'en' else GATE_ZH
+    if min_chars:
+        gate = dict(gate); gate['total'] = min_chars
+    cjk_total, word_total = _counts(text)
+    word_of = lambda k: len(re.findall(r'[A-Za-z][A-Za-z\-]+', parts.get(k, ('', ''))[1]))
     return {
+        'lang': lang,
+        'cjk_chars': cjk_total,
+        'en_words': word_total,
         'total_chars': _nchars(text),
-        'min_chars_ok': _nchars(text) >= min_chars,
+        'min_chars_ok': (word_total >= gate['total']) if lang == 'en' else (cjk_total >= gate['total']),
         'element_coverage': round(len(parts) / len(ELEMENTS), 3),
         'missing_elements': [k for k in ELEMENTS if k not in parts],
         'section_chars': lens,
         # 章节厚度只作为提示，不作为硬门槛：方法与实验章节的详略随领域差别很大，
         # 真正卡住"写没写全"的是六要素覆盖与参数表/对照/复现三项的结构完整性。
         'section_min_ok': {
-            'steps': lens.get('steps', 0) >= 450,
-            'setup': lens.get('setup', 0) >= 250,
-            'parameters': lens.get('parameters', 0) >= 300,
-            'dataset': lens.get('dataset', 0) >= 250,
-            'baselines': lens.get('baselines', 0) >= 250,
-            'reproducibility': lens.get('reproducibility', 0) >= 250,
+            k: (word_of(k) >= gate[k] if lang == 'en' else lens.get(k, 0) >= gate[k])
+            for k in ('steps', 'setup', 'parameters', 'dataset', 'baselines', 'reproducibility')
         },
         'param_rows': pm['param_rows'],
         'param_source_rate': pm['param_source_rate'],
