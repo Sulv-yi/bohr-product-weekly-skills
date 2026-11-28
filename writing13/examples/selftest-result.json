@@ -23,19 +23,40 @@
       ]
     },
     "build": {
-      "compile_status": "unavailable",
-      "note": "本机未安装 TeX 引擎，编译未执行；harbor 镜像内应可用 latex-compiler"
+      "compile_status": "success",
+      "converged": true,
+      "error_count": 0,
+      "latex_warning_count": 0,
+      "undefined_references": 0,
+      "overfull_boxes": 0,
+      "underfull_boxes": 0,
+      "pages": 5,
+      "rounds": 6,
+      "poppler_or_engine_log": "examples/runs/selftest-build.log",
+      "pdf": "examples/runs/preview.pdf",
+      "note": "真实编译：tectonic 0.15.0，见 examples/runs/REAL-BUILD.md"
     },
     "reproduction": {
-      "engine": "xelatex",
-      "engine_version": "not_reported",
+      "engine": "tectonic",
+      "engine_version": "0.15.0 (XeTeX + xdvipdfmx, TeX Live bundle)",
+      "template": "article 11pt (可选 ieeetran / 期刊 cls)",
       "packages": [
         "ctex",
         "booktabs",
-        "amsmath"
+        "amsmath",
+        "amssymb",
+        "graphicx",
+        "hyperref"
       ],
-      "command": "latexmk -pdf manuscript.tex",
-      "rounds": 0
+      "fonts": [
+        "FandolSong-Regular（ctex 默认中文字体）",
+        "Latin Modern"
+      ],
+      "command": "tectonic -X compile main.tex --outdir . --keep-logs",
+      "rounds": 6,
+      "converged": true,
+      "verified_at": "2026-11-28",
+      "log": "examples/runs/selftest-build.log"
     },
     "source_map": [
       {
