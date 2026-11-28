@@ -1,0 +1,35 @@
+{
+ "status": "failed",
+ "case_id": "selftest-001",
+ "metrics": {
+  "segment_coverage": 1.0,
+  "invariant_conservation": 1.0,
+  "hedge_conservation": 1.0,
+  "negation_conservation": 0.8333,
+  "term_uniqueness": 0.0,
+  "edit_note_coverage": 0.0,
+  "sentence_change_rate": 0.8571,
+  "manual_review_items": 0,
+  "paragraphs": 6,
+  "changed_sentences": 12
+ },
+ "thresholds": {
+  "invariant_conservation": 1.0,
+  "hedge_conservation": 1.0,
+  "term_uniqueness": 1.0,
+  "segment_coverage": 1.0,
+  "edit_note_coverage": 0.9,
+  "max_sentence_change_rate": 0.6
+ },
+ "errors": [
+  "没有术语决策记录（result.term_decisions 为空）：术语一致性无法核验",
+  "逐句修改说明不全：12 句有改动，只有 0 条带原文/改文/理由的记录",
+  "术语一致性不足：0%"
+ ],
+ "warnings": [
+  "改动率 86% 超过阈值，接近整段重写而非最小编辑"
+ ],
+ "computed_by": "eval/score_output.py v1.0",
+ "computed_at": "2026-11-28T16:51:04+08:00",
+ "note": "全部指标由原文与改文实际比对得出，可用同一份输入复现；不含自评输入。"
+}
