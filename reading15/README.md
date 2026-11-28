@@ -11,8 +11,14 @@
 
 ```bash
 python scripts/doctext.py /input/material.pdf --out work/doc.json
+
+# 一批论文：跨篇成图 + 自检（推荐路径）
+python scripts/graph_build.py build --docs work/*.doc.json \
+    --out /app/output/graph.json --audit /app/output/graph-audit.json
+python scripts/graph_build.py query --graph /app/output/graph.json --q "<查询词>"
+
+# 单篇 + 领域词表命中时
 python scripts/readwork.py graph work/doc.json --out work/graph.json
-python scripts/readwork.py graph work/doc.json --out work/graph-q1.json --query "<查询词>"
 python scripts/readwork.py graphexport work/graph.json --out work/graph.cypher
 python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
 ```
@@ -21,7 +27,9 @@ python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
 
 - `SKILL.md` — 完整说明（适用边界、契约、工作流、评分维度落点、异常处理）
 - `scripts/doctext.py` — 文档模型引擎（纯标准库可跑）
-- `scripts/readwork.py` — 任务加工与自检工具
+- `scripts/readwork.py` — 单篇任务加工与自检工具（词表驱动，精度高但换学科会抽空）
+- `scripts/graph_build.py` — 跨篇图谱构建与自检：通用线索抽实体、动词定方向、按标签归一合并、
+  证据逐条回查；`build / audit / query` 三个子命令，纯标准库
 - `references/` — 方法细则（阅读顺序、表格重建、结构识别）
 - `examples/runs/RUNS.md` — 真实 PDF 上的实测记录
 
