@@ -80,8 +80,9 @@ def check(result, case, min_chars=600, extra_text=''):
                 min_chars=min_chars)
 
     if status == 'success':
-        if m['total_chars'] < min_chars:
-            errors.append(f'status=success 但成稿正文仅 {m["total_chars"]} 字（<{min_chars}），疑似空壳/薄稿')
+        if not m['min_chars_ok']:
+            errors.append(f'status=success 但成稿篇幅不足（{m["lang"]}：中文 {m["cjk_chars"]} 字 / 英文 {m["en_words"]} 词），'
+                          f'疑似空壳或薄稿；中文需 ≥1600 字，英文需 ≥1000 词')
         if m['missing_parts']:
             errors.append(f'status=success 但四要素缺件: {m["missing_parts"]}（背景/相关工作/空白/贡献须分别成段）')
         if m['related_groups'] < GATE_GROUPS:
@@ -138,7 +139,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('result')
     ap.add_argument('--case')
-    ap.add_argument('--min-chars', type=int, default=1600)
+    ap.add_argument('--min-chars', type=int, default=0,
+                    help='显式篇幅门槛；0 表示按成稿语言自适应（中文 1600 字 / 英文 1000 词）')
     ap.add_argument('--text', help='成稿正文文件（draft.md），若正文不在 result.json 内则一并度量')
     args = ap.parse_args()
     for p in (args.result, args.case, args.text):
