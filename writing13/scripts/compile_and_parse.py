@@ -22,9 +22,12 @@ import sys
 ERROR_START = re.compile(r'^!', re.M)
 LINE_REF = re.compile(r'(?:^|\s)(?:l\.|lines?\s+)(\d+)', re.I)
 FILE_REF = re.compile(r'([\w./\\-]+\.tex)')
-UNDEREF = re.compile(r'Reference\s+[`\']([^\']+)\' undefined', re.I)
-UNDEFCITE = re.compile(r'Citation\s+[`\']([^\']+)\' undefined', re.I)
+UNDEREF = re.compile(r'Reference\s+[`\']([^\']+)\'[^\n]{0,60}undefined', re.I)
+# pdfTeX/XeTeX 的写法是：Citation `key' on page 1 undefined on input line 8.
+# 引号与 undefined 之间隔着 "on page N"，旧正则要求紧跟 undefined，会整条漏掉。
+UNDEFCITE = re.compile(r'Citation\s+[`\']([^\']+)\'[^\n]{0,60}undefined', re.I)
 RERUN = re.compile(r'Rerun to get (?:cross-references|the bibliography|marks|things) right', re.I)
+REQ_MISSING = re.compile(r'LaTeX Warning:\s*No\s*\\(author|title|date|maketitle)\s+given', re.I)
 UNDEFCTRL = re.compile(r'Undefined control sequence', re.I)
 MISSINGFILE = re.compile(r'(?:File|Package|I can\'t find file|LaTeX Error: File)\s+[`\']?([^\'\"\s]+\.(?:sty|cls|bib|tex|png|pdf|eps))', re.I)
 FLOAT_LARGE = re.compile(r'Float too large for page', re.I)
@@ -122,14 +125,19 @@ def parse_log(log_text):
     rerun = sorted(set(m.group(0) for m in RERUN.finditer(log_text)))
     overfull = len(OVERFULL.findall(log_text))
     float_large = len(FLOAT_LARGE.findall(log_text))
+    req_missing = sorted(set(m.group(1).lower() for m in REQ_MISSING.finditer(log_text)))
 
     warnings = []
-    for r in undef_refs:
-        warnings.append({'category': 'undefined_reference', 'message': 'Reference `%s` undefined' % r,
-                         'fix_hint': '补 \\label 或修正引用；确认编译轮次足够'})
     for c in undef_cites:
         warnings.append({'category': 'undefined_citation', 'message': 'Citation `%s` undefined' % c,
                          'fix_hint': '补 bib 条目并运行 bibtex/biber；确认 \\bibliography'})
+    for r in undef_refs:
+        warnings.append({'category': 'undefined_reference', 'message': 'Reference `%s` undefined' % r,
+                         'fix_hint': '补 \\label 或修正引用；确认编译轮次足够'})
+    for f in req_missing:
+        warnings.append({'category': 'template_required_missing',
+                         'message': '模板必填项缺失：\\%s 未提供' % f,
+                         'fix_hint': '补 \\%s，否则版式不合模板要求' % f})
     for r in rerun:
         warnings.append({'category': 'rerun_needed', 'message': r,
                          'fix_hint': '再编译一轮直到该提示消失'})
@@ -140,7 +148,7 @@ def parse_log(log_text):
         warnings.append({'category': 'float_too_large', 'message': 'Float too large 出现 %d 次' % float_large,
                          'fix_hint': '缩小表格图片或调整浮动体位置约束'})
 
-    converged = not undef_refs and not undef_cites and not rerun and not errs
+    converged = not undef_refs and not undef_cites and not rerun and not errs and not req_missing
     return {
         'errors': errs, 'warnings': warnings,
         'undefined_refs': undef_refs, 'undefined_cites': undef_cites,
