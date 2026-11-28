@@ -31,6 +31,38 @@ ZH = {
     "evidence": "证据槽",
     "check": "定稿前检查：①四部分齐全且顺序正确 ②每个论断后挂 [证据槽] 指向 sources ③无材料外事实 ④不确定处写 uncertainty。",
 }
+
+# output_contract 里同一要素可能出现的字段名（不同案例写法不一致）。
+# 判定时按别名归一到 CANON 的分类，输出时优先用契约里的原名，避免
+# 「契约要 introduction，产出却写 background」被判成字段缺失。
+ALIAS = {
+    "background": ("introduction", "intro", "background", "motivation", "research_background"),
+    "related_work": ("related_work", "relatedwork", "related", "literature_review", "prior_work"),
+    "gap": ("gap", "research_gap", "knowledge_gap", "problem_statement", "open_problem"),
+    "contributions": ("contributions", "contribution", "our_contributions", "key_contributions"),
+}
+
+
+def contract_keys(case):
+    c = case.get('output_contract') if case else None
+    if isinstance(c, list):
+        return [str(x) for x in c]
+    if isinstance(c, dict):
+        return [str(x) for x in c.keys()]
+    return []
+
+
+def resolve_names(keys):
+    """返回 {canon_key: 契约里的实际字段名或 canon_key}。"""
+    named = {}
+    low = {k.strip().lower(): k for k in keys}
+    for canon, alts in ALIAS.items():
+        for a in alts:
+            if a in low:
+                named[canon] = low[a]
+                break
+    return named
+
 EN = {
     "title": "Introduction & Related Work - Draft Skeleton",
     "note": "Note: This is a draft skeleton. Replace every 【…】 placeholder and [evidence slot] with verified content bound to sources before finalizing.",
@@ -51,16 +83,26 @@ def contract_keys(case):
 def build(case, lang='zh'):
     t = ZH if lang == 'zh' else EN
     keys = contract_keys(case)
+    named = resolve_names(keys)
     lines = [f"# {t['title']}", "", f"> {t['note']}", ""]
     lines.append(f"case_id: {case.get('case_id', '<from case.json>')}")
     lines.append("")
     for idx, (key, zhname, rule, length) in enumerate(CANON, 1):
-        matched = key in keys if keys else True
+        field = named.get(key, key)
+        matched = (not keys) or (field in keys)
         tag = "" if matched else "  （注意：output_contract 未列出此字段，仍需成稿或说明为何省略）"
-        lines.append(f"## {idx}. {zhname}  [{key}]{tag}")
+        alias_note = "" if field == key else f"（契约字段名 {field}，result.result 必须用此名）"
+        lines.append(f"## {idx}. {zhname}  [{key}]{tag}{alias_note}")
         lines.append(f"- 写作要求：{rule}；建议篇幅：{length}")
         lines.append(f"- 正文：【在此写入{zhname}段落；每条论断句末标注 [证据槽] 编号】")
         lines.append(f"- {t['evidence']}：指向 sources 中对应 id；无来源的论断须改写或移入 uncertainty")
+        lines.append("")
+    extra = [k for k in keys if k not in named.values()
+             and k not in [c for c, *_ in CANON] and k not in ('references_used', 'references')]
+    if extra:
+        lines.append("## 契约里的其他字段（必须逐个覆盖，不可缺）")
+        for k in extra:
+            lines.append(f"- `{k}`：【按 output_contract 要求填写】")
         lines.append("")
     lines.append("## 来源与不确定性清单（与正文同步维护）")
     lines.append("- sources：逐条记录 claim / file / page / section / quote")
