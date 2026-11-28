@@ -21,6 +21,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 SCRIPTS = os.path.join(ROOT, 'scripts')
 
+# compile_and_parse.py 输出 status=success/needs_more_rounds，早期版本写 passed；
+# 判定时统一接受，避免同一份成功编译被判成 fail。
+COMPILED_OK = ('passed', 'success', 'compiled')
+
 
 def _load(name, filename):
     p = os.path.join(SCRIPTS, filename)
@@ -76,14 +80,18 @@ def measure(result, tex_path, compile_report_path, bib_path=None):
     rep = load(compile_report_path, {}) or {}
     stats = {}
     cm_errors = []
+    # 结构核验与引用覆盖必须用同一份 .bib，否则会出现
+    # "cite_resolved_rate=1.0 同时报引用无法回溯"的自相矛盾
+    bib_file = find_bib(tex_path, bib_path)
+    bib_text = load(bib_file, '') or ''
     if cm and tex:
-        r = cm.check(tex, {}, '', 120, 400)
+        r = cm.check(tex, {}, bib_text, 250, 1400)
         stats = r.get('stats') or {}
         cm_errors = r.get('errors') or []
     cite_rows = []
     if bo and tex:
         usage = bo.cite_usage(tex)
-        entries = bo.bib_entries(load(find_bib(tex_path, bib_path), '') or '')
+        entries = bo.bib_entries(bib_text)
         # 只统计正文实际用到的键：引用覆盖看的是"引了多少"，不是"库里存了多少"
         for k in sorted(usage.keys()):
             cite_rows.append({'cite_key': k, 'in_bib': k in entries, 'used_in': ' / '.join(sorted(usage.get(k, [])))})
@@ -132,7 +140,7 @@ def evaluate(result, m, rubric):
         f"来源映射 {m['source_map_count']} 条；复现要素覆盖 {m['repro_coverage']:.0%}")
 
     items['quality_gain'] = verdict(
-        m['compile_status'] in ('passed', 'unavailable', 'skipped'),
+        m['compile_status'] in COMPILED_OK,
         f"编译状态 {m['compile_status']}；增益方向须用 eval/compare_ab.py 与 baseline 对比得出")
     items['efficiency_gain'] = {'verdict': 'n/a',
                                 'note': '编译轮次与耗时由平台记录，本脚本不代填；见 compile-report.json'}
@@ -140,7 +148,7 @@ def evaluate(result, m, rubric):
         items['gain_verifiability'] = {'verdict': 'n/a',
                                        'note': '本机无 TeX 引擎，编译类证据无法产生；需在有 latex-compiler 的镜像内复核，本脚本不代为判定'}
     else:
-        items['gain_verifiability'] = verdict(m['compile_status'] == 'passed',
+        items['gain_verifiability'] = verdict(m['compile_status'] in COMPILED_OK,
                                               f"编译状态 {m['compile_status']}；编译类增益须有日志支撑")
 
     items['new_capability'] = verdict(
@@ -151,7 +159,7 @@ def evaluate(result, m, rubric):
                                            '边界与取舍见 references/innovation-boundary.md')
 
     items['invocation'] = verdict(bool(result.get('case_id')), f"case_id={result.get('case_id')!r}")
-    items['stability'] = verdict(m['compile_status'] in ('passed', 'skipped', 'unavailable'),
+    items['stability'] = verdict(m['compile_status'] in COMPILED_OK + ('unavailable',),
                                  f"编译状态 {m['compile_status']}；重复性由 eval/ab-protocol.md 第 3 节定义")
     items['exception_handling'] = verdict(len(result.get('uncertainty') or []) > 0,
                                           f"uncertainty {len(result.get('uncertainty') or [])} 条；"
