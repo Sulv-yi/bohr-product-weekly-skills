@@ -35,9 +35,29 @@ def _nchars(text):
     """中文字符数 + 英文词数*0.6，用于跨语言统一篇幅口径。"""
     if not text:
         return 0
+    cjk, latin = _counts(text)
+    return int(cjk + latin * 0.6)
+
+
+def _counts(text):
+    """返回 (中文字符数, 英文词数)。"""
+    if not text:
+        return 0, 0
     cjk = len(CJK.findall(text))
     latin = len(re.findall(r'[A-Za-z][A-Za-z\-]+', text))
-    return int(cjk + latin * 0.6)
+    return cjk, latin
+
+
+# 篇幅门槛按语言分档。原实现只有一套数字（1600），而 1600 是中文口径；
+# 英文按词计 0.6 折算后 1000 词只有 600，等于要求英文写 2666 词，
+# 比题面「英文 1000 words」严 2.6 倍，英文案例会被误判为不达标。
+GATE_ZH = {'total': 1600, 'background': 350, 'related_work': 550, 'gap': 150, 'contributions': 150}
+GATE_EN = {'total': 1000, 'background': 220, 'related_work': 350, 'gap': 100, 'contributions': 100}
+
+
+def _lang_of(text):
+    cjk, latin = _counts(text)
+    return 'en' if latin > cjk * 2 and latin >= 60 else 'zh'
 
 
 def split_sections(text):
@@ -190,8 +210,11 @@ def source_metadata(sources):
     return round(ok / len(sources), 3)
 
 
-def measure(draft_text, sources=None, uncertainty=None, min_chars=1600):
-    """返回结构指标字典；键名与 eval/rubric.json 的 metrics 一一对应。"""
+def measure(draft_text, sources=None, uncertainty=None, min_chars=None):
+    """返回结构指标字典；键名与 eval/rubric.json 的 metrics 一一对应。
+
+    min_chars 显式给出时优先使用；否则按成稿语言取 GATE_ZH / GATE_EN。
+    """
     sources = sources or []
     uncertainty = uncertainty or []
     parts = find_parts(draft_text)
@@ -202,18 +225,30 @@ def measure(draft_text, sources=None, uncertainty=None, min_chars=1600):
     n_con = count_contributions(con)
     with_ev = contrib_with_evidence(con)
     total = _nchars(draft_text)
+    lang = _lang_of(draft_text)
+    gate = GATE_EN if lang == 'en' else GATE_ZH
+    if min_chars:
+        gate = dict(gate); gate['total'] = min_chars
+    cjk_total, word_total = _counts(draft_text)
     ph = PLACEHOLDER.findall(draft_text)
     return {
+        'lang': lang,
+        'cjk_chars': cjk_total,
+        'en_words': word_total,
         'total_chars': total,
-        'min_chars_ok': total >= min_chars,
+        'min_chars_ok': (word_total >= gate['total']) if lang == 'en' else (cjk_total >= gate['total']),
         'four_part_coverage': round(len(parts) / 4, 3),
         'missing_parts': [k for k in PART_PATTERNS if k not in parts],
         'section_chars': lens,
         'section_min_ok': {
-            'background': lens.get('background', 0) >= 350,
-            'related_work': lens.get('related_work', 0) >= 550,
-            'gap': lens.get('gap', 0) >= 150,
-            'contributions': lens.get('contributions', 0) >= 150,
+            'background': (len(re.findall(r'[A-Za-z][A-Za-z\-]+', parts.get('background', ('', ''))[1])) >= gate['background']
+                           if lang == 'en' else lens.get('background', 0) >= gate['background']),
+            'related_work': (len(re.findall(r'[A-Za-z][A-Za-z\-]+', rel)) >= gate['related_work']
+                             if lang == 'en' else lens.get('related_work', 0) >= gate['related_work']),
+            'gap': (len(re.findall(r'[A-Za-z][A-Za-z\-]+', parts.get('gap', ('', ''))[1])) >= gate['gap']
+                    if lang == 'en' else lens.get('gap', 0) >= gate['gap']),
+            'contributions': (len(re.findall(r'[A-Za-z][A-Za-z\-]+', con)) >= gate['contributions']
+                              if lang == 'en' else lens.get('contributions', 0) >= gate['contributions']),
         },
         'related_groups': count_groups(rel),
         'contributions': n_con,
