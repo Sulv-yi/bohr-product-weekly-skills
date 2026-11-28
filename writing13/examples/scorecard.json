@@ -5,29 +5,25 @@
   "status": "partial",
   "note": "只记录指标与逐项判定，不含自评分；增益结论须由 compare_ab.py 与 baseline 对比得出。",
   "metrics": {
-    "sections": 4,
-    "total_real_chars": 754,
-    "min_section_chars": 149,
+    "sections": 5,
+    "total_real_chars": 1973,
+    "min_section_chars": 289,
     "equations": 1,
     "tables": 1,
-    "cite_keys": 3,
+    "cite_keys": 10,
     "cite_resolved_rate": 1.0,
-    "compile_status": "unavailable",
+    "compile_status": "success",
     "compile_errors": 0,
     "compile_errors_located_rate": 1.0,
-    "repro_coverage": 0.8,
-    "source_map_count": 3,
+    "repro_coverage": 1.0,
+    "source_map_count": 10,
     "placeholder_errors": 0,
-    "cm_errors": [
-      "引用键无法回溯: \\cite{liu2022} 在参考文献中不存在",
-      "引用键无法回溯: \\cite{wang2019} 在参考文献中不存在",
-      "引用键无法回溯: \\cite{zhang2020} 在参考文献中不存在"
-    ]
+    "cm_errors": []
   },
   "items": {
     "task_completion": {
       "verdict": "pass",
-      "note": "章节 4；全文实义 754 字"
+      "note": "章节 5；全文实义 1973 字"
     },
     "result_correctness": {
       "verdict": "pass",
@@ -35,23 +31,23 @@
     },
     "result_completeness": {
       "verdict": "pass",
-      "note": "引用键 3，可回溯 100%"
+      "note": "引用键 10，可回溯 100%"
     },
     "result_verifiability": {
       "verdict": "pass",
-      "note": "来源映射 3 条；复现要素覆盖 80%"
+      "note": "来源映射 10 条；复现要素覆盖 100%"
     },
     "quality_gain": {
       "verdict": "pass",
-      "note": "编译状态 unavailable；增益方向须用 eval/compare_ab.py 与 baseline 对比得出"
+      "note": "编译状态 success；增益方向须用 eval/compare_ab.py 与 baseline 对比得出"
     },
     "efficiency_gain": {
       "verdict": "n/a",
       "note": "编译轮次与耗时由平台记录，本脚本不代填；见 compile-report.json"
     },
     "gain_verifiability": {
-      "verdict": "n/a",
-      "note": "本机无 TeX 引擎，编译类证据无法产生；需在有 latex-compiler 的镜像内复核，本脚本不代为判定"
+      "verdict": "pass",
+      "note": "编译状态 success；编译类增益须有日志支撑"
     },
     "new_capability": {
       "verdict": "pass",
@@ -71,7 +67,7 @@
     },
     "stability": {
       "verdict": "pass",
-      "note": "编译状态 unavailable；重复性由 eval/ab-protocol.md 第 3 节定义"
+      "note": "编译状态 success；重复性由 eval/ab-protocol.md 第 3 节定义"
     },
     "exception_handling": {
       "verdict": "pass",
@@ -91,8 +87,8 @@
     }
   },
   "counts": {
-    "pass": 14,
+    "pass": 15,
     "fail": 0,
-    "na": 2
+    "na": 1
   }
 }
