@@ -1,0 +1,36 @@
+{
+  "root": "D:\\YSL\\bohr-contest\\submissions\\bohr-submission-writing13\\examples",
+  "engine": null,
+  "main": null,
+  "requested_rounds": 3,
+  "engine_available": true,
+  "rounds_run": [],
+  "status": "needs_more_rounds",
+  "log_source": "D:/Tmp/ab/base/main.log",
+  "errors": [],
+  "warnings": [
+    {
+      "category": "undefined_citation",
+      "message": "Citation `wang2019` undefined",
+      "fix_hint": "补 bib 条目并运行 bibtex/biber；确认 \\bibliography"
+    },
+    {
+      "category": "template_required_missing",
+      "message": "模板必填项缺失：\\author 未提供",
+      "fix_hint": "补 \\author，否则版式不合模板要求"
+    }
+  ],
+  "undefined_refs": [],
+  "undefined_cites": [
+    "wang2019"
+  ],
+  "rerun_signals": [],
+  "overfull_count": 0,
+  "converged": false,
+  "summary": {
+    "error_count": 0,
+    "warning_count": 2,
+    "categories": [],
+    "converged": false
+  }
+}
