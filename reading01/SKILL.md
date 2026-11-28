@@ -59,7 +59,7 @@ python scripts/doctext.py /input/material.pdf --out work/doc.json
 | `sections` | 章节树：标题、层级、页码、子节点 |
 | `paragraphs` | 段落数组：`id`(如 `p003-07`)、`page`、`section`、`char_start/char_end` |
 | `captions` | 图表题注：label（Figure 1 / 表 2）、页码、所属段落 |
-| `tables` | 表格：表头、行、列数、证据；解析不了的进 `stats.unparsed_tables` 并给原因 |
+| `tables` | 表格：表头、行、列数、`row_full_ratio`、`raw_rows`（按行原文）与证据；**每张有题注的表都会出现在数组里**，解析不出栅格的标 `cell_confidence: unparsed` 并在 `limitation` 写明原因，同时进 `stats.unparsed_tables` |
 | `references` | 参考文献条目：首作者、年份、DOI、原文 |
 | `footnotes` | 脚注候选（作者注/基金/通讯地址） |
 
@@ -96,8 +96,8 @@ python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
 | 使用增益·质量增益 | 15 | 同一份 PDF 的 A/B 实测：粘连/千字 7.06 → 0.00，可疑字符 12.30% → 0.12%，页序 20 → 9（真实 9 页）。表格见 `examples/runs/BENCH.md` |
 | 使用增益·效率增益 | 5 | 一次调用产出全部结构（有 pypdf 时 0.7 s/篇，无 pypdf 0.23 s/篇）；对照条件同样一次直出，但不产出任何结构，后续章节/文献定位需人工重读 |
 | 使用增益·增益可验证性 | 5 | `scripts/bench.py` 一行复现两种条件的全部指标；纯确定性实现，同输入重复运行结果一致 |
-| 创新增益·新增能力 | 5 | 自带 `pdfmini`（纯标准库）：页树还原真实页序、按行内间隙投票判栏缝、无第三方库也能按坐标切表格 |
-| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环；表格切分阈值自适应（多阈值取列数最稳的一组），而非写死 |
+| 创新增益·新增能力 | 5 | 自带 `pdfmini`（纯标准库）：页树还原真实页序、按行内间隙投票判栏缝、无第三方库也能按坐标切表格；双栏版面上按**块**而非按行定位题注，锁住题注所在横坐标带 |
+| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环；表格重建用**列锚点聚类**（按块左边缘聚类定列），纵向合并单元格不再导致整表丢弃；栅格不可靠时并给 `raw_rows` 保数据 |
 | 创新增益·创新证据 | 5 | 三篇真实 PDF、两种环境（有无 pypdf）的实测数字与失败原因，全部可在包内复现 |
 | 可靠体验·调用与易用性 | 3 | 两条命令即可完成；参数与输出字段全在本文档 |
 | 可靠体验·运行稳定性 | 4 | 无随机性、无网络、无外部状态；三后端逐级降级，任一后端异常都不中断整体解析 |
