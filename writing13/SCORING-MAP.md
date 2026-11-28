@@ -71,8 +71,12 @@ python eval/compare_ab.py examples/baseline-scorecard.json /tmp/card13.json
 
 已知边界（写在这里，避免自查时误判）：
 
-- 本机无 TeX 引擎，`compile-report.json#status` 为 `unavailable`，
-  `score_output.py` 把 `gain_verifiability` 判 `n/a` 而不是 `pass`。
-  评测镜像提供 `latex-compiler`，编译类指标需在镜像内复核后再看。
+- 编译类指标已在本机真实跑通：tectonic 0.15.0 编出 5 页 PDF，
+  `examples/runs/compile-report.json` 的 `status=success`、`converged=true`、warning 0，
+  原始日志 `examples/runs/selftest-build.log` 与产物 `examples/runs/preview.pdf` 都在包内。
+  评测镜像若装的是 `latex-compiler`（pdflatex/xelatex），命令换成
+  `latexmk -pdf -interaction=nonstopmode main.tex` 即可，步骤不变。
+- 环境确实没有引擎时，`compile-report.json#status` 为 `unavailable`，
+  `score_output.py` 会把 `gain_verifiability` 判 `n/a` 而不是 `pass`，不伪造编译成功。
 - `check_manuscript.py` 判的是"是不是写实的完整稿件"，判不了科学正确性；
   公式含义与表格数值是否符合原文，仍需人工/评审判断。
