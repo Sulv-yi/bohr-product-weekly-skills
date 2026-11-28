@@ -118,25 +118,41 @@ def build(case, sections, main_name, template, title, author, bib_name):
     if method_idx is None:
         method_idx = 2 if len(sections) >= 2 else 1
 
+    used_labels = set()
+    n_tab = 0
+
+    def _uniq(base):
+        """label 必须全局唯一：中文标题 slug 后为空时退回编号，重复时加序号后缀。"""
+        lab, n = base, 2
+        while lab in used_labels:
+            lab = "%s-%d" % (base, n)
+            n += 1
+        used_labels.add(lab)
+        return lab
+
     for idx, (sec_title, hint) in enumerate(sections, 1):
-        lab = "sec:" + slug(sec_title)
+        base = slug(sec_title)
+        if base == "sec":
+            base = "s%d" % idx
+        lab = _uniq("sec:" + base)
         L.append(r"\section{%s}\label{%s}" % (sec_title, lab))
         L.append("%% 写作要求：%s" % (hint or "按材料写实，关键论断标注来源。"))
-        L.append("%% 本节正文待写：写完须达到实质篇幅（默认 >=120 字），否则 check_manuscript 不通过。")
+        L.append("%% 本节正文待写：写完须达到实质篇幅（每节 >=250 字、全文 >=1400 字），否则 check_manuscript 不通过。")
         L.append("")
         # 在方法类章节插入公式锚点，保证成稿具备可核验的数学要素
         low = sec_title.lower()
         if idx == method_idx:
             L.append(r"\begin{equation}")
             L.append(r"  % 填入材料中的主公式，符号须在正文定义")
-            L.append(r"  \label{eq:main}")
+            L.append(r"  \label{%s}" % _uniq("eq:main"))
             L.append(r"\end{equation}")
             L.append("")
         if "result" in low or "experiment" in low or "结果" in sec_title or "实验" in sec_title:
+            n_tab += 1
             L.append(r"\begin{table}[t]")
             L.append(r"  \centering")
             L.append(r"  \caption{主结果对照（数值须来自实际运行或材料，注明统计口径）}")
-            L.append(r"  \label{tab:main}")
+            L.append(r"  \label{%s}" % _uniq("tab:main" if n_tab == 1 else "tab:main-%d" % n_tab))
             L.append(r"  \begin{tabular}{lcc}")
             L.append(r"    \toprule")
             L.append(r"    Method & Metric & Value \\")
