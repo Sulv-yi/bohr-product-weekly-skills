@@ -1,0 +1,41 @@
+{
+ "nodes": 61,
+ "edges": 86,
+ "node_types": {
+  "abbr": 20,
+  "method": 26,
+  "metric": 5,
+  "material": 6,
+  "task": 4
+ },
+ "relations": {
+  "co_occurs_with": 56,
+  "composed_of": 1,
+  "uses": 20,
+  "decreases": 3,
+  "compares_with": 2,
+  "increases": 4
+ },
+ "edge_evidence_rate": 1.0,
+ "node_evidence_rate": 1.0,
+ "orphan_nodes": 0,
+ "orphan_sample": [],
+ "weak_edge_ratio": 0.651,
+ "cross_paper_nodes": 0,
+ "per_paper": {
+  "paper.pdf": {
+   "file": "paper.pdf",
+   "pages": 9,
+   "entities": 87,
+   "candidates": 411
+  },
+  "case2-zh.pdf": {
+   "file": "case2-zh.pdf",
+   "pages": 13,
+   "entities": 27,
+   "candidates": 96
+  }
+ },
+ "gates": [],
+ "ok": true
+}
