@@ -145,3 +145,30 @@ Python 3.9+，**零第三方依赖也能运行**。PDF 后端按序降级并在 
 | `scripts/readwork.py` | 任务加工工具：glossary / bilingual / notes / claims / graph / verify |
 | `examples/runs/RUNS.md` | 真实运行记录与边界 |
 | `GITHUB_URL.txt` | 本题作品的 GitHub 公开链接 |
+
+## 九、使用增益的实测证据（可复现）
+
+「使用增益」不能靠自述。本包附一份同输入、同度量代码的对照：
+
+```bash
+python eval/ab_parse.py <pdf> [<pdf> ...] --md examples/runs/ab-report.md
+```
+
+- **A（baseline）**：`_builtin_legacy()` —— 把内容流拼成纯文本。这是不加载本 Skill 时能拿到的东西：
+  没有章节、题注、表格、文献结构，也没有段落定位。
+- **B（skill）**：`build()` —— 完整流水线，每个段落带 `page` 与 `char_start..char_end`，可逐条回查。
+
+实测（9 页英文双栏论文 + 13 页中文论文，`eval/ab_parse.py` 输出）：
+
+| 指标 | baseline | skill |
+|---|---:|---:|
+| 页数（真实 9 页） | 20 | **9** |
+| 可疑字符占比 | 2.80% / 68% | **0 / 0** |
+| 章节 / 题注 / 文献 / 表格 | 0 / 0 / 0 / 0 | **6 / 14 / 39 / 5** |
+| 可回查段落数 | 0 | **146 / 97** |
+
+结论：质量增益成立（无常变差项，7 项严格变好），效率增益成立（一次运行即得到可回查结构，
+基线只有文本流，要定位一句话得自己数页找段）。判定阈值写在 `eval/ab-protocol.md`，
+脚本只执行规则，不做人工加权。
+
+已知边界（不隐藏）：中文题注与中文文献表识别仍为 0，属真实能力缺口。
