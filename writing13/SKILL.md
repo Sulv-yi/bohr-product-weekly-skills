@@ -50,9 +50,9 @@ description: 面向科研稿件的 LaTeX 写作与编译 Skill。围绕"成稿�
 | 门槛 | 阈值 | 由谁判 |
 |---|---|---|
 | 章节齐备 | `required_sections` 全在，且 ≥3 节 | `check_manuscript.py` |
-| 每节写实 | 最薄一节实义字数 ≥120 | `check_manuscript.py` |
-| 全篇成稿 | 全文实义字数 ≥400 | `check_manuscript.py` |
-| 摘要齐全 | `abstract` 存在且非空 | `check_manuscript.py` |
+| 每节写实 | 最薄一节实义字数 ≥250 | `check_manuscript.py` |
+| 全篇成稿 | 全文实义字数 ≥1400 | `check_manuscript.py` |
+| 摘要齐全 | `abstract` 存在且实义字数 ≥40 | `check_manuscript.py` |
 | 公式有内容 | ≥1 个 `equation` 环境且非空 | `check_manuscript.py` |
 | 表格有数据 | 表格 ≥2 行真实数据（只有表头判不合格） | `check_manuscript.py` |
 | 引用闭合 | 每个 `\cite` 键都能在 `.bib` 找到；`\ref` 无悬空 | `check_manuscript.py` + `static_check.py` |
@@ -61,6 +61,23 @@ description: 面向科研稿件的 LaTeX 写作与编译 Skill。围绕"成稿�
 
 门槛是脚本判的，不是清单判的：同一份 `.tex` 重跑得到的结论必须一致。
 空骨架能过模板检查，但过不了这张表——这是本 Skill 与模板向导的分界。
+
+## 实测结果（真实编译，非示意）
+
+`examples/runs/REAL-BUILD.md` 记录一次真实执行：tectonic 0.15.0，两边都实际编译。
+
+| 指标 | 基线（无 Skill） | 本 Skill |
+|---|---:|---:|
+| 编译状态 | success | success |
+| PDF 页数 / 字节 | 1 / 40,283 | **5 / 209,054** |
+| undefined 引用 | **2** | **0** |
+| LaTeX Warning | **3** | **0** |
+| 公式 / 表格 | 0 / 0 | 1 / 1 |
+
+基线三条警告（`No \author given.` / `Citation 'wang2019' undefined` /
+`There were undefined references.`）正好对应本 Skill 的三个检查点：
+模板必填项、引用闭合、结构完整。产物 `examples/runs/preview.pdf` 与
+原始 `.log` 都在包内，可打开核对。
 
 ## 工作流
 
@@ -85,7 +102,7 @@ python scripts/build_manuscript.py --case /input/case.json --out /app/output \
 
 ### 第 2 步 · 逐节写实（对应"实际效果"的核心）
 按 `manuscript_plan.json` 把材料里的真实内容写进每一节：
-- 每节正文达到实质篇幅（默认 ≥120 字），写清论断并标注来源；
+- 每节正文达到实质篇幅（默认 ≥250 字），写清论断并标注来源；
 - 公式填进 `equation` 锚点，符号先在正文定义，`\label` 后在正文 `\ref`；
 - 表格至少 2 行真实数据，数值与单位必须来自材料或实际运行；
 - 摘要 3–5 句，覆盖问题、做法、带数值的结果、结论；
@@ -127,6 +144,8 @@ python scripts/compile_and_parse.py <工程根> --out compile_report.json \
 ```json
 {"claim":"公式(3) 的系数 α=0.85","source":"原文 §3.2 Eq.(3) / p.5","change":"保持原值，仅调整对齐环境"}
 ```
+来源定位三种写法等价，`verify_result.py` 都认：`source`、`source_id`、或 `file` + `locator`
+（归一为 `file#locator`）。缺任一种才会被判"缺来源定位"。
 材料不足/冲突/需人工确认 → 写 `uncertainty`，不新增事实。
 
 ### 第 8 步 · 复现记录（对应"复现得了"）
@@ -225,6 +244,10 @@ python scripts/verify_result.py /app/output/result.json --case /input/case.json 
 `eval/score_output.py`（算指标与判定，不给自评分）、`eval/compare_ab.py`（A/B 差值）、
 `eval/ab-protocol.md`（对照协议）、`eval/acceptance.md`（人工验收与盲评表）、
 `SCORING-MAP.md`（评分点 → 证据位置对照，含 60 秒自查命令）。
+
+真实运行证据：`examples/runs/REAL-BUILD.md`（对照数据与复跑命令）、
+`examples/runs/preview.pdf`（编译产物，5 页）、`examples/runs/selftest-build.log`（原始引擎日志）、
+`examples/ab-report.md`（A/B 结论）。
 
 依赖：Python 3.9+ 标准库；编译需环境提供 TeX 引擎（pdflatex/xelatex/lualatex/latexmk/tectonic）与 bibtex/biber，缺失时按上表降级。
 
