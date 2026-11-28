@@ -49,7 +49,7 @@ def _collect_text(obj):
     return "\n".join(parts)
 
 
-def validate(result, case, min_chars=800, extra_text=""):
+def validate(result, case, min_chars=0, extra_text=""):
     errors, warnings = [], []
     if not isinstance(result, dict):
         return {"status": "failed", "errors": ["result 不是对象"]}
@@ -85,13 +85,16 @@ def validate(result, case, min_chars=800, extra_text=""):
     section = r.get("section", "")
     section_text = section if isinstance(section, str) else _collect_text(section)
     text = section_text + "\n" + (extra_text or "")
-    m = measure(text, result.get("uncertainty") or [], r.get("questions_for_author") or [],
-                min_chars=min_chars)
+    # measure(elem_text, body_text, uncertainty, questions, min_chars)：
+    # 原来把 uncertainty 传进了 body_text 位，issues 计数与人工核对项都会错位。
+    m = measure(text, None, result.get("uncertainty") or [], r.get("questions_for_author") or [],
+                min_chars=min_chars or None)
     nchars = m["total_chars"]
 
     if st == "success":
-        if nchars < min_chars:
-            errors.append(f"status=success 但 section 正文仅 {nchars} 字（<{min_chars}），疑似空壳/薄稿")
+        if not m["min_chars_ok"]:
+            errors.append(f"status=success 但篇幅不足（中文 {m['cjk_chars']} 字 / 英文 {m['en_words']} 词），"
+                          f"疑似空壳或薄稿；中文需 ≥1800 字，英文需 ≥1100 词")
         if m["missing_elements"]:
             errors.append(f"六类要素缺件: {', '.join(m['missing_elements'])}（步骤/设置/参数/数据/对照/复现限制须各自成段）")
         if m["param_rows"] < GATE_PARAM_ROWS:
@@ -138,7 +141,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("result")
     ap.add_argument("--case")
-    ap.add_argument("--min-chars", type=int, default=1800)
+    ap.add_argument("--min-chars", type=int, default=0,
+                    help="显式篇幅门槛；0=按语言自适应（中文 1800 字 / 英文 1100 词）")
     ap.add_argument("--text", help="成稿正文文件（section.md），正文不在 result.json 内时一并度量")
     args = ap.parse_args()
     result = json.load(open(args.result, encoding="utf-8"))
