@@ -1,0 +1,984 @@
+{
+ "_note": "真实运行产物截断示例（两篇论文：英文 9 页 + 中文 13 页），仅保留前 12 节点 / 16 边 / 6 条测量，用于展示字段形态，不是正式案例结果",
+ "nodes": [
+  {
+   "id": "a1",
+   "type": "abbr",
+   "label": "A1",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 8,
+     "paragraph_id": "p008-03",
+     "quote": "A1-component PI, BPBDO, based on both BP molecular structure and BDO molecular structures, was successfully synthesized and characterized."
+    }
+   ]
+  },
+  {
+   "id": "ai",
+   "type": "method",
+   "label": "AI",
+   "aliases": [],
+   "papers": [
+    "case2-zh.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "case2-zh.pdf",
+     "page": 2,
+     "paragraph_id": "p002-04",
+     "quote": "姓名角色 主要职责易苏侣项目负责人、主力开发选题与创意设计,产品需求与交互设计,AI 工具选型与提示词,小程序主体开发(几何内核、3D 视口、三视图、自由搭建、界面),算法与题库方案取舍,测试与真机验证,参赛文档与五个附件打包提交及最终定稿裴锦泽演示视频录制按团队提供的分镜、配音与字幕,完成录屏、配音、剪辑并导出 演示视频.mp4冯雕题型整理与结果验证整理《机械制图习题集》(第二版,清华大学出版社)常考相贯线、截交线组合类型形成对照清单;将程序生成的交线、剖视与三视图结果与教材示例、手工作图逐一比对核验并记录差异;参与真机试用与反馈"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 2,
+     "paragraph_id": "p002-05",
+     "quote": "1.2 分工说明易苏侣负责从创意设计、AI 辅助开发到参赛交付的主线工作,裴锦泽负责演示视频录制,冯雕负责题型整理与结果验证,不参与核心算法与代码实现。分工按各成员实际参与程度划分。"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 10,
+     "paragraph_id": "p010-03",
+     "quote": "3.8 测试与性能指标 实测值相贯线残差 ≈ 1e-13(6 种预设与解析解对照)单对求交耗时 0.75–1.25 ms,满足 60 fps 实时重算等径圆柱正交弧长305.16(解析解 305.62)回归 13 套脚本 787/787 全通过;收敛 48/48;剖视分层 180/180剖切分层 切片 1、2、3、5、8 层对应块数 2、5、8、12、21,交线归属率 100%自由搭建拖动 23.4 ms 降到 5.2 ms,降幅 78%,纯平移网格复用 3/3包体、控制台 914.4 KB;启动期 errors、warnings、deprecated 均为 0真机调试 vivo V2548A"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 11,
+     "paragraph_id": "p011-01",
+     "quote": "第 11 ⻚ AI 工具 版本 提供方使用形态WorkBuddy(AI 开发助手,桌面客户端)以客户端关于页显示为准腾讯 本地文件读写、终端执行与多轮对话的辅助开发辅助大模型:Tencent Hunyuan Hy(混元)以客户端会话信息为准腾讯 由 WorkBuddy 调用,承担代码、文档生成与问题诊断其他 AI 工具 无 — —使用人:上述 AI 工具由项目负责人独立使用,负责工具选型、提示词设计与全部交互。"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 11,
+     "paragraph_id": "p011-01",
+     "quote": "第 11 ⻚ AI 工具 版本 提供方使用形态WorkBuddy(AI 开发助手,桌面客户端)以客户端关于页显示为准腾讯 本地文件读写、终端执行与多轮对话的辅助开发辅助大模型:Tencent Hunyuan Hy(混元)以客户端会话信息为准腾讯 由 WorkBuddy 调用,承担代码、文档生成与问题诊断其他 AI 工具 无 — —使用人:上述 AI 工具由项目负责人独立使用,负责工具选型、提示词设计与全部交互。"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 11,
+     "paragraph_id": "p011-01",
+     "quote": "第 11 ⻚ AI 工具 版本 提供方使用形态WorkBuddy(AI 开发助手,桌面客户端)以客户端关于页显示为准腾讯 本地文件读写、终端执行与多轮对话的辅助开发辅助大模型:Tencent Hunyuan Hy(混元)以客户端会话信息为准腾讯 由 WorkBuddy 调用,承担代码、文档生成与问题诊断其他 AI 工具 无 — —使用人:上述 AI 工具由项目负责人独立使用,负责工具选型、提示词设计与全部交互。"
+    }
+   ]
+  },
+  {
+   "id": "ay",
+   "type": "abbr",
+   "label": "AY",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 8,
+     "paragraph_id": "p008-23",
+     "quote": "Polykarpov AY, Hassoon S, Neckers DC."
+    }
+   ]
+  },
+  {
+   "id": "bdo",
+   "type": "method",
+   "label": "BDO",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-08",
+     "quote": "Elementary analysis, atmospheric pressure chemical ionization mass spectrometry, 1H nuclear magnetic resonance, and 13C nuclear magnetic resonance studies revealed that the molecular structure of BPBDO consisted of both benzophenone (BP) and benzodioxole (BDO) structures."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-09",
+     "quote": "In contrast to typical dual-component photoinitiators, eg, BP/ethyl 4-dimethylaminobenzoate or BP/BDO, BPBDO does not require an additional amine coinitiator for the initiation and is applicable in nonamine resin systems."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 2,
+     "paragraph_id": "p002-06",
+     "quote": "2.1 | Material Benzophenone, 4-fluorobenzophenone, and BDO were purchased from TCI Co, Ltd, and Sesamol was purchased from Wuhan Yuancheng Tech."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-09",
+     "quote": "A, Equimolar mixture of benzophenone (BP) and benzodioxole (BDO), BP, and BDO absorption spectra, respectively; B, equimolar mixture of BP and BDO, 4-(1,3benzodioxol-5-yloxy) benzophenone, and 4-(2-(benzodioxol-5-yloxy) ethoxy)benzophenone absorption spectra, respectively [Colour figure can be viewe"
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-09",
+     "quote": "A, Equimolar mixture of benzophenone (BP) and benzodioxole (BDO), BP, and BDO absorption spectra, respectively; B, equimolar mixture of BP and BDO, 4-(1,3benzodioxol-5-yloxy) benzophenone, and 4-(2-(benzodioxol-5-yloxy) ethoxy)benzophenone absorption spectra, respectively [Colour figure can be viewe"
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-09",
+     "quote": "A, Equimolar mixture of benzophenone (BP) and benzodioxole (BDO), BP, and BDO absorption spectra, respectively; B, equimolar mixture of BP and BDO, 4-(1,3benzodioxol-5-yloxy) benzophenone, and 4-(2-(benzodioxol-5-yloxy) ethoxy)benzophenone absorption spectra, respectively [Colour figure can be viewe"
+    }
+   ]
+  },
+  {
+   "id": "bp",
+   "type": "method",
+   "label": "BP",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-08",
+     "quote": "Elementary analysis, atmospheric pressure chemical ionization mass spectrometry, 1H nuclear magnetic resonance, and 13C nuclear magnetic resonance studies revealed that the molecular structure of BPBDO consisted of both benzophenone (BP) and benzodioxole (BDO) structures."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-08",
+     "quote": "The laser flash photolysis experiments and electron spin resonance test indicated that the process of radicals generated from BPBDO after irradiation was similar to 3 processes of ethyl 4-dimethylaminobenzoate and BP."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-09",
+     "quote": "In contrast to typical dual-component photoinitiators, eg, BP/ethyl 4-dimethylaminobenzoate or BP/BDO, BPBDO does not require an additional amine coinitiator for the initiation and is applicable in nonamine resin systems."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-09",
+     "quote": "In contrast to typical dual-component photoinitiators, eg, BP/ethyl 4-dimethylaminobenzoate or BP/BDO, BPBDO does not require an additional amine coinitiator for the initiation and is applicable in nonamine resin systems."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-13",
+     "quote": "Benzoin and its derivatives are the typical monomers used in the radical photopolymerization of vinyl monomers.10 A typical type II PI system consists of a PI such as benzophenone or thioxanthone, eg, thioxanthones,11 benzophenone (BP) and its derivatives,12 benzil,8 quinones,13 and organic dyes.14 "
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 2,
+     "paragraph_id": "p002-01",
+     "quote": "abstraction or electron transfer reactions.1,2 Alcohols, amines, thiols, and ethers are used as coinitiators because of their hydrogen donating capability.1-3 Benzophenone is 1 of the most widely commercialized PIs1,3,4 because of its lower price, good surface curing property, oxygen inhibition effe"
+    }
+   ]
+  },
+  {
+   "id": "bpbdo",
+   "type": "method",
+   "label": "BPBDO",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-07",
+     "quote": "Email: yangxp@buct.edu.cn Funding information National Natural Science Foundation of China, Grant/Award Number: U1362205, U156420074; Jiangsu Province Science and Technology Support Project, Grant/Award Number: BE2014146-4 A new benzodioxole derivative, 4-(1,3-benzodioxol-5-yloxy) benzophenone (BPBD"
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-08",
+     "quote": "Elementary analysis, atmospheric pressure chemical ionization mass spectrometry, 1H nuclear magnetic resonance, and 13C nuclear magnetic resonance studies revealed that the molecular structure of BPBDO consisted of both benzophenone (BP) and benzodioxole (BDO) structures."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-08",
+     "quote": "The laser flash photolysis experiments and electron spin resonance test indicated that the process of radicals generated from BPBDO after irradiation was similar to 3 processes of ethyl 4-dimethylaminobenzoate and BP."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-09",
+     "quote": "All the results suggest that BPBDO is a 1-component photoinitiator that is an efficient photoinitiator for free radical polymerization."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-09",
+     "quote": "In contrast to typical dual-component photoinitiators, eg, BP/ethyl 4-dimethylaminobenzoate or BP/BDO, BPBDO does not require an additional amine coinitiator for the initiation and is applicable in nonamine resin systems."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 2,
+     "paragraph_id": "p002-03",
+     "quote": "A new benzodioxole derivative, 4-(1,3-benzodioxol-5-yloxy) benzophenone (BPBDO), was successfully synthesized and characterized in this study."
+    }
+   ]
+  },
+  {
+   "id": "bpc2bdo",
+   "type": "metric",
+   "label": "BPC2BDO",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 2,
+     "paragraph_id": "p002-06",
+     "quote": "Dimethyl sulfoxide (DMSO) was dried and purified according to common laboratory methods.35 In addition, 4-(2- (benzodioxol-5-yloxy) ethoxy)benzophenone (BPC2BDO) was synthesized according to our previous study.8 Other chemical reagents were purchased from Sinopharm Group Chemical Reagent Co."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-10",
+     "quote": "TABLE 1 UV absorption data of photoinitiators (PIs) in acetonitrile PI λmax (nm) εmax (L/mol · cm) BP 250 17 750 286 179 338 123 BDO 250 45 286 293 338 0 BP + BDOa 250 17 775 286 489 338 125 BP + BDOb 250 17 795 286 472 338 123 BPC2BDO 250 9 120 285 17 860 338 409 BPBDO 250 14 220 289 18 996 338 613"
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 5,
+     "paragraph_id": "p005-02",
+     "quote": "Figure 2B shows that the UV absorption spectra of BPBDO and BPC2BDO in acetonitrile use the equimolar mixture (BP and BDO) as a reference, and the data are also listed in Table 1."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 5,
+     "paragraph_id": "p005-02",
+     "quote": "Compared with BP, the absorption peaks of BPBDO and BPC2BDO appear at 289 and 285 nm, respectively, exhibiting a red-shift of the π-π* type (37 nm) because of the hetero-linker,38 and the n-π* transition was overlaid by the broad and more intense tail of the strong π-π* transition."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 5,
+     "paragraph_id": "p005-03",
+     "quote": "Because of the bonding, the red shift of the BPBDO absorption peak was higher than that of the BPC2BDO peak, and the absorbance of BPBDO at 250 and 338 nm were also higher than those of BPC2BDO."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 5,
+     "paragraph_id": "p005-03",
+     "quote": "Because of the bonding, the red shift of the BPBDO absorption peak was higher than that of the BPC2BDO peak, and the absorbance of BPBDO at 250 and 338 nm were also higher than those of BPC2BDO."
+    }
+   ]
+  },
+  {
+   "id": "bpdbo",
+   "type": "metric",
+   "label": "BPDBO",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 6,
+     "paragraph_id": "p006-08",
+     "quote": "TABLE 2 Quenching rate constants (kq) of 3BPDBO by different monomers EOTMPTA TMPTA PETA kq (106 mol−1 Ls−1)27 16 15"
+    }
+   ]
+  },
+  {
+   "id": "c138",
+   "type": "metric",
+   "label": "C138",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 3,
+     "paragraph_id": "p003-11",
+     "quote": "The rate of decomposition (Rd) of BPBDO PI was calculated according to the following Equation (1)8: Rd 1⁄4 − dPI1⁄2/C138 dt 1⁄4 − 1 ε · dAt dt (1) where At represents the absorbance of BPBDO at 289 nm after the BPBDO was exposed by UV light."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 6,
+     "paragraph_id": "p006-01",
+     "quote": "The rate constants (kq) of quenching of the 3BPBDO by the monomers were determined from the Stern-Volmer Equation (3)40: τðÞ−1 1⁄4 τ0ðÞ−1 þ kq· monomer1⁄2/C138(3) where τ0 and τ represent the 3BPBDO lifetimes in the absence and the presence of the monomer, respectively."
+    }
+   ]
+  },
+  {
+   "id": "c20h14o4",
+   "type": "material",
+   "label": "C20H14O4",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 3,
+     "paragraph_id": "p003-03",
+     "quote": "Analytical calculation for C20H14O4: C, 75.46; H, 4.43."
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 3,
+     "paragraph_id": "p003-04",
+     "quote": "Q-TOF-MS (m/z): calculation for C20H14O4, 318.0892."
+    }
+   ]
+  },
+  {
+   "id": "cad",
+   "type": "method",
+   "label": "CAD",
+   "aliases": [],
+   "papers": [
+    "case2-zh.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "case2-zh.pdf",
+     "page": 2,
+     "paragraph_id": "p002-08",
+     "quote": "2.1 开发背景与意义机械制图、画法几何课程中,相贯线、截交线与组合体长期是最难教也最难学的一章:学生要在脑中把两个立体旋转、判断遮挡、想象交线的空间走向,再按投影规则画到纸上。教材只能给出固定角度、固定尺寸的一张图;教师用挂图或 PPT,也很难讲清改一个半径之后交线会怎么变;能建模的桌面 CAD 软件门槛高,要机房和授权,学生在课间、宿舍、通勤路上根本用不起来。"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 2,
+     "paragraph_id": "p002-09",
+     "quote": "团队由此确定了一个目标:把这一章从静态插图变成可以实时计算的 3D 实验。交线由参数实时算出,立体可以随手转动,三视图与 3D 模型同源生成。作品定位是教学辅助工具,不替代 CAD,只解决随手验算和随堂演示。"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 3,
+     "paragraph_id": "p003-01",
+     "quote": "第 3 ⻚内部相交被遮挡 两立体相贯处、穿孔内腔不可见 实体模型不透明,剖面图需另画3D 与三视图对不上学生能想象立体,却画不对主、俯、左视图立体图与作业图分离,缺少同源对照工具门槛高 桌面 CAD 需电脑、授权与建模基础 手机端、课堂上无法随手验证题型覆盖不足 平面立体、挖空穿孔、多形体组合少有直观示例习题集以静态图为主,缺动态验证"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 3,
+     "paragraph_id": "p003-04",
+     "quote": "2.4 当前已有解决方案及不足现有方案 代表形态 能解决什么 不足教材、习题集插图清华版《机械制图习题集》等纸质图给出标准题型与标准答案,是教学依据静态、固定角度与尺寸;看不到内部;改条件后无对应图课堂 PPT /挂图 / GIF动画教师自制课件、网络动画有一定动态感,便于讲解典型例题参数写死、不可交互、不能自由组合立体通用 CAD 建模软件SolidWorks、 AutoCAD、Creo 等建模与布尔运算能力强,可生成任意相交体需电脑、授权、建模基础;建模步骤重;不直接给第一角三视图与教学型虚实线;不适合手机随手验算在线 3D 几何工具网页版函数、曲面可视化能显示曲面与交线多为通用数学工具,"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 3,
+     "paragraph_id": "p003-05",
+     "quote": "2.5 市场空白与差异化定位CAD 能算但太重,教材和动画能看但太死,搜题类产品给答案不给过程。轻量、可实时交互、又能输出规范三视图的工具,目前仍是空白。本作品定位为面向课程教学的实验与验算工具,不做通用建模软件,也不做答题工具。"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 4,
+     "paragraph_id": "p004-06",
+     "quote": "知识门槛方面,只需要课程基础概念,不需要 CAD 建模或编程基础。"
+    }
+   ]
+  },
+  {
+   "id": "cli",
+   "type": "method",
+   "label": "CLI",
+   "aliases": [],
+   "papers": [
+    "case2-zh.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "case2-zh.pdf",
+     "page": 7,
+     "paragraph_id": "p007-05",
+     "quote": "3.1 技术选型层 选型 理由框架 微信小程序原生(WXML / WXSS / JS / JSON),ES6 + 增强编译无跨端框架运行时开销,WebGL / Canvas 2D原生能力最直接3D threejs-miniprogram@0.0.8(Three.js 0.108,597 KB,经 CLI build-npm 构建)微信官方适配的小程序版 Three.js,避免自行移植三视图 原生 canvas type=\"2d\" 无依赖,可精确控制线型、线宽、虚实线剖视 自定义 ShaderMaterial(8 槽位discard)按块裁剪比重建几何更省,适合拖动时实时刷新系统信息core/s"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 7,
+     "paragraph_id": "p007-05",
+     "quote": "3.1 技术选型层 选型 理由框架 微信小程序原生(WXML / WXSS / JS / JSON),ES6 + 增强编译无跨端框架运行时开销,WebGL / Canvas 2D原生能力最直接3D threejs-miniprogram@0.0.8(Three.js 0.108,597 KB,经 CLI build-npm 构建)微信官方适配的小程序版 Three.js,避免自行移植三视图 原生 canvas type=\"2d\" 无依赖,可精确控制线型、线宽、虚实线剖视 自定义 ShaderMaterial(8 槽位discard)按块裁剪比重建几何更省,适合拖动时实时刷新系统信息core/s"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 9,
+     "paragraph_id": "p009-07",
+     "quote": "3.6 工程结构与构建目录与文件 说明project.config.json 项目配置:AppID、miniprogramRoot、基础库版本miniprogram/pages index 为首页,含 3D 视口、三视图、题库与自由搭建;guide为原理页miniprogram/components view3d、views3、nav-bar、preset-tabs、param-panel 五个自定义组件miniprogram/core geometry、intersection、projections、cells、freeform、 presets、math-utils、system-inf"
+    }
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "edge_id": "e00001",
+   "source": "bpbdo",
+   "target": "bp",
+   "source_label": "BPBDO",
+   "target_label": "BP",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 1,
+   "paragraph_id": "p001-08",
+   "quote": "Elementary analysis, atmospheric pressure chemical ionization mass spectrometry, 1H nuclear magnetic resonance, and 13C nuclear magnetic resonance studies revealed that the molecular structure of BPBDO consisted of both benzophenone (BP) and benzodioxole (BDO) structures.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00002",
+   "source": "bpbdo",
+   "target": "bp",
+   "source_label": "BPBDO",
+   "target_label": "BP",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [
+    "after"
+   ],
+   "paper": "paper.pdf",
+   "page": 1,
+   "paragraph_id": "p001-08",
+   "quote": "The laser flash photolysis experiments and electron spin resonance test indicated that the process of radicals generated from BPBDO after irradiation was similar to 3 processes of ethyl 4-dimethylaminobenzoate and BP.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00003",
+   "source": "pi",
+   "target": "bp",
+   "source_label": "PI",
+   "target_label": "BP",
+   "relation": "composed_of",
+   "trigger": "consists of",
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 1,
+   "paragraph_id": "p001-13",
+   "quote": "Benzoin and its derivatives are the typical monomers used in the radical photopolymerization of vinyl monomers.10 A typical type II PI system consists of a PI such as benzophenone or thioxanthone, eg, thioxanthones,11 benzophenone (BP) and its derivatives,12 benzil,8 quinones,13 and organic dyes.14 ",
+   "basis": "关系词位于两实体之间",
+   "strength": "medium"
+  },
+  {
+   "edge_id": "e00004",
+   "source": "pi",
+   "target": "bp",
+   "source_label": "PI",
+   "target_label": "BP",
+   "relation": "uses",
+   "trigger": "based on",
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-03",
+   "quote": "It is a 1-component type II PI based on BP and sesamol.",
+   "basis": "关系词位于两实体之间",
+   "strength": "medium"
+  },
+  {
+   "edge_id": "e00005",
+   "source": "bpbdo",
+   "target": "pi",
+   "source_label": "BPBDO",
+   "target_label": "PI",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-03",
+   "quote": "All the results suggest that BPBDO is an effective PI for the free radical polymerization of acrylic basic monomers.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00006",
+   "source": "pi",
+   "target": "bpbdo",
+   "source_label": "PI",
+   "target_label": "BPBDO",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-04",
+   "quote": "In contrast to a typical dual-component PI, BPBDO does not require an additional amine coinitiator for the initiation and is biocompatible and applicable in nonamine resin systems.33,34",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00007",
+   "source": "bdo",
+   "target": "tci",
+   "source_label": "BDO",
+   "target_label": "TCI",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-06",
+   "quote": "2.1 | Material Benzophenone, 4-fluorobenzophenone, and BDO were purchased from TCI Co, Ltd, and Sesamol was purchased from Wuhan Yuancheng Tech.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00008",
+   "source": "eotmpta",
+   "target": "hdda",
+   "source_label": "EOTMPTA",
+   "target_label": "HDDA",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-06",
+   "quote": "The monomers, trimethylolpropane ethoxylate triacrylate (EOTMPTA), 1,6-hexanediol diacrylate (HDDA), trimethylolpropane triacrylate (TMPTA), and pentaerythritol triacrylate (PETA) were all obtained from Sartomer Company (PA, USA).",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00009",
+   "source": "scheme",
+   "target": "wang",
+   "source_label": "SCHEME",
+   "target_label": "WANG",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-09",
+   "quote": "SCHEME 1 Chemical structures of photoinitiators and monomers WANG ET AL.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00010",
+   "source": "tof-m",
+   "target": "c20h14o4",
+   "source_label": "TOF-MS",
+   "target_label": "C20H14O4",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-04",
+   "quote": "Q-TOF-MS (m/z): calculation for C20H14O4, 318.0892.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00011",
+   "source": "el",
+   "target": "xp6",
+   "source_label": "EL",
+   "target_label": "XP6",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [
+    "with"
+   ],
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-07",
+   "quote": "2.3 | Characterization The compositions of C and H were determined by vario EL cube (Elementar Analysensysteme GmbH, Hanau, Germany) furnished with Mettler-Toledo XP6 (Mettler-Toledo GmbH, Germany) at the CHNS mode.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00012",
+   "source": "g2",
+   "target": "tof",
+   "source_label": "G2",
+   "target_label": "TOF",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [
+    "with"
+   ],
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-07",
+   "quote": "The ultraperformance liquid chromatography quadrupole timeof-flight mass spectrometry experiments were performed by a Xevo G2 Q-TOF mass spectrometer (Waters, MA, USA) furnished with an atmospheric pressure chemical ionization interface.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00013",
+   "source": "bpbdo",
+   "target": "uv",
+   "source_label": "BPBDO",
+   "target_label": "UV",
+   "relation": "uses",
+   "trigger": "using",
+   "values": [],
+   "cross_paper": false,
+   "conditions": [],
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-10",
+   "quote": "2.5 | Photoreduction Photoreduction of BPBDO was studied by using UV-Vis spectroscopy.",
+   "basis": "关系词位于两实体之间",
+   "strength": "medium"
+  },
+  {
+   "edge_id": "e00014",
+   "source": "bpbdo",
+   "target": "pi",
+   "source_label": "BPBDO",
+   "target_label": "PI",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [
+    "289 nm"
+   ],
+   "cross_paper": false,
+   "conditions": [
+    "At"
+   ],
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-11",
+   "quote": "The rate of decomposition (Rd) of BPBDO PI was calculated according to the following Equation (1)8: Rd 1⁄4 − dPI1⁄2/C138 dt 1⁄4 − 1 ε · dAt dt (1) where At represents the absorbance of BPBDO at 289 nm after the BPBDO was exposed by UV light.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00015",
+   "source": "scheme",
+   "target": "k2co3",
+   "source_label": "SCHEME",
+   "target_label": "K2CO3",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [
+    "under",
+    "at"
+   ],
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-12",
+   "quote": "SCHEME 2 Synthesis route of 4-(1,3-benzodioxol-5-yloxy) benzophenone, the 4-fluorobenzophenone, sesamol, and K2CO3 were heated under reflux and in dimethyl sulfoxide solution [Colour figure can be viewed at wileyonlinelibrary.com]",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  },
+  {
+   "edge_id": "e00016",
+   "source": "figure",
+   "target": "nmr",
+   "source_label": "FIGURE",
+   "target_label": "NMR",
+   "relation": "co_occurs_with",
+   "trigger": null,
+   "values": [],
+   "cross_paper": false,
+   "conditions": [
+    "at"
+   ],
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-13",
+   "quote": "FIGURE 1 The 1H nuclear magnetic resonance (NMR) spectrum (A) and the 13C-NMR spectrum (B) of 4-(1,3-benzodioxol-5-yloxy) benzophenone [Colour figure can be viewed at wileyonlinelibrary.com] 2266 WANG ET AL.",
+   "basis": "无中间关系词，仅记共现",
+   "strength": "weak"
+  }
+ ],
+ "measurements": [
+  {
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-07",
+   "values": [
+    "2.00 g",
+    "20 mmol",
+    "2.76 g",
+    "20 mmol",
+    "5.52 g",
+    "40 mmol"
+   ],
+   "quote": "A mixture of 4fluorobenzophenone (2.00 g, 20 mmol), sesamol (2.76 g, 20 mmol), potassium carbonate (5.52 g, 40 mmol), and DMSO (100 mL) was heated under reflux until the composition of the reaction mixture immovability."
+  },
+  {
+   "paper": "paper.pdf",
+   "page": 2,
+   "paragraph_id": "p002-07",
+   "values": [
+    "25°C",
+    "800 mL"
+   ],
+   "quote": "Then, the mixture was cooled to the temperature of 25°C and poured into brine (800 mL) and extracted with 100-mL chloroform each time and repeated thrice."
+  },
+  {
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-02",
+   "values": [
+    "66%",
+    "4.20 g"
+   ],
+   "quote": "Yield: 66% (4.20 g)."
+  },
+  {
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-05",
+   "values": [
+    "400 MHz"
+   ],
+   "quote": "1H-NMR (400 MHz, CDCl3) δ (ppm): 7.76 to 7.79 (4H), 7.53 to 7.57 (1H), 7.42 to 7.50 (2H), 6.96 to 7.00 (2H), 6.75 to 6.81 (1H), 6.59 to 6.64 (1H), 6.52 to 6.58 (1H), 5.98 (2H)."
+  },
+  {
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-06",
+   "values": [
+    "400 MHz"
+   ],
+   "quote": "13C-NMR (400 MHz, CDCl3) δ (ppm): 195.42, 162.31, 149.70, 148.60, 144.68, 137.99, 132.45, 132.09, 131.62, 129.78, 128.23, 116.39, 113.03, 108.48, 102.88, 101.73."
+  },
+  {
+   "paper": "paper.pdf",
+   "page": 3,
+   "paragraph_id": "p003-08",
+   "values": [
+    "298 K"
+   ],
+   "quote": "The 1H-NMR and 13C-NMR spectra were measured on a 400-MHz NMR instrument (Bruker Corporation, Germany) at 298 K with tetramethylsilane as the internal standard and CDCl3 as the solvent, as shown in Figure 1."
+  }
+ ],
+ "mentions": [
+  {
+   "id": "a6162",
+   "type": "material",
+   "label": "A6162",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-05",
+     "quote": "The polymerization kinetics was calculated by the decrease of the area of acrylate double bond absorption peak around 6162 cm−1.37 The double bond conversions (DCs), directly related to the decrease in absorbance, were calculated from Equation (2).15 DC% 1⁄4 1− A6162ðÞt A6162ðÞ0 /C20/C21 × 100% (2) "
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-05",
+     "quote": "The polymerization kinetics was calculated by the decrease of the area of acrylate double bond absorption peak around 6162 cm−1.37 The double bond conversions (DCs), directly related to the decrease in absorbance, were calculated from Equation (2).15 DC% 1⁄4 1− A6162ðÞt A6162ðÞ0 /C20/C21 × 100% (2) "
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-05",
+     "quote": "The polymerization kinetics was calculated by the decrease of the area of acrylate double bond absorption peak around 6162 cm−1.37 The double bond conversions (DCs), directly related to the decrease in absorbance, were calculated from Equation (2).15 DC% 1⁄4 1− A6162ðÞt A6162ðÞ0 /C20/C21 × 100% (2) "
+    },
+    {
+     "paper": "paper.pdf",
+     "page": 4,
+     "paragraph_id": "p004-05",
+     "quote": "The polymerization kinetics was calculated by the decrease of the area of acrylate double bond absorption peak around 6162 cm−1.37 The double bond conversions (DCs), directly related to the decrease in absorbance, were calculated from Equation (2).15 DC% 1⁄4 1− A6162ðÞt A6162ðÞ0 /C20/C21 × 100% (2) "
+    }
+   ]
+  },
+  {
+   "id": "api",
+   "type": "method",
+   "label": "API",
+   "aliases": [],
+   "papers": [
+    "case2-zh.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "case2-zh.pdf",
+     "page": 7,
+     "paragraph_id": "p007-05",
+     "quote": "3.1 技术选型层 选型 理由框架 微信小程序原生(WXML / WXSS / JS / JSON),ES6 + 增强编译无跨端框架运行时开销,WebGL / Canvas 2D原生能力最直接3D threejs-miniprogram@0.0.8(Three.js 0.108,597 KB,经 CLI build-npm 构建)微信官方适配的小程序版 Three.js,避免自行移植三视图 原生 canvas type=\"2d\" 无依赖,可精确控制线型、线宽、虚实线剖视 自定义 ShaderMaterial(8 槽位discard)按块裁剪比重建几何更省,适合拖动时实时刷新系统信息core/s"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 10,
+     "paragraph_id": "p010-02",
+     "quote": "3.7 技术风险与应对技术风险 应对措施 可替代方案小程序 WebGL 与桌面 Three.js行为差异(无全局 RAF、旧Geometry API、原生 canvas 层级)组件作用域取 node、按 dpr 设尺寸、Matrix4 替代applyQuaternion、错误层兜底改用原生 WebGL 自绘,或改用微信官方XR / 3D 框架(成本更高)重根、自交导致交线断裂 解析求根 + 分支跟踪 + 周期接缝,放弃 marching squares提高采样密度的数值等值线法(精度与性能下降)多形体求交组合爆炸 pairKey 增量缓存 + 几何签名复用,只重算受影响对限制同时立体的数量,或"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 11,
+     "paragraph_id": "p011-12",
+     "quote": "7 质量保障消除废弃 API 警告、建立回归防线system-info.js、13 套回归脚本787/787 通过、控制台 0 错 0 警告"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 13,
+     "paragraph_id": "p013-01",
+     "quote": "第 13 ⻚ AI 辅助生成核心代码、组件、回归脚本、本文档与参赛材料草稿全文 WorkBuddy / Tencent Hunyuan Hy 辅助产出,团队复核采纳第三方开源库threejs-miniprogram@0.0.8 (Three.js 0.108) miniprogram_npm/ 按原许可证使用,随代码包提交开发平台与工具微信原生框架、wx API、微信开发者工具、官方开发规范文档全项目 微信平台提供公开出版物参考清华版《机械制图习题集》第二版(仅题型分类参考) 2.1、2.2、2.4、 4.3未复制原图、题面、答案交互形式参考公开演示项目 cone-lab 的分块剖视交互思路2"
+    },
+    {
+     "paper": "case2-zh.pdf",
+     "page": 13,
+     "paragraph_id": "p013-01",
+     "quote": "第 13 ⻚ AI 辅助生成核心代码、组件、回归脚本、本文档与参赛材料草稿全文 WorkBuddy / Tencent Hunyuan Hy 辅助产出,团队复核采纳第三方开源库threejs-miniprogram@0.0.8 (Three.js 0.108) miniprogram_npm/ 按原许可证使用,随代码包提交开发平台与工具微信原生框架、wx API、微信开发者工具、官方开发规范文档全项目 微信平台提供公开出版物参考清华版《机械制图习题集》第二版(仅题型分类参考) 2.1、2.2、2.4、 4.3未复制原图、题面、答案交互形式参考公开演示项目 cone-lab 的分块剖视交互思路2"
+    }
+   ]
+  },
+  {
+   "id": "appid",
+   "type": "method",
+   "label": "AppID",
+   "aliases": [],
+   "papers": [
+    "case2-zh.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "case2-zh.pdf",
+     "page": 9,
+     "paragraph_id": "p009-07",
+     "quote": "3.6 工程结构与构建目录与文件 说明project.config.json 项目配置:AppID、miniprogramRoot、基础库版本miniprogram/pages index 为首页,含 3D 视口、三视图、题库与自由搭建;guide为原理页miniprogram/components view3d、views3、nav-bar、preset-tabs、param-panel 五个自定义组件miniprogram/core geometry、intersection、projections、cells、freeform、 presets、math-utils、system-inf"
+    }
+   ]
+  },
+  {
+   "id": "article",
+   "type": "abbr",
+   "label": "ARTICLE",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 1,
+     "paragraph_id": "p001-01",
+     "quote": "RESEARCH ARTICLE One-component photoinitiator based on benzophenone and sesamol Jing Wang1,2 | Jinliang Yang3 | Muhammad Atif4 | Roberta Bongiovanni5 | Gang Li1 | Zhongmin Xue6 | Xiaoping Yang1"
+    }
+   ]
+  },
+  {
+   "id": "autocad",
+   "type": "method",
+   "label": "AutoCAD",
+   "aliases": [],
+   "papers": [
+    "case2-zh.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "case2-zh.pdf",
+     "page": 3,
+     "paragraph_id": "p003-04",
+     "quote": "2.4 当前已有解决方案及不足现有方案 代表形态 能解决什么 不足教材、习题集插图清华版《机械制图习题集》等纸质图给出标准题型与标准答案,是教学依据静态、固定角度与尺寸;看不到内部;改条件后无对应图课堂 PPT /挂图 / GIF动画教师自制课件、网络动画有一定动态感,便于讲解典型例题参数写死、不可交互、不能自由组合立体通用 CAD 建模软件SolidWorks、 AutoCAD、Creo 等建模与布尔运算能力强,可生成任意相交体需电脑、授权、建模基础;建模步骤重;不直接给第一角三视图与教学型虚实线;不适合手机随手验算在线 3D 几何工具网页版函数、曲面可视化能显示曲面与交线多为通用数学工具,"
+    }
+   ]
+  },
+  {
+   "id": "av",
+   "type": "abbr",
+   "label": "AV",
+   "aliases": [],
+   "papers": [
+    "paper.pdf"
+   ],
+   "cross_paper": false,
+   "evidence": [
+    {
+     "paper": "paper.pdf",
+     "page": 9,
+     "paragraph_id": "p009-19",
+     "quote": "Tian H, Yao Y, Ma S, Fu L, Xiang A, Rajulu AV."
+    }
+   ]
+  }
+ ],
+ "stats": {
+  "docs": 2,
+  "nodes": 61,
+  "edges": 86,
+  "measurements": 43,
+  "mentions": 53,
+  "cross_paper_nodes": 0,
+  "per_paper": {
+   "paper.pdf": {
+    "file": "paper.pdf",
+    "pages": 9,
+    "entities": 87,
+    "candidates": 411
+   },
+   "case2-zh.pdf": {
+    "file": "case2-zh.pdf",
+    "pages": 13,
+    "entities": 27,
+    "candidates": 96
+   }
+  }
+ },
+ "schema": {
+  "node_types": [
+   "abbr",
+   "material",
+   "method",
+   "metric",
+   "task"
+  ],
+  "relations": [
+   "co_occurs_with",
+   "compares_with",
+   "composed_of",
+   "decreases",
+   "increases",
+   "uses"
+  ]
+ }
+}
