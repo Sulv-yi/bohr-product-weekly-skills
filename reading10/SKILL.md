@@ -64,7 +64,7 @@ python scripts/doctext.py /input/material.pdf --out work/doc.json
 五条硬规则：
 
 1. 引文必须能在 `paragraphs[].text` 里**逐字找到**，找不到就是定位错了，重来。
-2. `backend=builtin` 表示环境没有第三方 PDF 库，字符可能缺失，**必须在 `uncertainty` 写明**。
+2. `backend=builtin` 表示环境没有第三方 PDF 库：此时走 `scripts/pdfmini.py`（纯标准库，按 `/Pages` 页树还原真实页序、按坐标判双栏栏缝、按 ToUnicode 还原字符），页序与空格不退化；仍读不出的字形（缺 ToUnicode 的子集字体、扫描件）必须写进 `uncertainty`。
 3. `stats.unreadable_pages` 非空 → 这些页没有文字层，逐页记 `status:"unreadable"`，不得靠猜补。
 4. `stats.unparsed_tables` 里的表**不要编造单元格**，如实写"结构不可解析 + 原因"。
 5. 段落 id 只在本次运行内有效，跨运行不复用。
