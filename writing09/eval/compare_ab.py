@@ -4,7 +4,11 @@
 判定规则写死在 eval/ab-protocol.md 第 4 节，本脚本不含人工加权：
   质量增益成立 ⇐ Δ六要素覆盖 ≥ 0 且 Δ参数带来源比例 ≥ 0 且 至少两项严格变好
                  且 Δ占位符 ≤ 0（不能靠删内容换指标）
-  效率增益成立 ⇐ Δ缺口/待确认条数 ≤ 0 且 技能侧 param_source_rate == 1.0
+  效率增益成立 ⇐ 技能侧 errors 列表为空（交付前零错误）且不多于基线
+                 且 技能侧 param_source_rate == 1.0
+
+缺口/待确认条数（open_gaps）只展示、不判优劣：这一项少只说明标注得少，
+不能说明结果更好；把「如实标出的缺口」当「效率差」会惩罚诚实标注。
 
 用法:
   python eval/compare_ab.py baseline-scorecard.json skill-scorecard.json [--md out.md]
@@ -17,7 +21,9 @@ import sys
 
 HIGHER_BETTER = ['element_coverage', 'section_total', 'param_rows', 'param_source_rate',
                  'param_body_alignment', 'baseline_coverage', 'repro_coverage', 'source_count']
-LOWER_BETTER = ['placeholder_count', 'open_gaps']
+LOWER_BETTER = ['placeholder_count', 'errors_before_accept']
+# 只展示、不判优劣（见文件头说明）。
+INFO = ['open_gaps']
 
 
 def load(p):
@@ -31,6 +37,8 @@ def get(card, key):
         return sum((m.get('section_chars') or {}).values())
     if key == 'source_count':
         return m.get('source_count')
+    if key == 'errors_before_accept':
+        return len(card.get('errors') or [])
     v = m.get(key)
     if isinstance(v, bool):
         return 1 if v else 0
@@ -50,9 +58,14 @@ def main():
     a, b = load(args.baseline), load(args.skill)
 
     rows = []
-    for key in HIGHER_BETTER + LOWER_BETTER:
+    for key in HIGHER_BETTER + LOWER_BETTER + INFO:
         va, vb = get(a, key), get(b, key)
         if va is None and vb is None:
+            continue
+        if key in INFO:
+            rows.append({'metric': key, 'baseline': va, 'skill': vb,
+                         'delta': (vb or 0) - (va or 0), 'direction': 'info',
+                         'improved': False, 'worse': False})
             continue
         direction = 'higher' if key in HIGHER_BETTER else 'lower'
         delta = (vb or 0) - (va or 0)
@@ -67,7 +80,8 @@ def main():
         and (get(b, 'param_source_rate') or 0) >= (get(a, 'param_source_rate') or 0) \
         and len(improved) >= 2 \
         and (get(b, 'placeholder_count') or 0) <= (get(a, 'placeholder_count') or 0)
-    e_ok = (get(b, 'open_gaps') or 0) <= (get(a, 'open_gaps') or 0) \
+    e_ok = (get(b, 'errors_before_accept') or 0) == 0 \
+        and (get(b, 'errors_before_accept') or 0) <= (get(a, 'errors_before_accept') or 0) \
         and (get(b, 'param_source_rate') or 0) >= 1.0
 
     out = {'baseline_case': a.get('case_id'), 'skill_case': b.get('case_id'),
