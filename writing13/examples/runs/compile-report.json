@@ -1,0 +1,23 @@
+{
+  "root": "D:\\YSL\\bohr-contest\\submissions\\bohr-submission-writing13\\examples",
+  "engine": null,
+  "main": null,
+  "requested_rounds": 3,
+  "engine_available": true,
+  "rounds_run": [],
+  "status": "success",
+  "log_source": "examples/runs/selftest-build.log",
+  "errors": [],
+  "warnings": [],
+  "undefined_refs": [],
+  "undefined_cites": [],
+  "rerun_signals": [],
+  "overfull_count": 0,
+  "converged": true,
+  "summary": {
+    "error_count": 0,
+    "warning_count": 0,
+    "categories": [],
+    "converged": true
+  }
+}
