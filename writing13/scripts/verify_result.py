@@ -98,14 +98,21 @@ def verify(result, case, static, compile_rep, tex_path=None, result_dir=None,
         warnings.append('success 但未记录改动文件/差异（交得可用/可核验性弱）')
 
     # 改得对：事实/来源映射逐条可回溯
+    # 来源定位接受三种等价写法：source / source_id，或 file + locator（按 file#locator 归一）
     smap = r.get('source_map') or []
     for i, item in enumerate(smap):
         if not isinstance(item, dict):
             continue
         if not str(item.get('claim', item.get('text', ''))).strip():
             warnings.append(f'source_map[{i}] 缺 claim/text')
-        if not (item.get('source') or item.get('source_id')):
-            warnings.append(f'source_map[{i}] 缺来源定位')
+        loc = item.get('source') or item.get('source_id')
+        if not loc:
+            f, l = item.get('file'), item.get('locator')
+            if f and l:
+                loc = f'{f}#{l}'
+                item.setdefault('source', loc)
+        if not loc:
+            warnings.append(f'source_map[{i}] 缺来源定位（source 或 file+locator）')
 
     # 编译得通：编译状态与错误定位
     build = r.get('build') or {}
