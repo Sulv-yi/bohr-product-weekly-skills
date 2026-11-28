@@ -72,23 +72,49 @@ python scripts/doctext.py /input/material.pdf --out work/doc.json
 
 ### 第 2 步 · 任务加工（文献知识图谱构建）
 
+题面要的是**一批论文**的图谱，不是单篇摘要拼接，所以先批量建文档模型，再一次性成图：
+
 ```bash
-python scripts/readwork.py graph work/doc.json --out work/graph.json
-python scripts/readwork.py graph work/doc.json --out work/graph-q1.json --query "<查询词>"
-python scripts/readwork.py graphexport work/graph.json --out work/graph.cypher
+# 1) 每篇各建一份文档模型（可并行）
+for f in /input/papers/*.pdf; do
+  python scripts/doctext.py "$f" --out "work/$(basename "$f" .pdf).doc.json"
+done
+
+# 2) 跨篇成图（通用抽取 + 实体合并 + 证据绑定），同时输出自检报告
+python scripts/graph_build.py build \
+    --docs work/*.doc.json \
+    --out /app/output/graph.json \
+    --audit /app/output/graph-audit.json
+
+# 3) 按实体查询子图（题面要求的真实查询，至少 3 个）
+python scripts/graph_build.py query --graph /app/output/graph.json --q "<查询词>"
 ```
 
-工具只产出**候选结构 + 证据**，最终字段由你按材料填写；工具给的 `limits`/`limitations` 必须原样带进结果的 `uncertainty`。
+`graph_build.py` 与 `readwork.py graph` 的分工：
+
+| 场景 | 用哪个 | 原因 |
+|---|---|---|
+| 一批论文（≥2 篇） | `graph_build.py` | 支持跨篇实体合并、`cross_paper` 标记、每篇覆盖率统计 |
+| 只上单篇、且领域与 `assets/` 词表一致 | `readwork.py graph` | 词表命中精度高，但换学科会抽空 |
+| 需要 Cypher 导出 | `readwork.py graphexport` | 已有实现 |
+
+`graph_build.py` 的抽取不靠领域白名单，用四类通用线索：大写缩写/化学式、驼峰专名、
+指标词（中英）、数量+单位。数量**不建节点**，作为属性进 `measurements` 与边的 `values`；
+没有任何关系的实体进 `mentions` 而不进 `nodes`——图谱的价值是关系，孤立节点只算噪声。
 
 ### 第 3 步 · 自检（必做，不通过不许交）
 
 ```bash
+python scripts/graph_build.py audit --graph /app/output/graph.json \
+    --docs work/*.doc.json --out /app/output/graph-audit.json
 python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
 ```
 
-必须满足：`output_contract` 字段齐全、`status` 合法、`uncertainty` 与 `status` 一致、
-每条 `sources` 的 `quote` 能在对应段落里逐字回查（`evidence_coverage` 应为 1.0）。
-不通过就回到第 2 步改，**不要靠删证据让检查通过**。
+`audit` 的 `ok` 必须为 `true`，即同时满足：节点证据回查率 ≥ 0.95、边证据回查率 ≥ 0.95、
+孤立节点 ≤ 20%（已进 `mentions` 的不计）、弱边（纯共现）占比 ≤ 0.7、每篇实体数 ≥ 8。
+任一条不过就回去补抽取或如实降 `status`，**不要靠删证据让检查通过**；
+`gates` 里未解决的条目要原样抄进 `result.uncertainty`。
+
 
 ## 四、评分维度落点（自查表）
 
@@ -96,13 +122,13 @@ python scripts/readwork.py verify /app/output/result.json --doc work/doc.json
 |--|--:|--|
 | 实际效果·任务完成度 | 15 | `doctext.py` 一次给出段落/章节/题注/表格/参考文献五类结构，`result` 逐字段覆盖 `output_contract` |
 | 实际效果·结果正确性 | 15 | 引文逐字回查（`verify` 的 `evidence_coverage`）；翻译类另查数字/单位/引用/公式保留 |
-| 实际效果·结果完整性 | 5 | `metadata`（标题/作者/单位/摘要/关键词/DOI）+ 图表清单 + 参考文献条目 + 脚注 |
+| 实际效果·结果完整性 | 5 | `metadata`（标题/作者/单位/摘要/关键词/DOI）+ 图表清单 + 参考文献条目 + 脚注；跨篇时另给每篇实体覆盖统计（`stats.per_paper`），低覆盖篇目单独告警 |
 | 实际效果·结果可核验性 | 5 | 每条结论带 `page` + `paragraph_id` + `quote`，`quote_verified` 布尔位 |
 | 使用增益·质量增益 | 15 | 无 Skill 时模型只能读"一段文本"；本 Skill 提供段 id、章节树、题注归属、证据回查四件套 |
 | 使用增益·效率增益 | 5 | 单篇 1～2 秒产出完整模型（实测见 `examples/runs/RUNS.md`），不需要反复重读 PDF |
 | 使用增益·增益可验证性 | 5 | 复现命令 + 两次运行结果一致（纯确定性，不含随机采样） |
-| 创新增益·新增能力 | 5 | 三级后端降级（无第三方库也能解 ToUnicode 子集字体）；坐标栅格表格；共现与有向关系分离 |
-| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环，把"可核验"变成可执行检查 |
+| 创新增益·新增能力 | 5 | 跨篇实体合并（按归一标签 + aliases 合并，`cross_paper` 标记）、通用线索抽取（不靠领域白名单，换学科仍可用）、三级后端降级、共现与有向关系分离 |
+| 创新增益·方法改进 | 5 | `paragraph_id + char 偏移` 的回查机制 + 引文校验闭环；`audit` 把"证据回查率/弱边比/覆盖率"变成可执行门槛，不过门槛不许交 |
 | 创新增益·创新证据 | 5 | 两篇真实 PDF 的实测数字与失败原因，全部可在包内复现 |
 | 可靠体验·调用与易用性 | 3 | 两条命令即可完成；参数与输出字段全在本文档 |
 | 可靠体验·运行稳定性 | 4 | 无随机性、无网络、无外部状态；重复运行输出一致 |
